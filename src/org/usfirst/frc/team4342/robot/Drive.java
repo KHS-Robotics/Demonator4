@@ -57,7 +57,7 @@ public class Drive {
 		kY = Math.abs(kY) < RobotConstants.JOYSTICK_DEADBAND ? 0 : kY;
 		kZ = Math.abs(kZ) < RobotConstants.JOYSTICK_DEADBAND ? 0 : kZ;
 
-		forward = -kY;
+		forward = kY;
 		right = kX;
 		twist = kZ;
 
@@ -173,5 +173,21 @@ public class Drive {
 	// TODO: change to percent v bus mode if the encoders fail to give a value
 	public void disableGyro() {
 		gyroIsEnabled = false;
+	}
+	
+	public CANJaguar getFrontRight() {
+		return fr;
+	}
+	
+	public CANJaguar getFrontLeft() {
+		return fl;
+	}
+	
+	public CANJaguar getRearRight() {
+		return rr;
+	}
+	
+	public CANJaguar getRearLeft() {
+		return rl;
 	}
 }
