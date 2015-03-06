@@ -11,22 +11,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AutoRoutines 
 {
 	private Drive fod;
+	private ElevatorControl elevC;
 	private Gyro gyro;
 	private CANJaguar frontRight, frontLeft, rearRight, rearLeft;
-	private DigitalInput rightPhotoSensor, leftPhotoSensor, botElevLS, topElevLS;
-	private Talon rightElevatorMotor, leftElevatorMotor;
-	private Encoder elevatorEncoder;
+	private DigitalInput rightPhotoSensor, leftPhotoSensor;
 	private Ultrasonic ultra;
 	
 	private int autoStep, savingPvtBrian;
 	private double offset, initAngle, distanceDer, distanceError;
 	
-	public AutoRoutines(Drive fod, Gyro gyro, double initAngle, DigitalInput rightPhotoSensor, DigitalInput leftPhotoSensor,
-						DigitalInput botElevLS, DigitalInput topElevLS, Talon rightElevatorMotor, Talon leftElevatorMotor,
-						Encoder elevatorEncoder, Ultrasonic ultra)
+	public AutoRoutines(Drive fod, Gyro gyro, double initAngle, DigitalInput rightPhotoSensor, 
+						DigitalInput leftPhotoSensor, ElevatorControl elevC, Ultrasonic ultra)
 	{
 		this.fod = fod;
-		
+		this.elevC = elevC;
 		this.frontRight = fod.getFrontRight();
 		this.frontLeft = fod.getFrontLeft();
 		this.rearRight = fod.getRearRight();
@@ -34,14 +32,6 @@ public class AutoRoutines
 		
 		this.rightPhotoSensor = rightPhotoSensor;
 		this.leftPhotoSensor = leftPhotoSensor;
-		
-		this.botElevLS = botElevLS;
-		this.topElevLS = topElevLS;
-		
-		this.rightElevatorMotor = rightElevatorMotor;
-		this.leftElevatorMotor = leftElevatorMotor;
-		
-		this.elevatorEncoder = elevatorEncoder;
 		
 		this.ultra = ultra;
 		
@@ -60,39 +50,33 @@ public class AutoRoutines
 		{
 			if(moveDist(2.5, 0.11))
 			{
+				fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
 				autoStep++;
 				savingPvtBrian = (int)numLoops;
 			}
 		}
 		else if(autoStep == 2)
 		{
-			fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
+			
 			if(wait(savingPvtBrian+10))
 			{
+				elevC.setAutoSetpoint((150));
 				autoStep++;
 			}
 		}
 		else if(autoStep == 3)
 		{
-			if(autoMcgriddle(100))
-			{
-				
-				autoStep++;
-			}
-		}
-		else if(autoStep == 4)
-		{
 			
-			fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
-			if(autoMcgriddle(2000))
+			if(elevC.isDone())
 			{
+				elevC.setAutoSetpoint(2000); //TODO: find min height to clear totes- use in place of 2000 every time it appears
 				offset = totals();
 				autoStep++;
 			}
 		}
-		else if(autoStep==5)
+		else if(autoStep==4)
 		{
-			autoMcgriddle(2000);
+			
 			if(moveBackDist(1, 0.2))
 			{
 				snapshotEncoderValues();
@@ -100,49 +84,49 @@ public class AutoRoutines
 				autoStep++;
 			}
 		}
-		else if(autoStep == 6)
+		else if(autoStep == 5)
 		{
-			autoMcgriddle(2000);
 			if(autoStrafe(25))
 			{
 				autoStep++;
 			}
 		}
-		else if(autoStep == 7)
+		else if(autoStep == 6)
 		{
-			autoMcgriddle(2000);
 			if(autoForward())
 			{
+				fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
+				elevC.setAutoSetpoint(0);
+				autoStep++;
+			}
+		}
+		else if(autoStep == 7)
+		{
+			if(elevC.isDone())
+			{
+				elevC.setAutoSetpoint(100);
 				autoStep++;
 			}
 		}
 		else if(autoStep == 8)
 		{
-			fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
-			if(autoMcgriddle(0))
-			{
+			if(elevC.isDone())
+			{	
+				fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
+				elevC.setAutoSetpoint(2000);
 				autoStep++;
 			}
 		}
 		else if(autoStep == 9)
 		{
-			if(autoMcgriddle(100))
-			{
-				autoStep++;
-			}
-		}
-		else if(autoStep == 10)
-		{
-			fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
-			if(autoMcgriddle(2000))
+			if(elevC.isDone())
 			{
 				offset = totals();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 11)
+		else if(autoStep == 10)
 		{
-			autoMcgriddle(2000);
 			if(moveBackDist(1, 0.11))
 			{
 				snapshotEncoderValues();
@@ -150,71 +134,74 @@ public class AutoRoutines
 				autoStep++;
 			}
 		}
-		else if(autoStep == 12)
+		else if(autoStep == 11)
 		{
-			autoMcgriddle(2000);
 			if(autoStrafe(25))
 			{
 				autoStep++;
 			}
 		}
-		else if(autoStep == 13)
+		else if(autoStep == 12)
 		{
-			autoMcgriddle(2000);
 			if(autoForward())
 			{
+				fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
+				elevC.setAutoSetpoint(0);
+				autoStep++;
+			}
+		}
+		else if(autoStep == 13)
+		{
+			if(elevC.isDone())
+			{
+				elevC.setAutoSetpoint(100);
 				autoStep++;
 			}
 		}
 		else if(autoStep == 14)
-		{
-			fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
-			if(autoMcgriddle(0))
+		{	
+			if(elevC.isDone())
 			{
+				elevC.setAutoSetpoint(2000);
+				offset = totals();
 				autoStep++;
 			}
 		}
 		else if(autoStep == 15)
 		{
-			if(autoMcgriddle(100))
-			{
-				offset = totals();
-				autoStep++;
-			}
-		}
-		else if(autoStep == 16)
-		{
-			autoMcgriddle(2000);
 			if(moveBackDist(3, 0.07))
 			{
 				autoStep++;
 			}
 		}
+		else if(autoStep == 16)
+		{
+			if(elevC.isDone())
+			{
+				elevC.setAutoSetpoint(2000);
+				offset = totals();
+				autoStep++;
+			}
+		}
 		else if(autoStep == 17)
 		{
-			if(autoMcgriddle(2000))
+			if(moveBackDist(4, 0.11))
 			{
-				offset = totals();
+				elevC.setAutoSetpoint(-50);
 				autoStep++;
 			}
 		}
 		else if(autoStep == 18)
 		{
-			autoMcgriddle(2000);
-			if(moveBackDist(4, 0.11))
+			
+			if(elevC.isDone())
 			{
 				autoStep++;
 			}
 		}
-		else if(autoStep ==19)
+		else if(autoStep == 19)
 		{
-			if(autoMcgriddle(-50))
-			{
-				autoStep++;
-			}
-		}
-		else if(autoStep==20){
-			moveBackDist(4,0.5);
+			moveBackDist(4, 0.5);
 		}
 		
 	}
@@ -230,39 +217,30 @@ public class AutoRoutines
 		{
 			if(moveDist(2.5, 0.11))
 			{
+				fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
 				autoStep++;
 				savingPvtBrian = (int)numLoops;
 			}
 		}
 		else if(autoStep == 2)
-		{
-			fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
+		{	
 			if(wait(savingPvtBrian+10))
 			{
+				fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
+				elevC.setAutoSetpoint(2000);
 				autoStep++;
 			}
 		}
 		else if(autoStep == 3)
 		{
-			if(autoMcgriddle(100))
-			{
-				
-				autoStep++;
-			}
-		}
-		else if(autoStep == 4)
-		{
-			
-			fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
-			if(autoMcgriddle(2000))
+			if(elevC.isDone())
 			{
 				offset = totals();
 				autoStep++;
 			}
 		}
-		else if(autoStep==5)
+		else if(autoStep==4)
 		{
-			autoMcgriddle(2000);
 			if(moveBackDist(3, 0.2))
 			{
 				snapshotEncoderValues();
@@ -276,53 +254,54 @@ public class AutoRoutines
 	{
 		if(autoStep == 0)
 		{
+			elevC.setAutoSetpoint(697);
 			snapshotEncoderValues();
 			autoStep++;
 		}
 		else if(autoStep == 1)
 		{
-			if(autoMcgriddle(697))
+			if(elevC.isDone())
 			{
 				autoStep++;
 			}
 		}
 		else if(autoStep == 2)
 		{
-			autoMcgriddle(697);
 			if(autoForward())
 			{
+				fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
 				autoStep++;
 				savingPvtBrian = (int)numLoops;
 			}
 		}
 		else if(autoStep == 3)
 		{
-			fod.autoMove(0.0, 0.0, gyro.getAngle(), initAngle);
 			if(wait(savingPvtBrian+10))
 			{
+				elevC.setAutoSetpoint(2250);
 				autoStep++;
 			}
 		}
 		else if(autoStep == 4)
 		{
-			if(autoMcgriddle(2250))
+			if(elevC.isDone())
 			{
+				elevC.setAutoSetpoint(2250);
 				offset = 0;
 				autoStep++;
 			}
 		}
 		else if(autoStep == 5)
 		{
-			autoMcgriddle(2250);
 			if(moveBackDist(17, 0.1))
 			{
+				elevC.setAutoSetpoint(2250);
 				initAngle+=90;
 				autoStep++;
 			}
 		}
 		else if(autoStep == 6)
 		{
-			autoMcgriddle(2250);
 			fod.autoMove(0.01, 0.0, gyro.getAngle(), initAngle);
 		}
 	}
@@ -432,72 +411,9 @@ public class AutoRoutines
 		}
 		return false;
 	}
-	
-	private int autoBand = 10, error;
 	private double p = 0.25, i = 0.0, d = 0.02, pd = 0.1, id = 0.0, dd = 0.01;
 	
-	private boolean autoMcgriddle(int setpoint) {
-		error = setpoint - elevatorEncoder.get();
-		double out=0;
-		if (Math.abs(error) <= autoBand) {
-			rightElevatorMotor.set(out);
-			leftElevatorMotor.set(out);
-			return true;
-		}
-		if (error > 0) {
-			out = 0.7;
-			//out = pid(p, i, d, error);
-		} else {
-			out =-0.1;
-			//out = pid(pd, id, dd, error);
-		}
-		if (botElevLS.get() && out < 0) {
-			out = 0;
-		}
-		if(topElevLS.get() && out > 0)
-		{
-			out = 0;
-		}
-		rightElevatorMotor.set(out);
-		leftElevatorMotor.set(out);
-		return false;
-//		if(elevatorEncoder.get()<)
-		
-	}
 
-	private int accumulated = 0, perr;
-	long howLong = System.currentTimeMillis();
-	private double pPID;
-
-	private double pid(double p, double i, double d, int err) {
-		double out = 0;
-		if (Math.abs(err) <= 5) {
-			accumulated = 0;
-			return 0;
-		} else if (Math.abs(perr - err) > Math.abs(err + perr)) {
-			accumulated = 0;
-		}
-		accumulated += err;
-
-		double P = p * err;
-		double I = i * accumulated;
-		double D = (err - perr) * d;
-		perr = err;
-		out = P + I + D;
-		if (out > 1) {
-			out = 1;
-		} else if (out < -.5) {
-			out = -.5;
-		}
-		if (out - pPID > .1) {
-			out = pPID + .1;
-		} else if (out - pPID < -.1) {
-			out = pPID - .1;
-		}
-		pPID = out;
-		return out;
-
-	}
 	
 	private boolean wait(int waitLoops)
 	{

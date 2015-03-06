@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot
 	
 	private CANJaguar frontRight, frontLeft, rearRight, rearLeft;
 	
-	private Talon rightElevatorMotor, leftElevatorMotor, testMotor;
+	private Talon rightElevatorMotor, leftElevatorMotor, containerGrabber;
 	
 	private Encoder elevatorEncoder;
 	
@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot
 	private Thread t;
 	
 	private static long numLoops;
-	private boolean loggedError, fieldOriented;
+	private boolean loggedError, fieldOriented = true;
 	private Ultrasonic ultra;
 	
 	private Gyro gyro;
@@ -150,7 +150,7 @@ public class Robot extends IterativeRobot
 			rearRight.enableControl();
 			rearLeft.enableControl();
 			
-			fod = new Drive(frontLeft, frontRight, rearLeft, rearRight, driveStick, gyro, true);
+			fod = new Drive(frontLeft, frontRight, rearLeft, rearRight, driveStick);
 			//robotDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
 			
 			SmartDashboard.putNumber("Elev-P Up", kRLP);
@@ -165,7 +165,7 @@ public class Robot extends IterativeRobot
 			
 			rightElevatorMotor = new Talon(0);
 			leftElevatorMotor = new Talon(1);
-			testMotor = new Talon(2);
+			containerGrabber = new Talon(2);
 			
 			pidTuner = new PIDTuner(frontRight, frontLeft, rearRight, rearLeft, elevC,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
 			
@@ -181,7 +181,8 @@ public class Robot extends IterativeRobot
 			botElevLS = new DigitalInput(4);
 			topElevLS = new DigitalInput(7);
 			
-			elevC = new ElevatorControl(elevatorStick, rightElevatorMotor, leftElevatorMotor, elevatorEncoder, points,botElevLS , topElevLS);
+			elevC = new ElevatorControl(elevatorStick, rightElevatorMotor, leftElevatorMotor, 
+										elevatorEncoder, points,botElevLS , topElevLS);
 			
 			gyro = new Gyro(0);
 			gyro.setSensitivity(0.007);
@@ -239,21 +240,24 @@ public class Robot extends IterativeRobot
 //		{
 
 			
-			if(driveStick.getRawButton(3))
+			if(driveStick.getRawButton(3)) {
 				gyro.reset();
+			}
 			
-			if(driveStick.getRawButton(12))
-			{
+			if(driveStick.getRawButton(12)) {
 				fieldOriented = fieldOriented ? false : true;
 			}
 			
-			fod.fieldOriented(driveStick.getX(),sensitivityControl(driveStick.getY()), driveStick.getZ(), fieldOriented ? gyro.getAngle() : 0.0);
+			fod.fieldOriented(-sensitivityControl(driveStick.getX()),sensitivityControl(driveStick.getY()), 
+							-sensitivityControl(driveStick.getZ()), fieldOriented ? gyro.getAngle() : 0.0);
 			
-			if(elevatorStick.getRawButton(7))
+			if(elevatorStick.getRawButton(7)) {
 				elevatorEncoder.reset();
+			}
 			
-			if(numLoops % 10 == 0)
+			if(numLoops % 10 == 0) {
 				putDataToSmartDashboard();
+			}
 			
 			numLoops++;
 		//}
@@ -307,8 +311,7 @@ public class Robot extends IterativeRobot
 			gyro.reset();
 			initAngle = gyro.getAngle();
 			autoRoutines = new AutoRoutines(fod, gyro, initAngle, rightPhotoSensor, leftPhotoSensor,
-											botElevLS, topElevLS, rightElevatorMotor, leftElevatorMotor,
-											elevatorEncoder, ultra);
+											elevC, ultra);
 		}
 		catch(Exception ex)
 		{
@@ -456,7 +459,7 @@ public class Robot extends IterativeRobot
 	 */
 	public static double sensitivityControl(double output)
 	{
-			return -(1.75*Math.pow(output, 3));
+		return -(1.75*Math.pow(output, 3));
 	}
 	public double wrapGyroAngle(double gyroAngle)
 	{

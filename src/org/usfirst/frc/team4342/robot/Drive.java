@@ -16,8 +16,6 @@ public class Drive {
 	private double r_l;
 	private double r_r;
 
-	private boolean gyroIsEnabled;
-
 	private CANJaguar fl;
 	private CANJaguar fr;
 	private CANJaguar rl;
@@ -28,14 +26,13 @@ public class Drive {
 	private Gyro gyro;
 
 	public Drive(CANJaguar frontLeft, CANJaguar frontRight, CANJaguar rearLeft,
-			CANJaguar rearRight, Joystick j, Gyro gyro, boolean enableGyro) {
+			CANJaguar rearRight, Joystick j, Gyro gyro) {
 		fl = frontLeft;
 		fr = frontRight;
 		rl = rearLeft;
 		rr = rearRight;
 		this.j = j;
 		this.gyro = gyro;
-		gyroIsEnabled = enableGyro;
 	}
 
 	public void fieldOriented() {
@@ -60,8 +57,9 @@ public class Drive {
 		forward = kY;
 		right = kX;
 		twist = kZ;
-
-		// gyroAngle += 180;
+		
+		gyroAngle+=180;
+		
 		gyroAngle %= 360.0;
 		if (gyroAngle < 0) {
 			gyroAngle += 360;
@@ -164,15 +162,6 @@ public class Drive {
 		fr.set(f_r * 470);
 		rl.set(r_l * 470);
 		rr.set(r_r * 470);
-	}
-
-	public void enableGyro() {
-		gyroIsEnabled = true;
-	}
-
-	// TODO: change to percent v bus mode if the encoders fail to give a value
-	public void disableGyro() {
-		gyroIsEnabled = false;
 	}
 	
 	public CANJaguar getFrontRight() {

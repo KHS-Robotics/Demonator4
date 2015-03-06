@@ -42,6 +42,8 @@ public class ElevatorControl {
 	private int error;
 	private double deadband = .1;
 	private int index = 0;
+	
+	private volatile int currentSetpoint;
 
 	private Encoder e;
 
@@ -49,19 +51,11 @@ public class ElevatorControl {
 	private SpeedController mb;
 
 	public boolean isEnabled = false;
-	private long numLoops = 0;
-	private double jsM = 0;
-	private boolean autoStop = false;
-	private double jstickwaittime = 5000;
-	private long encwaittime = 50;
-	private double irate = 10; // period for i and d in ms- based on system time
-	private double drate = 50;
 	long howLong = System.currentTimeMillis();
 	private int perr;
 	private int accumulated = 0;
 	private boolean jcheck = false;
-	private int button = 10000;
-	private boolean buttonChanged = false;
+	private int button = -1;
 	private DigitalInput bls;
 	private DigitalInput tls;
 	DriverStation ds;
@@ -69,8 +63,6 @@ public class ElevatorControl {
 	private Joystick j;
 
 	private ArrayList<Setpoint> setpoints;
-
-	private ArrayList<Setpoint> autoSetpoints;
 
 	public ElevatorControl(Joystick joy, SpeedController a, SpeedController b,
 			Encoder enc, ArrayList<Setpoint> setpoints, DigitalInput bls,
@@ -80,7 +72,6 @@ public class ElevatorControl {
 		t.schedule(c, (long) 0, 20);
 		this.bls = bls;
 		this.tls = tls;
-		this.autoSetpoints = autoSetpoints;
 		this.setpoints = setpoints;
 		e = enc;
 		j = joy;
@@ -127,11 +118,20 @@ public class ElevatorControl {
 		return out;
 
 	}
-
-	public boolean autoMcgriddle(int setpoint) {
+	
+	public void setAutoSetpoint(int setpoint) {
+		this.currentSetpoint = setpoint;
+	}
+	
+	private void moveElevator(int setpoint) {
 		error = setpoint - e.get();
-		if (Math.abs(error) <= autoBand) {
-			return true;
+		if (Math.abs(error) <= 5) {
+			if (index < encR.length - 1) {
+				index++;
+				error = encR[index] - e.get();
+			}
+			done = true;
+			return;
 		}
 		double out;
 		if (error > 0) {
@@ -142,13 +142,14 @@ public class ElevatorControl {
 		if (bls.get() && out < 0) {
 			out = 0;
 		}
+		if (tls.get() && out > 0) {
+			out = 0;
+		}
 		ma.set(out);
 		mb.set(out);
-		return false;
+		done = false;
 	}
-
-	int perror;
-
+	
 	public void mcgriddle() {
 		if (bls.get()) {
 			e.reset();
@@ -159,7 +160,7 @@ public class ElevatorControl {
 					if (button != i) {
 						button = i;
 						for (Setpoint a : setpoints) {
-							if (a.getButton() == button && button != 10000) {
+							if (a.getButton() == button && button != -1) {
 								index = 0;
 								encR = a.getSetpoint();
 								break;
@@ -172,37 +173,15 @@ public class ElevatorControl {
 				}
 			}
 			if ((Math.abs(j.getY()) < deadband)) {
-
 				if (jcheck) {
-					error = encR[index] - e.get();
-					if (Math.abs(error) <= 5) {
-						if (index < encR.length - 1) {
-							index++;
-							error = encR[index] - e.get();
-
-						}
-					}
-					double out;
-					if (error > 0) {
-						out = pid(p, i, d, error);
-					} else {
-						out = pid(pd, id, dd, error);
-					}
-					if (bls.get() && out < 0) {
-						out = 0;
-					}
-					if (tls.get() && out > 0) {
-						out = 0;
-					}
-					ma.set(out);
-					mb.set(out);
+					moveElevator(encR[index]);
 				} else {
 					ma.set(0);
 					mb.set(0);
 					jcheck = false;
 				}
 			} else {
-				
+				jcheck = false;
 				double y = j.getY();
 				if (bls.get() && y < 0) {
 					y = 0;
@@ -212,9 +191,10 @@ public class ElevatorControl {
 				}
 				ma.set(y);
 				mb.set(y);
-				jcheck = false;
-				autoStop = false;
 			}
+		}
+		else if (ds.isAutonomous()) {
+			moveElevator(currentSetpoint);
 		}
 	}
 
@@ -270,15 +250,7 @@ public class ElevatorControl {
 		return autoSetpoint;
 	}
 
-	public void setAutoSetpoint(int autoSetpoint) {
-		this.autoSetpoint = autoSetpoint;
-	}
-
 	public boolean isDone() {
 		return done;
-	}
-
-	public void setDone(boolean done) {
-		this.done = done;
 	}
 }
