@@ -15,7 +15,7 @@ public class Drive {
 	private double f_r;
 	private double r_l;
 	private double r_r;
-
+	
 	private CANJaguar fl;
 	private CANJaguar fr;
 	private CANJaguar rl;
@@ -99,7 +99,6 @@ public class Drive {
 		rr.set(r_r * 470);
 
 	}
-
 	public void autoMove(double x, double y, double gyroAngle,
 			double initialAngle) {
 		forward = y;
@@ -152,16 +151,31 @@ public class Drive {
 		}
 
 		if (x == 0.0 && y == 0.0) {
-			fl.set(0);
-			fr.set(0);
-			rl.set(0);
-			rr.set(0);
+			stopMotors();
 			return;
 		}
 		fl.set(f_l * 470);
 		fr.set(f_r * 470);
 		rl.set(r_l * 470);
 		rr.set(r_r * 470);
+	}
+	public void turnInPlace(double speed, double degrees) {
+		if(gyro.getAngle()>=degrees) {
+			stopMotors();
+			return;
+		}
+		fl.set(-speed*470);
+		fr.set(speed*470);
+		rl.set(-speed*470);
+		rr.set(speed*470);
+	}
+	
+	public void stopMotors()
+	{
+		fl.set(0);
+		fr.set(0);
+		rl.set(0);
+		rr.set(0);
 	}
 	
 	public CANJaguar getFrontRight() {
