@@ -149,10 +149,13 @@ public class ElevatorControl {
 	}
 	
 	public synchronized void mcgriddle() {
+		if(ds.isDisabled()){
+			button=-1;
+		}
 		if (bls.get()) {
 			e.reset();
 		}
-		if (ds.isOperatorControl()) {
+		if (ds.isOperatorControl() && ds.isEnabled()) {
 			for (int i = 1; i < j.getButtonCount(); i++) {
 				if (j.getRawButton(i)) {
 					if (button != i) {
@@ -191,7 +194,7 @@ public class ElevatorControl {
 				mb.set(y);
 			}
 		}
-		else if (ds.isAutonomous()) {
+		else if (ds.isAutonomous() && ds.isEnabled()) {
 			moveElevator(currentSetpoint);
 		}
 	}

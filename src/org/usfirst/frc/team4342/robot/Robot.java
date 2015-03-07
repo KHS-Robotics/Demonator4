@@ -41,10 +41,8 @@ public class Robot extends IterativeRobot
 	
 	private CameraServer camera;
 	
-	private ILog log;
-	private LogRunnable logRunnable;
-	private Thread logThread;
-	private Thread t;
+	private LoggingThread log;
+	private PDPMonitor pdpMonitor;
 	
 	private static long numLoops;
 	private boolean loggedError, fieldOriented = true;
@@ -65,15 +63,11 @@ public class Robot extends IterativeRobot
 	private double initAngle;
 	
 	private double kRLPD,kRLID,kRLDD;
-	private double kRLP, kRLI, kRLD,kRLSetpoint; //rear left pid
+	private double kRLP, kRLI, kRLD;
 	
 	private int autoStep;
 	
 	private double offset;
-
-	
-	private double distanceError = 0;
-	private double distanceDer = 0;
 	
 	private int autoRoutine; // 0 = pickup 3 totes, 1 = pickup 1 totes, 2 = pickup 1 container
 	
@@ -114,12 +108,11 @@ public class Robot extends IterativeRobot
 	@Override
     public void robotInit()
 	{
-//		try
-//		{
+		try
+		{
 			loggedError = false;
-//			log = new LocalLog("Demonator IV", RobotConstants.LOG_TEXT_FILE, true);
-//			logRunnable = new LogRunnable(log);
-//			logThread = new Thread(logRunnable);
+			//log = new LoggingThread(new LocalLog("Demonator IV", RobotConstants.LOG_TEXT_FILE, true));
+			
 			
 //			camera = CameraServer.getInstance();
 //			camera.setQuality(50);
@@ -198,15 +191,15 @@ public class Robot extends IterativeRobot
 			SmartDashboard.putNumber("Auto-Routine", (int) autoRoutine);
 			
 			pdp = new PowerDistributionPanel();
+			pdpMonitor = new PDPMonitor(pdp);
 		}
-//		catch(Exception ex)
-//		{
-////			logRunnable.setLogInfo(Severity.ERROR, "Unexpected error while attempting to start robot", ex);
-////			logThread.start();
-//			ex.printStackTrace();
-//			DriverStation.reportError("ERROR in robotInit()... Go get Ernie or Magnus!\n", false);
-//		}
-    //}
+		catch(Exception ex)
+		{
+			//log.error("Unexpected error while attempting to start robot", ex);
+			ex.printStackTrace();
+			DriverStation.reportError("ERROR in robotInit()... Go get Ernie or Magnus!\n", false);
+		}
+    }
 	
 	/**
 	 * This method is run when the robot enters operator control and should 
@@ -223,8 +216,7 @@ public class Robot extends IterativeRobot
 		}
 		catch(Exception ex)
 		{
-//			logRunnable.setLogInfo(Severity.ERROR, "Unexpected error while initializing operator control", ex);
-//			logThread.start();
+			//log.error("Unexpected error while initializing operator control", ex);
 			DriverStation.getInstance();
 			DriverStation.reportError("ERROR in teleopInit()... Go get Ernie or Magnus!", false);
 		}
@@ -236,10 +228,8 @@ public class Robot extends IterativeRobot
 	@Override
 	public void teleopPeriodic()
 	{
-//		try
-//		{
-
-			
+		try
+		{
 			if(driveStick.getRawButton(3)) {
 				gyro.reset();
 			}
@@ -260,18 +250,17 @@ public class Robot extends IterativeRobot
 			}
 			
 			numLoops++;
-		//}
-//		catch(Exception ex)
-//		{
-//			if(!loggedError)
-//			{
-////				logRunnable.setLogInfo(Severity.ERROR, "Unexpected error while in operator control", ex);
-////				logThread.start();
-//				DriverStation.getInstance();
-//				DriverStation.reportError("ERROR in teleopPeriodic()... Go get Ernie or Magnus!", true);
-//			}
-//			loggedError = true;
-//		}
+		}
+		catch(Exception ex)
+		{
+			if(!loggedError)
+			{
+				//log.error("Unexpected error while in operator control", ex);
+				DriverStation.getInstance();
+				DriverStation.reportError("ERROR in teleopPeriodic()... Go get Ernie or Magnus!", true);
+			}
+			loggedError = true;
+		}
 	}
 	/**
 	 * This method is run when the robot enters autonomous and should 
@@ -315,8 +304,7 @@ public class Robot extends IterativeRobot
 		}
 		catch(Exception ex)
 		{
-//			logRunnable.setLogInfo(Severity.ERROR, "Unexpected error while initializing autonomous", ex);
-//			logThread.start();
+			//log.error("Unexpected error while initializing autonomous", ex);
 			DriverStation.getInstance();
 			DriverStation.reportError("ERROR in autonomousInit()... Go get Ernie or Magnus!", false);
 		}
@@ -359,8 +347,7 @@ public class Robot extends IterativeRobot
 		{
 			if(!loggedError)
 			{
-//				logRunnable.setLogInfo(Severity.ERROR, "Unexpected error while in autonomous", ex);
-//				logThread.start();
+				//log.error("Unexpected error while in autonomous", ex);
 				DriverStation.getInstance();
 				DriverStation.reportError("ERROR in autonomousPeriodic()... Go get Ernie or Magnus!", false);
 			}
@@ -375,19 +362,17 @@ public class Robot extends IterativeRobot
 	@Override
 	public void disabledInit()
 	{
-		//elevC.isEnabled = false;
-//		try
-//		{
+		try
+		{
 			loggedError = false;
 			numLoops = 0;
-//		}
-//		catch(Exception ex)
-//		{
-////			logRunnable.setLogInfo(Severity.ERROR, "Unexpected error whie inializing disabled", ex);
-////			logThread.start();
-//			DriverStation.getInstance();
-//			DriverStation.reportError("ERROR in disabledInit()... Go get Ernie or Magnus!", false);
-//		}
+		}
+		catch(Exception ex)
+		{
+			//log.error("Unexpected error whie inializing disabled", ex);
+			DriverStation.getInstance();
+			DriverStation.reportError("ERROR in disabledInit()... Go get Ernie or Magnus!", false);
+		}
 	}
 	
 	/**
@@ -396,25 +381,24 @@ public class Robot extends IterativeRobot
 	@Override
 	public void disabledPeriodic()
 	{
-//		try
-//		{
+		try
+		{
 			if(numLoops % 10 == 0)
 				putDataToSmartDashboard();
 			
 			gyro.reset();
 				
-//		}
-//		catch(Exception ex)
-//		{
-//			if(!loggedError)
-//			{
-////				logRunnable.setLogInfo(Severity.ERROR, "Unexpected error while disabled", ex);
-////				logThread.start();
-//				DriverStation.getInstance();
-//				DriverStation.reportError("ERROR in disabledPeriodic()... Go get Ernie or Magnus!", false);
-//			}
-//			loggedError = true;
-//		}
+		}
+		catch(Exception ex)
+		{
+			if(!loggedError)
+			{
+				//log.error("Unexpected error while disabled", ex);
+				DriverStation.getInstance();
+				DriverStation.reportError("ERROR in disabledPeriodic()... Go get Ernie or Magnus!", false);
+			}
+			loggedError = true;
+		}
 	}
 	
 	/**
@@ -461,6 +445,7 @@ public class Robot extends IterativeRobot
 	{
 		return -(1.75*Math.pow(output, 3));
 	}
+	
 	public double wrapGyroAngle(double gyroAngle)
 	{
 		gyroAngle %= 360.0;
@@ -470,7 +455,8 @@ public class Robot extends IterativeRobot
 		return gyroAngle;
 	}
 	
-	public static int getNumLoops() {
+	public static int getNumLoops() 
+	{
 		return (int) numLoops;
 	}
 }
