@@ -150,7 +150,7 @@ public class Robot extends IterativeRobot
 			rearRight.enableControl();
 			rearLeft.enableControl();
 			
-			fod = new Drive(frontLeft, frontRight, rearLeft, rearRight, driveStick);
+			fod = new Drive(frontLeft, frontRight, rearLeft, rearRight, driveStick, gyro);
 			//robotDrive = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
 			
 			SmartDashboard.putNumber("Elev-P Up", kRLP);

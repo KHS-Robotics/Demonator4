@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorControl {
 
@@ -26,43 +25,42 @@ public class ElevatorControl {
 		}
 	}
 
-	private double pPID;
-	private double p;
-	private double i;
-	private double d;
-	private double pd;
-	private double id;
-	private double dd;
+	private volatile double pPID;
+	private volatile double p;
+	private volatile double i;
+	private volatile double d;
+	private volatile double pd;
+	private volatile double id;
+	private volatile double dd;
 
-	private boolean done = false;
-	private int autoBand = 10;
-	private int autoSetpoint;
+	private volatile boolean done = false;
+	private volatile int autoSetpoint;
 
-	private int[] encR;
-	private int error;
-	private double deadband = .1;
-	private int index = 0;
+	private volatile int[] encR;
+	private volatile int error;
+	private volatile double deadband = .1;
+	private volatile int index = 0;
 	
 	private volatile int currentSetpoint;
 
-	private Encoder e;
+	private volatile Encoder e;
 
-	private SpeedController ma;
-	private SpeedController mb;
+	private volatile SpeedController ma;
+	private volatile SpeedController mb;
 
-	public boolean isEnabled = false;
-	long howLong = System.currentTimeMillis();
-	private int perr;
-	private int accumulated = 0;
-	private boolean jcheck = false;
-	private int button = -1;
-	private DigitalInput bls;
-	private DigitalInput tls;
-	DriverStation ds;
+	public volatile boolean isEnabled = false;
+	volatile long howLong = System.currentTimeMillis();
+	private volatile int perr;
+	private volatile int accumulated = 0;
+	private volatile boolean jcheck = false;
+	private volatile int button = -1;
+	private volatile DigitalInput bls;
+	private volatile DigitalInput tls;
+	volatile DriverStation ds;
 
-	private Joystick j;
+	private volatile Joystick j;
 
-	private ArrayList<Setpoint> setpoints;
+	private volatile ArrayList<Setpoint> setpoints;
 
 	public ElevatorControl(Joystick joy, SpeedController a, SpeedController b,
 			Encoder enc, ArrayList<Setpoint> setpoints, DigitalInput bls,
@@ -87,7 +85,7 @@ public class ElevatorControl {
 	 * elevator controller that automatically holds elevator in position if
 	 * operator leaves controller at 0 kY- tuning constant for joystick
 	 */
-	private double pid(double p, double i, double d, int err) {
+	private synchronized double pid(double p, double i, double d, int err) {
 		double out = 0;
 		// if((System.currentTimeMillis()-howLong)%irate<10)
 		if (Math.abs(err) <= 5) {
@@ -119,11 +117,11 @@ public class ElevatorControl {
 
 	}
 	
-	public void setAutoSetpoint(int setpoint) {
+	public synchronized void setAutoSetpoint(int setpoint) {
 		this.currentSetpoint = setpoint;
 	}
 	
-	private void moveElevator(int setpoint) {
+	private synchronized void moveElevator(int setpoint) {
 		error = setpoint - e.get();
 		if (Math.abs(error) <= 5) {
 			if (index < encR.length - 1) {
@@ -150,7 +148,7 @@ public class ElevatorControl {
 		done = false;
 	}
 	
-	public void mcgriddle() {
+	public synchronized void mcgriddle() {
 		if (bls.get()) {
 			e.reset();
 		}
@@ -198,59 +196,59 @@ public class ElevatorControl {
 		}
 	}
 
-	public double getP() {
+	public synchronized double getP() {
 		return p;
 	}
 
-	public void setP(double p) {
+	public synchronized void setP(double p) {
 		this.p = p;
 	}
 
-	public double getI() {
+	public synchronized double getI() {
 		return i;
 	}
 
-	public void setI(double i) {
+	public synchronized void setI(double i) {
 		this.i = i;
 	}
 
-	public double getD() {
+	public synchronized double getD() {
 		return d;
 	}
 
-	public void setD(double d) {
+	public synchronized void setD(double d) {
 		this.d = d;
 	}
 
-	public double getPd() {
+	public synchronized double getPd() {
 		return pd;
 	}
 
-	public void setPd(double pd) {
+	public synchronized void setPd(double pd) {
 		this.pd = pd;
 	}
 
-	public double getId() {
+	public synchronized double getId() {
 		return id;
 	}
 
-	public void setId(double id) {
+	public synchronized void setId(double id) {
 		this.id = id;
 	}
 
-	public double getDd() {
+	public synchronized double getDd() {
 		return dd;
 	}
 
-	public void setDd(double dd) {
+	public synchronized void setDd(double dd) {
 		this.dd = dd;
 	}
 
-	public int getAutoSetpoint() {
+	public synchronized int getAutoSetpoint() {
 		return autoSetpoint;
 	}
 
-	public boolean isDone() {
+	public synchronized boolean isDone() {
 		return done;
 	}
 }
