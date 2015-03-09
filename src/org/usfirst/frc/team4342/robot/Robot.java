@@ -235,7 +235,7 @@ public class Robot extends IterativeRobot
 		try
 		{
 			if(elevatorStick.getRawButton(11)) {
-				fod.stackAlign(driveStick.getX(), driveStick.getY(), gyro.getAngle());
+				fod.stackAlign(-sensitivityControl(driveStick.getX()), sensitivityControl(driveStick.getY()), gyro.getAngle());
 			}
 			if(driveStick.getRawButton(12)) {
 				fieldOriented = fieldOriented ? false : true;
