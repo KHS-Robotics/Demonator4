@@ -41,8 +41,8 @@ public class Robot extends IterativeRobot
 	
 	private CameraServer camera;
 	
-	//private LoggingThread log;
-	//private PDPMonitor pdpMonitor;
+	private LoggingThread log;
+	private PDPMonitor pdpMonitor;
 	
 	private static long numLoops;
 	private boolean loggedError, fieldOriented = true;
@@ -190,7 +190,7 @@ public class Robot extends IterativeRobot
 			SmartDashboard.putNumber("Auto-Routine", (int) autoRoutine);
 			
 			pdp = new PowerDistributionPanel();
-			//pdpMonitor = new PDPMonitor(pdp);
+			pdpMonitor = new PDPMonitor(pdp);
 		}
 		catch(Exception ex)
 		{
