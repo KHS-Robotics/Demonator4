@@ -20,7 +20,9 @@ public class Drive {
 	private CANJaguar fr;
 	private CANJaguar rl;
 	private CANJaguar rr;
-
+	
+	private final double angleP = 0.01; //smart.getNum(angleP)
+	
 	private Joystick j;
 
 	private Gyro gyro;
@@ -35,9 +37,6 @@ public class Drive {
 		this.gyro = gyro;
 	}
 
-	public void fieldOriented() {
-		//this.fieldOriented(j.getX(), j.getY(), j.getZ());
-	}
 
 	/*
 	 * field oriented control with tuning params for joystick inputs
@@ -46,7 +45,6 @@ public class Drive {
 	 * the fastest wheel SHOULD be going- input should match output otherwise
 	 * slow input down until it does
 	 * 
-	 * kX, kY, kZ are for tuning inputs leave them as 1 for now
 	 */
 	public void fieldOriented(double kX, double kY, double kZ, double gyroAngle) {
 
@@ -104,8 +102,6 @@ public class Drive {
 		forward = y;
 		right = x;
 
-		// gyroAngle += 180;
-
 		gyroAngle %= 360;
 		double error = initialAngle - gyroAngle;
 		if (error >= 180) {
@@ -116,9 +112,8 @@ public class Drive {
 		if (error >= -0.5 && error <= 0.5) {
 			twist = 0.0;
 		} else {
-			twist = error * SmartDashboard.getNumber("angleP");
+			twist = error * angleP; //make 
 		}
-		gyroAngle %= 360.0;
 		if (gyroAngle < 0) {
 			gyroAngle += 360;
 		}
@@ -176,6 +171,21 @@ public class Drive {
 		fr.set(0);
 		rl.set(0);
 		rr.set(0);
+	}
+	
+	public void stackAlign(double x, double y, double gyroAngle) {
+		gyroAngle+=180;
+		
+		gyroAngle %= 360.0;
+		if (gyroAngle < 0) {
+			gyroAngle += 360;
+		}
+		if(gyroAngle <= 195 && gyroAngle >= 165) {
+			autoMove(x, y, gyroAngle, 180/*or 0 or whatever */);
+		}
+		else if(gyroAngle >= 345 && gyroAngle <= 15) {
+			autoMove(x, y, gyroAngle,0 /*or 360 or whatever */);
+		}
 	}
 	
 	public CANJaguar getFrontRight() {

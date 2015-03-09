@@ -25,7 +25,7 @@ import Logging.*;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  * 
- * WO SO THIS IS HOW GITHUB WORKS
+ * 
  */
 public class Robot extends IterativeRobot 
 {
@@ -41,8 +41,8 @@ public class Robot extends IterativeRobot
 	
 	private CameraServer camera;
 	
-	private LoggingThread log;
-	private PDPMonitor pdpMonitor;
+	//private LoggingThread log;
+	//private PDPMonitor pdpMonitor;
 	
 	private static long numLoops;
 	private boolean loggedError, fieldOriented = true;
@@ -53,7 +53,6 @@ public class Robot extends IterativeRobot
 	private ArrayList<Setpoint> points;
 	private ElevatorControl elevC;
 	
-	private RobotDrive robotDrive;
 	private Drive fod;
 	
 	private PIDTuner pidTuner;
@@ -191,7 +190,7 @@ public class Robot extends IterativeRobot
 			SmartDashboard.putNumber("Auto-Routine", (int) autoRoutine);
 			
 			pdp = new PowerDistributionPanel();
-			pdpMonitor = new PDPMonitor(pdp);
+			//pdpMonitor = new PDPMonitor(pdp);
 		}
 		catch(Exception ex)
 		{
@@ -230,10 +229,9 @@ public class Robot extends IterativeRobot
 	{
 		try
 		{
-			if(driveStick.getRawButton(3)) {
-				gyro.reset();
+			if(elevatorStick.getRawButton(11)) {
+				fod.stackAlign(driveStick.getX(), driveStick.getY(), gyro.getAngle());
 			}
-			
 			if(driveStick.getRawButton(12)) {
 				fieldOriented = fieldOriented ? false : true;
 			}
