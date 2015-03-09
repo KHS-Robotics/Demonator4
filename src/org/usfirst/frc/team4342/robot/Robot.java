@@ -162,12 +162,17 @@ public class Robot extends IterativeRobot
 			pidTuner = new PIDTuner(frontRight, frontLeft, rearRight, rearLeft, elevC,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
 			
 			points = new ArrayList<Setpoint>();
-			points.add(new Setpoint(2, new int[]{-50}));
-			points.add(new Setpoint(3, new int[]{500}));
-			points.add(new Setpoint(4, new int[]{1000}));
-			points.add(new Setpoint(5, new int[]{2000}));
-			points.add(new Setpoint(6,new int[]{3000}));
-			points.add(new Setpoint(10,new int[]{2000,1000,2000,-10}));
+			points.add(new Setpoint(1,new int[]{643})); //container handle ground pickup
+			points.add(new Setpoint(2, new int[]{-50})); //0 (universal)
+			points.add(new Setpoint(3, new int[]{500})); //1 on platform
+			points.add(new Setpoint(4, new int[]{1173})); //2 on platform
+			points.add(new Setpoint(5, new int[]{1953})); //3 on platform
+			points.add(new Setpoint(6,new int[]{2600})); //4 on platform
+			points.add(new Setpoint(7,new int[]{795})); //1st on step
+			points.add(new Setpoint(8,new int[]{1401})); //2nd on step
+			points.add(new Setpoint(9,new int[]{2100})); //3rd on step
+			points.add(new Setpoint(10,new int[]{2823})); //4th on step
+			
 			
 			
 			botElevLS = new DigitalInput(4);
