@@ -67,6 +67,11 @@ public class LocalLog extends BaseLog
     	this(facilityName, new File(logFile), false);
     }
     
+    public LocalLog(String facilityName, String logFile, boolean append) throws IOException
+    {
+    	this(facilityName, new File(logFile), append);
+    }
+    
     @Override
     protected void Log(Severity severity, Object... message)
     {

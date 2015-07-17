@@ -1,22 +1,30 @@
 package Logging;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
+/**
+ * Do not use this class, still under testing
+ * @author Ernie
+ *
+ */
 public class LoggingThread extends Thread implements Runnable
 {
-	private final ILog log;
+	private volatile ILog log;
 	private Thread logThread;
 	
-	private Severity severity;
-	private String message;
-	private Exception ex;
+	private volatile Severity severity;
+	private volatile String message;
+	private volatile Exception ex;
 	
 	public LoggingThread(LocalLog log)
 	{
-		this.log = log;
-		logThread = new Thread(this);
+		throw new UnsupportedOperationException("Do not use this class, still under testing");
+		//this.log = log;
+		//logThread = new Thread(this);
 	}
 	
 	@Override
-	public void run()
+	public synchronized void run()
 	{
 		switch(severity)
 		{
@@ -35,68 +43,83 @@ public class LoggingThread extends Thread implements Runnable
 			case ERROR:
 				log.error(message, ex);
 			break;
+			
+			default:
+				DriverStation.reportError(
+					"WARNING: Logging thread's severity could not be determiend, "
+					+ "please contact Ernie or Magnus when you can", 
+					false
+				);
 		}
 	}
 	
 	public synchronized void info(String message)
 	{
-		if(verifySeverity(Severity.INFO))
-			setSeverity(Severity.INFO);
-		
+		waitForLog(2000);
+		setSeverity(Severity.INFO);
 		setMessage(message);
-		logThread.start();
+		new Thread(this).start();
 	}
 	
 	public synchronized void debug(String message)
 	{
-		if(verifySeverity(Severity.DEBUG))
-			setSeverity(Severity.DEBUG);
-		
+		waitForLog(2000);
+		setSeverity(Severity.DEBUG);
 		setMessage(message);
-		logThread.start();
+		new Thread(this).start();
 	}
 	
 	public synchronized void warning(String message)
 	{
-		if(verifySeverity(Severity.WARNING))
-			setSeverity(Severity.WARNING);
-		
+		waitForLog(2000);
+		setSeverity(Severity.WARNING);
 		setMessage(message);
-		logThread.start();
+		new Thread(this).start();
 	}
 	
 	public synchronized void error(String message, Exception ex)
 	{
-		if(verifySeverity(Severity.ERROR))
-			setSeverity(Severity.ERROR);
-		
+		waitForLog(2000);
+		setSeverity(Severity.ERROR);
 		setErrorInfo(message, ex);
-		logThread.start();
+		new Thread(this).start();
 	}
 	
-	private void setMessage(String message)
+	private void waitForLog(int millis)
+	{
+		try
+		{
+			Thread.sleep(millis);
+		}
+		catch(InterruptedException ex)
+		{
+			DriverStation.reportError(
+				"WARNING: Exception thrown while waiting for "
+				+ "logger to log, please contact Ernie or Magnus "
+				+ "when you can",
+				false
+			);
+		}
+	}
+	
+	private synchronized void setMessage(String message)
 	{
 		this.message = message;
 	}
 	
-	private void setException(Exception ex)
+	private synchronized void setException(Exception ex)
 	{
 		this.ex = ex;
 	}
 	
-	private void setErrorInfo(String message, Exception ex)
+	private synchronized void setErrorInfo(String message, Exception ex)
 	{
 		setMessage(message);
 		setException(ex);
 	}
 	
-	private void setSeverity(Severity severity)
+	private synchronized void setSeverity(Severity severity)
 	{
 		this.severity = severity;
-	}
-	
-	private boolean verifySeverity(Severity sev)
-	{
-		return sev == severity;
 	}
 }
