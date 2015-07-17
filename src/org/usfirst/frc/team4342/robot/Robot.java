@@ -29,6 +29,8 @@ public class Robot extends IterativeRobot {
 	private boolean logged;
 	private long numLoops;
 	
+	private static DriverStation ds;
+	
 	private Joystick driveStick, elevatorStick;
 	
 	private CANJaguar frontRight, frontLeft, rearRight, rearLeft;
@@ -60,6 +62,8 @@ public class Robot extends IterativeRobot {
 	
 	@Override
     public void robotInit() {
+		
+		ds = DriverStation.getInstance();
 		
 		try {
 			log = RobotLogFactory.createLocalLog();
@@ -262,6 +266,10 @@ public class Robot extends IterativeRobot {
 	
 	public static void printWarningToDS(String error) {
 		DriverStation.reportError("WARNING: " + error, false);
+	}
+	
+	public static DriverStation getDriverStation() {
+		return ds;
 	}
 	
 	private void putDataToSmartDb() {
