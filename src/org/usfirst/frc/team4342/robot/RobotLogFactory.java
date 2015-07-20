@@ -6,6 +6,12 @@ import java.io.IOException;
 import Logging.LocalLog;
 import Logging.LoggingThread;
 
+/**
+ * 
+ * @author khsrobotics
+ * 
+ * Factory to create loggers for the robot
+ */
 public class RobotLogFactory {
 	
 	/**
@@ -30,6 +36,7 @@ public class RobotLogFactory {
 		return new LoggingThread(createLocalLog());
 	}
 
+	//TODO: Get these two methods working
 	private static File getValidLogFile() throws IOException {
 		//deleteAndRenameLogFiles();
 		

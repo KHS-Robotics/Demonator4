@@ -4,6 +4,16 @@ import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * 
+ * @author khsrobotics 
+ * 
+ * This class is for the drive train of the robot. The drive train is composed
+ * of four motors, using mecanum wheels.
+ * 
+ * About mecanum wheels: https://en.wikipedia.org/wiki/Mecanum_wheel
+ * How mecanum wheels work in 30 seconds: https://www.youtube.com/watch?v=o-j9TReI1aQ
+ */
 public class MecanumDrive {
 	
 	private static final double JOYSTICK_DEADBAND = 0.1;
@@ -32,6 +42,16 @@ public class MecanumDrive {
 
 	private Gyro gyro;
 
+	/**
+	 * Main constructor for the class
+	 * @param frontLeft the front left motor
+	 * @param frontRight the front right motor
+	 * @param rearLeft the rear left motor
+	 * @param rearRight the rear right motor
+	 * @param joystick the joystick to get inputs from
+	 * @param gyro the gyro to ensure the robot is driving straight
+	 * @param enableGyro true for field oriented, false for robot oriented
+	 */
 	public MecanumDrive(CANJaguar frontLeft, CANJaguar frontRight, CANJaguar rearLeft,
 			CANJaguar rearRight, Joystick joystick, Gyro gyro, boolean enableGyro) {
 		fl = frontLeft;
@@ -42,15 +62,9 @@ public class MecanumDrive {
 		this.gyro = gyro;
 		this.enableGyro = enableGyro;
 	}
-
-	/*
-	 * field oriented control with tuning params for joystick inputs
-	 * 
-	 * use normalization to regulate all speeds of wheels to only be as fast as
-	 * the fastest wheel SHOULD be going- input should match output otherwise
-	 * slow input down until it does
-	 * 
-	 * kX, kY, kZ are for tuning inputs leave them as 1 for now
+	
+	/**
+	 * Moved the robot based on the joystick inputs
 	 */
 	public void drive() {
 		double kX = Math.abs(joystick.getX()) < JOYSTICK_DEADBAND ? 0 : joystick.getX();
@@ -109,6 +123,12 @@ public class MecanumDrive {
 
 	}
 
+	/**
+	 * Automatically moves the robot for autonomous
+	 * @param x the X value to move
+	 * @param y the Y value to move
+	 * @param gyroAngle the current angle of the robot
+	 */
 	public void autoDrive(double x, double y, double gyroAngle) {
 		forward = y;
 		right = x;

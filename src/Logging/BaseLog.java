@@ -56,6 +56,7 @@ public abstract class BaseLog implements ILog
         temp.add("Severity: " + severity.toString() + "-");
         temp.add("Message: " + message.getMessage() + "-");
         String[] stacktrace = message.getStacktrace();
+        
         for (int i = 0; i < stacktrace.length; i++)
         {
             if (i == 0)
@@ -65,6 +66,7 @@ public abstract class BaseLog implements ILog
             else
                 temp.add("            " + stacktrace[i] + "-");
         }
+        
         temp.add("Timestamp: " + message.getTimestamp() + "-");
         
         String[] data = new String[temp.size()];

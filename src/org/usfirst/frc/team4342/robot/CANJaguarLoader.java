@@ -2,8 +2,25 @@ package org.usfirst.frc.team4342.robot;
 
 import edu.wpi.first.wpilibj.CANJaguar;
 
+/**
+ * 
+ * @author khsrobotics
+ * 
+ * This class initializes and/or resets the CANJaguars (motor controllers) 
+ * for the drive train.
+ * 
+ * About CAN bus: https://en.wikipedia.org/wiki/CAN_bus
+ * About Jaguars: http://www.vexrobotics.com/217-3367.html
+ *
+ */
 public class CANJaguarLoader {
 	
+	/**
+	 * Initializes the CANJaguars for the drive train. Each controller
+	 * has an encoder that operates over CAN bus
+	 * @param jaguar the jaguar to initialize
+	 * @param resetEncoders true to reset the encoder, false otherwise
+	 */
 	public static void init(CANJaguar jaguar, boolean resetEncoders) {
 		jaguar.configNeutralMode(CANJaguar.NeutralMode.Brake);
 		

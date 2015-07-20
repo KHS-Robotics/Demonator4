@@ -28,10 +28,12 @@ public class LogData
         
         exception = ex;
         this.message = message;
+        
         for(StackTraceElement ste : exception.getStackTrace())
         {
             stacktrace.add(ste.toString() + "\n");
         }
+        
         timestamp = new Date(System.currentTimeMillis());
     }
     

@@ -21,6 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * that should exist within this class. Please do not
  * add any more.
  * 
+ * Main class for the entire robot!
+ * 
+ * Code goes in here: http://www.andymark.com/product-p/am-3000.htm
+ * 
  * @author khsrobotics
  */
 public class Robot extends IterativeRobot {
@@ -60,6 +64,9 @@ public class Robot extends IterativeRobot {
 	private static ILog log;
 	private static PDPMonitor pdpMonitor;
 	
+	/**
+	 * Initialization code for when the robot is first powered on
+	 */
 	@Override
     public void robotInit() {
 		
@@ -139,6 +146,9 @@ public class Robot extends IterativeRobot {
 		}
     }
     
+	/**
+	 * Initialization code for autonomous
+	 */
 	@Override
     public void autonomousInit() {
 		try {
@@ -165,9 +175,16 @@ public class Robot extends IterativeRobot {
 		}
     }
 	
+	/**
+	 * Code to run autonomous. This method runs 50 times per second
+	 * while the robot is in auto
+	 */
 	@Override
     public void autonomousPeriodic() {
 		try {
+			
+			
+			
 			if(numLoops % 10 == 0) {
 				putDataToSmartDb();
 			}
@@ -181,6 +198,9 @@ public class Robot extends IterativeRobot {
 		}
     }
     
+	/**
+	 * Initialization code for operator control
+	 */
 	@Override
     public void teleopInit() {
 		try {
@@ -195,21 +215,26 @@ public class Robot extends IterativeRobot {
 		}
     }
     
+	/**
+	 * Code to run operator control. This method runs 50 times per second
+	 * while the robot is in auto
+	 */
 	@Override
     public void teleopPeriodic() {
 		try {
-			if(numLoops % 10 == 0) {
-				mecDrive.drive();
-				
-				if(driveStick.getRawButton(7)) {
-					enableFod = enableFod ? false : true;
-					if(enableFod) {
-						mecDrive.enableFod();
-					} else {
-						mecDrive.disableFod();
-					}
+			
+			mecDrive.drive();
+			
+			if(driveStick.getRawButton(7)) {
+				enableFod = enableFod ? false : true;
+				if(enableFod) {
+					mecDrive.enableFod();
+				} else {
+					mecDrive.disableFod();
 				}
-				
+			}
+			
+			if(numLoops % 10 == 0) {
 				putDataToSmartDb();
 			}
 		} catch(Exception ex) {
@@ -222,6 +247,9 @@ public class Robot extends IterativeRobot {
 		}
     }
 	
+	/**
+	 * Initialization code for disabled
+	 */
 	@Override
 	public void disabledInit() {
 		try {
@@ -236,6 +264,10 @@ public class Robot extends IterativeRobot {
 		}
 	}
 	
+	/**
+	 * Code to run disabled. This method runs 50 times per second
+	 * while in disabled
+	 */
 	@Override
 	public void disabledPeriodic() {
 		try {
@@ -245,13 +277,16 @@ public class Robot extends IterativeRobot {
 		} catch(Exception ex) {
 			if(!logged && log != null) {
 				log.error("Error in autonomousPeriodic()", ex);
+				printErrorToDS("Exception in disabledPeriodic(), please alert Ernie or Magnus");
 				logged = true;
 			}
-			
-			printErrorToDS("Exception in disabledPeriodic(), please alert Ernie or Magnus");
 		}
 	}
 	
+	/**
+	 * Gets the logger for the robot so other classes can use it
+	 * @return the logger for the robot
+	 */
 	public static ILog getRobotLog() {
 		if(log == null) {
 			throw new NullPointerException("Robot log is equal to null");
@@ -260,18 +295,34 @@ public class Robot extends IterativeRobot {
 		return log;
 	}
 	
-	public static void printErrorToDS(String error) {
-		DriverStation.reportError("ERROR: " + error, false);
+	/**
+	 * Prints an error message to the driver station
+	 * @param message the error message to print
+	 */
+	public static void printErrorToDS(String message) {
+		DriverStation.reportError("ERROR: " + message, false);
 	}
 	
-	public static void printWarningToDS(String error) {
-		DriverStation.reportError("WARNING: " + error, false);
+	/**
+	 * Prints a warning message to the driver station
+	 * @param message the warning message to print
+	 */
+	public static void printWarningToDS(String message) {
+		DriverStation.reportError("WARNING: " + message, false);
 	}
 	
+	/**
+	 * Gets the robot's driver station
+	 * @return the robot's driver station
+	 */
 	public static DriverStation getDriverStation() {
 		return ds;
 	}
 	
+	/**
+	 * Prints sensor data to the driver stations smart dash board,
+	 * mostly used for debugging
+	 */
 	private void putDataToSmartDb() {
 		SmartDashboard.putBoolean("Fod", enableFod);
 		SmartDashboard.putBoolean("MecD-Fod", mecDrive.isFodEnabled());

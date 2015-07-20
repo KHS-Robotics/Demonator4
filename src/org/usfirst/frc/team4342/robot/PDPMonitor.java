@@ -6,6 +6,15 @@ import java.util.Date;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
+/**
+ * 
+ * @author khsrobotics
+ * 
+ * Monitors the Power Distribution Panel's volatage and amperage and
+ * logs it to a CSV file
+ * 
+ * About the PDP: http://www.vexrobotics.com/217-4244.html
+ */
 public class PDPMonitor implements Runnable
 {
 	private int numLogs = 0;
@@ -113,6 +122,7 @@ public class PDPMonitor implements Runnable
 		}
 	}
 	
+	//TODO: Get these two methods working...
 	private static void initalizeLogFile()
 	{
 		for(int i = 0; i < 10; i++)

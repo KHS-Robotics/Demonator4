@@ -6,8 +6,25 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
+/**
+ * 
+ * @author khsrobotics
+ * 
+ * This class is for controller the elevator of the robot.
+ * The elevator is for picking up totes and containers in order
+ * to stack them to earn points.
+ */
 public class ElevatorController {
 	
+	/**
+	 *
+	 * @author khsrobotics
+	 * 
+	 * The elevator operates on a separate thread, since it contains
+	 * complex math and things that should be done separate from the
+	 * main thread
+	 *
+	 */
 	private class ElevatorThread extends Thread implements Runnable {
 		
 		private volatile ElevatorController ec;
@@ -50,6 +67,16 @@ public class ElevatorController {
 	private Encoder enc;
 	private DigitalInput topLS, botLS;
 	
+	/**
+	 * Crates the elevator thread and starts it
+	 * @param rightMotor one of the motors to move the elevator
+	 * @param leftMotor one of the motors to move the elevator
+	 * @param elevStick the joystick to control the elevator
+	 * @param enc the encoder to keep track of the location for elevator
+	 * @param topLS the top limit switch to stop the elevator from moving off the track
+	 * @param botLS the bottom limit switch to stop the elevator from moving off the track
+	 * @param setpoints the encoder setpoints for buttons on the joystick for automatic arm movement
+	 */
 	public ElevatorController(Talon rightMotor, Talon leftMotor, 
 							Joystick elevStick, Encoder enc,
 							DigitalInput topLS, DigitalInput botLS,
@@ -69,6 +96,10 @@ public class ElevatorController {
 		elevThread.start();
 	}
 	
+	/**
+	 * Automatically moves the arm to a specific encoder setpoint
+	 * @param setpoint the number of encoder revolutions to move
+	 */
 	public void autoMove(int setpoint) {
 		error = setpoint - enc.get();
 		
@@ -94,10 +125,18 @@ public class ElevatorController {
 		setMotors(controlSpeed(out, enc.get()));
 	}
 	
+	/**
+	 * Sets the setpoint for automatic elevator movement
+	 * @param setpoint
+	 */
 	public void setAutoSetpoint(int setpoint) {
 		this.setpoint = setpoint;
 	}
 	
+	/**
+	 * Primary method to mvoe the elevator for operator control
+	 * and autonomous
+	 */
 	private void move() {
 		if(botLS.get()) {
 			enc.reset();
@@ -142,6 +181,17 @@ public class ElevatorController {
 		}
 	}
 	
+	/**
+	 * Calculates the PID for automatic elevator movement
+	 * 
+	 * @see ElevatorPID.java
+	 * 
+	 * @param p proportional
+	 * @param i integral
+	 * @param d derivative
+	 * @param err the current elevator position vs the setpoint
+	 * @return the new calculation for the elevator output
+	 */
 	private synchronized double pid(double p, double i, double d, int err) {
 		double out = 0;
 		if (Math.abs(err) <= 5) {
@@ -184,6 +234,11 @@ public class ElevatorController {
 		return out;
 	}
 	
+	/**
+	 * Gives the two elevator motors outputs, up being between 0 and 1.0
+	 * and down being between 0 and -1.0
+	 * @param output the output value to the motors
+	 */
 	private void setMotors(double output) {
 		if(topLS.get() && output > 0) {
 			output = 0;
@@ -202,6 +257,13 @@ public class ElevatorController {
 		leftMotor.set(0);
 	}
 	
+	/**
+	 * Decelerates the elevator speed as it approaches the top or
+	 * bottom to prevent it from slamming harshly
+	 * @param input the input from the joysticks or autoMove
+	 * @param encCounts the current position of the elevator
+	 * @return the new output for the motors
+	 */
 	private double controlSpeed(double input, int encCounts) {
 		double output = input;
 		
@@ -221,10 +283,20 @@ public class ElevatorController {
 		return output;
 	}
 	
+	/**
+	 * Used to determine if the elevator is getting close to the bottom
+	 * @param encCounts the current elevator position
+	 * @return true if close, false otherwise
+	 */
 	private boolean isInBottomWindow(int encCounts) {
 		return encCounts <= START_BOTTOM_WINDOW;
 	}
 	
+	/**
+	 * Used to determine if the elevator is getting close to the top
+	 * @param encCounts the current elevator postion
+	 * @return true if close, false otherwise
+	 */
 	private boolean isInTopWindow(int encCounts) {
 		return encCounts >= START_TOP_WINDOW;
 	}
