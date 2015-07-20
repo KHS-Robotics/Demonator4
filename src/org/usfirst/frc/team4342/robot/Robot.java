@@ -191,10 +191,9 @@ public class Robot extends IterativeRobot {
 		} catch(Exception ex) {
 			if(!logged && log != null) {
 				log.error("Error in autonomousPeriodic()", ex);
+				printErrorToDS("Exception in autonomousPeriodic(), please alert Ernie or Magnus");
 				logged = true;
 			}
-			
-			printErrorToDS("Exception in autonomousPeriodic(), please alert Ernie or Magnus");
 		}
     }
     
@@ -240,10 +239,9 @@ public class Robot extends IterativeRobot {
 		} catch(Exception ex) {
 			if(!logged && log != null) {
 				log.error("Error in teleopPeriodic()", ex);
+				printErrorToDS("Exception in teleopPeriodic(), please alert Ernie or Magnus");
 				logged = true;
 			}
-			
-			printErrorToDS("Exception in teleopPeriodic(), please alert Ernie or Magnus");
 		}
     }
 	
