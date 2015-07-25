@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import Logging.LocalLog;
-import Logging.LoggingThread;
+import Logging.LoggerAsync;
 
 /**
  * 
@@ -14,26 +14,48 @@ import Logging.LoggingThread;
  */
 public class RobotLogFactory {
 	
+	public static final String PATH = "/home/lvuser/Log.txt";
+	
+	/**
+	 * Clears the log file
+	 * 
+	 * @throws IOException
+	 */
+	public static void clearLogs() throws IOException {
+		File f = new File(PATH);
+		
+		if(f.exists()) {
+			f.delete();
+		}
+		
+		f.createNewFile();
+	}
+	
 	/**
 	 * Creates a simple logger that logs to a specified text file.
 	 * WARNING: LocalLog is not thread safe, consider using
 	 * LoggingThread for a thread safe logger
+	 * @param clearLogs true to clear the log file, false to append
 	 * @return a logger that logs to a text file
 	 * @throws IOException
 	 */
-	public static LocalLog createLocalLog() throws IOException {
-		return new LocalLog("Demonator4", "/home/lvuser/Log.txt", true);
+	public static LocalLog createLocalLog(boolean clearLogs) throws IOException {
+		if(clearLogs) {
+			clearLogs();
+		}
+		
+		return new LocalLog("Demonator4", PATH, true);
 	}
 	
 	/**
 	 * Creates a thread safe logger that logs in the background of
 	 * the program to a specified text file
-	 * DO NOT USE THIS
+	 * @param clearLogs true to clear the log file, false to append
 	 * @return a logger that logs to a text file
 	 * @throws IOException
 	 */
-	public static LoggingThread createLoggingThread() throws IOException {
-		return new LoggingThread(createLocalLog());
+	public static LoggerAsync createAsyncLog(boolean clearLogs) throws IOException {
+		return new LoggerAsync(createLocalLog(clearLogs));
 	}
 
 	//TODO: Get these two methods working

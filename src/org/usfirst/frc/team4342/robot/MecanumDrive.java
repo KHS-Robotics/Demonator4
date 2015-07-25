@@ -230,4 +230,36 @@ public class MecanumDrive {
 	public void setInitalAngle(double angle) {
 		initialAngle = angle;
 	}
+	
+	/**
+	 * Gets the front right CANJaguar for the drive train
+	 * @return the front right CANJaguar of the drive train
+	 */
+	public CANJaguar getFrontRight() {
+		return fr;
+	}
+	
+	/**
+	 * Gets the front left CANJaguar for the drive train
+	 * @return the front left CANJaguar of the drive train
+	 */
+	public CANJaguar getFrontLeft() {
+		return fl;
+	}
+	
+	/**
+	 * Gets the rear right CANJaguar for the drive train
+	 * @return the rear right CANJaguar of the drive train
+	 */
+	public CANJaguar getRearRight() {
+		return rr;
+	}
+	
+	/**
+	 * Gets the rear left CANJaguar for the drive train
+	 * @return the rear left CANJaguar of the drive train
+	 */
+	public CANJaguar getRearLeft() {
+		return rl;
+	}
 }

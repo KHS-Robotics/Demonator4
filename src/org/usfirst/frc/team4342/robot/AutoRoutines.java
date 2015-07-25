@@ -2,7 +2,9 @@ package org.usfirst.frc.team4342.robot;
 
 import RobotExceptions.NonFatalRobotException;
 import RobotExceptions.RobotException;
+import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
@@ -17,7 +19,8 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 //TODO: Re-write and test the auto routines
 public class AutoRoutines {
 	
-	private int autoRoutine;
+	private int autoStep;
+	private boolean currentlyExecuting;
 	
 	private MecanumDrive drive;
 	private ElevatorController ec;
@@ -51,23 +54,55 @@ public class AutoRoutines {
 	 * @param autoRoutine the auto routine to run
 	 */
 	public void executeAutonomous(int autoRoutine) throws RobotException {
-		if(!Robot.getDriverStation().isAutonomous()) {
-			Robot.printWarningToDS("Robot cannot execute auto routine unless"
-									+ " in autonomous");
-			throw new NonFatalRobotException("Robot is not in autonomous!");
+		if(DriverStation.getInstance().isAutonomous()) {
+			switch(autoRoutine) {
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				case 4:
+					break;
+				default:
+					 break;
+			}
 		}
+	}
+	
+	private void pickupOneTote() {
 		
-		switch(autoRoutine) {
-			case 1:
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
-			default:
-				 break;
-		}
+	}
+	
+	private void pickupTwoTotes() {
+		
+	}
+	
+	private void pickupThreeTotes() {
+		
+	}
+	
+	private void pickupOneContainer() {
+		
+	}
+	
+	private int currentDriveEncoderValues() {
+		int frontRight = Math.abs((int) drive.getFrontRight().getPosition());
+		int frontLeft = Math.abs((int) drive.getFrontLeft().getPosition());
+		int rearRight = Math.abs((int) drive.getRearRight().getPosition());
+		int rearLeft = Math.abs((int) drive.getRearLeft().getPosition());
+		
+		return (frontRight + frontLeft + rearRight + rearLeft);
+	}
+	
+	private void resetDriveTrainEncoders() {
+		CANJaguarLoader.init(new CANJaguar[] {
+				drive.getFrontLeft(),
+				drive.getFrontRight(),
+				drive.getRearLeft(),
+				drive.getRearRight()
+			},
+			true
+		);
 	}
 }

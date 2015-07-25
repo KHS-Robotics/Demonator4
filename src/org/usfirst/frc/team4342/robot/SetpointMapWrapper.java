@@ -22,26 +22,18 @@ public class SetpointMapWrapper
 	
 	/**
 	 * Main constructor for this class
-	 * @param buttonValues the button values corresponding to the encoder values
-	 * @param encoderValues the encoder values corresponding to the buttons values
+	 * @param setpoints the button and setpoints for the elevator
 	 * 
-	 * @throws IllegalArgumentException if the two arrays are not equal in length
+	 * @throws IllegalArgumentException if setpoints is null
 	 */
-	public SetpointMapWrapper(int[] buttonValues, int[] encoderValues) {
-		if(buttonValues == null) {
-			throw new IllegalArgumentException("Button values cannot be null");
-		}
-		if(encoderValues == null) {
-			throw new IllegalArgumentException("Encoder values cannot be null");
-		}
-		
-		if(buttonValues.length != encoderValues.length) {
-			throw new IllegalArgumentException("Button and encoder values must be the same length");
+	public SetpointMapWrapper(Setpoint[] setpoints) {
+		if(setpoints == null) {
+			throw new IllegalArgumentException("setpoints cannot be null");
 		}
 		
 		map = new Hashtable<Integer, Integer>();
 		
-		init(buttonValues, encoderValues);
+		init(setpoints);
 	}
 	
 	/**
@@ -81,12 +73,11 @@ public class SetpointMapWrapper
 	
 	/**
 	 * Initializes the Hashtable
-	 * @param buttonValues the button values corresponding to the encoder values
-	 * @param encoderValues the encoder values corresponding to the buttons
+	 * @param setpoints the button and setpoints for the elevator
 	 */
-	private void init(int[] buttonValues, int[] encoderValues) {
-		for(int i = 0; i < buttonValues.length; i++) {
-			map.put(buttonValues[i], encoderValues[i]);
+	private void init(Setpoint[] setpoints) {
+		for(int i = 0; i < setpoints.length; i++) {
+			map.put(setpoints[i].getButton(), setpoints[i].getEncoderCounts());
 		}
 	}
 	

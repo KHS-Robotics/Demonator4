@@ -22,7 +22,7 @@ public class ElevatorController {
 	 * 
 	 * The elevator operates on a separate thread, since it contains
 	 * complex math and things that should be done separate from the
-	 * main thread
+	 * main thread... brian are you happy!?
 	 *
 	 */
 	private class ElevatorThread extends Thread implements Runnable {
@@ -43,10 +43,10 @@ public class ElevatorController {
 	
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	
-	private static final int TOP_WINDOW_SIZE = 1000;
-	private static final int BOTTOM_WINDOW_SIZE = 2700;
-	private static final int START_TOP_WINDOW = 2700;
-	private static final int START_BOTTOM_WINDOW = 2700;
+	private static final int TOP_WINDOW_SIZE = 1200;
+	private static final int BOTTOM_WINDOW_SIZE = 2350;
+	private static final int START_TOP_WINDOW = 2500;
+	private static final int START_BOTTOM_WINDOW = 2350;
 	
 	private int accumulatedError, prevError, error;
 	private double prevPidOut;
@@ -91,6 +91,7 @@ public class ElevatorController {
 		this.setpoints = setpoints;
 		
 		ds = DriverStation.getInstance();
+		enc.setDistancePerPulse(1);
 		
 		elevThread = new ElevatorThread(this);
 		elevThread.start();
@@ -134,7 +135,7 @@ public class ElevatorController {
 	}
 	
 	/**
-	 * Primary method to mvoe the elevator for operator control
+	 * Primary method to move the elevator for operator control
 	 * and autonomous
 	 */
 	private void move() {
@@ -177,6 +178,7 @@ public class ElevatorController {
 			if(elevStick.getRawButton(i) && setpoints.containsButton(i)) {
 				buttonPressed = true;
 				buttonSelected = i;
+				
 			}
 		}
 	}
@@ -269,13 +271,13 @@ public class ElevatorController {
 		
 		if(input > 0 && isInTopWindow(encCounts)) {
 			double penetration = (encCounts - START_TOP_WINDOW);
-			output = input - (penetration*(input/TOP_WINDOW_SIZE));
+			output = input - (penetration*(input/(TOP_WINDOW_SIZE)));
 			
-			output = output < .30 ? .30 : output;
+			output = output < .35 ? .35 : output;
 		}
 		else if(input < 0 && isInBottomWindow(encCounts)) {
 			double penetration = (BOTTOM_WINDOW_SIZE - encCounts);
-			output = input - (penetration*(input / BOTTOM_WINDOW_SIZE));
+			output = input - (penetration*(input / (BOTTOM_WINDOW_SIZE)));
 			
 			output = output > -.15 ? -.15 : output;
 		}
@@ -299,5 +301,9 @@ public class ElevatorController {
 	 */
 	private boolean isInTopWindow(int encCounts) {
 		return encCounts >= START_TOP_WINDOW;
+	}
+	
+	public Encoder getEncoder() {
+		return enc;
 	}
 }
