@@ -14,7 +14,7 @@ package org.usfirst.frc.team4342.robot;
  * 
  * About PID: https://en.wikipedia.org/wiki/PID_controller
  */
-public class ElevatorPID {
+public final class ElevatorPID {
 	
 	// Values for going up (higher to fight gravity)
 	public static final double kP = 0.25 / 100.0;

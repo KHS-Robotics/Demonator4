@@ -14,7 +14,7 @@ package org.usfirst.frc.team4342.robot;
  * 
  * About PID: https://en.wikipedia.org/wiki/PID_controller
  */
-public class DrivePID {
+public final class DrivePID {
 	
 	/**
 	 * Front right motor controller

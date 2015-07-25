@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -29,7 +30,7 @@ public class Robot extends IterativeRobot {
 	
 	private boolean enableFod;
 	private boolean logged;
-	private long numLoops;
+	private static long numLoops;
 	
 	private Joystick driveStick, elevatorStick;
 	
@@ -41,6 +42,8 @@ public class Robot extends IterativeRobot {
 	
 	private DigitalInput topElevLS, botElevLS, rightPhotoSensor, leftPhotoSensor;
 	
+	private Ultrasonic ultra;
+	
 	private Gyro pivotGyro, pitchGyro;
 	
 	private CameraServer camera;
@@ -49,6 +52,7 @@ public class Robot extends IterativeRobot {
 	
 	private MecanumDrive mecDrive;
 	private ElevatorController elevController;
+	private AutoRoutines autos;
 	
 	private Setpoint[] setpoints = {
 		new Setpoint(2, 0),
@@ -115,7 +119,11 @@ public class Robot extends IterativeRobot {
 			topElevLS = new DigitalInput(7);
 			botElevLS = new DigitalInput(4);
 			
-			log.debug("Successfuly initialized elevator");
+			log.debug("Successfully initialized elevator");
+			
+			ultra = new Ultrasonic(3, 4);
+			
+			log.debug("Successfully initialized ultrasonic");
 			
 			rightPhotoSensor = new DigitalInput(0);
 			leftPhotoSensor = new DigitalInput(1);
@@ -141,6 +149,9 @@ public class Robot extends IterativeRobot {
 			elevController = new ElevatorController(rightElev, leftElev, elevatorStick,
 													elevatorEnc, topElevLS, botElevLS,
 											new SetpointMapWrapper(setpoints));
+			
+			autos = new AutoRoutines(mecDrive, elevController, ultra, leftPhotoSensor, rightPhotoSensor, pivotGyro);
+			
 		} catch(Exception ex) {
 			TryLogError("Error in robotInit()", ex);
 			printErrorToDS("Exception in robotInit(), please alert Ernie or Magnus");
@@ -180,6 +191,8 @@ public class Robot extends IterativeRobot {
 	@Override
     public void autonomousPeriodic() {
 		try {
+			
+			autos.executeAutonomous(AutoRoutineLoader.getAutoRoutine());
 			
 			putDataToSmartDb();
 			
@@ -300,6 +313,15 @@ public class Robot extends IterativeRobot {
 	 */
 	public static void printWarningToDS(String message) {
 		DriverStation.reportError("WARNING: " + message, false);
+	}
+	
+	/**
+	 * Gets the current number of invocations of the periodic method
+	 * the robot is executing
+	 * @return the number of invocations of the periodic method the robot is executing
+	 */
+	public static long getNumLoops() {
+		return numLoops;
 	}
 	
 	/**

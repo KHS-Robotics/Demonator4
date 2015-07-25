@@ -16,11 +16,15 @@ import edu.wpi.first.wpilibj.Ultrasonic;
  * Autonomous is the 15 second period at the beginning, when
  * it runs by itself, of the match.
  */
-//TODO: Re-write and test the auto routines
 public class AutoRoutines {
+	
+	private static final double minUltrasonicValue = 9.0;
+	private static final double maxUltrasonicValue = 12.0;
 	
 	private int autoStep;
 	private boolean currentlyExecuting;
+	
+	private long waitLoops;
 	
 	private MecanumDrive drive;
 	private ElevatorController ec;
@@ -57,6 +61,7 @@ public class AutoRoutines {
 		if(DriverStation.getInstance().isAutonomous()) {
 			switch(autoRoutine) {
 				case 1:
+					pickupOneTote();
 					break;
 				case 2:
 					break;
@@ -70,12 +75,129 @@ public class AutoRoutines {
 		}
 	}
 	
+	/**
+	 * Auto routine will execute in the following steps:
+	 * 0) Move elevator to 250 encoder counts
+	 * 1) Move forward until it's between 8" and 12" of the tote
+	 * 2) Move the elevator to 0 encoder counts
+	 * 3) Wait half a second for the elevator to move
+	 * 4) Move the elevator to 100 encoder counts
+	 * 5) Wait half a second for the elevator to move
+	 * 6) Move backwards for 16 total encoder counts of the drive train
+	 * 7) Move the elevator to 0 encoder counts
+	 * 8) Wait half a second for the elevator to move
+	 * 9) Move backwards for a total of 4 encoder counts
+	 */
 	private void pickupOneTote() {
-		
+		if(autoStep == 0) {
+			ec.setAutoSetpoint(250);
+			autoStep++;
+		}
+		else if(autoStep == 1) {
+			drive.autoDrive(0.0, 0.25, gyro.getAngle());
+			
+			double ultrasonicValue = ultra.getRangeInches();
+			
+			if(ultrasonicValue < maxUltrasonicValue && ultrasonicValue > minUltrasonicValue) {
+				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+				autoStep++;
+			}
+		}
+		else if(autoStep == 2) {
+			ec.setAutoSetpoint(0);
+			waitLoops = Robot.getNumLoops()+25;
+			autoStep++;
+		}
+		else if(autoStep == 3) {
+			if(waitForNumLoops(Robot.getNumLoops())) {
+				autoStep++;
+			}
+		}
+		else if(autoStep == 4) {
+			ec.setAutoSetpoint(100);
+			waitLoops = Robot.getNumLoops()+10;
+			autoStep++;
+		}
+		else if(autoStep == 5) {
+			if(waitForNumLoops(Robot.getNumLoops())) {
+				resetDriveEncoders();
+				autoStep++;
+			}
+		}
+		else if(autoStep == 6) {
+			
+			drive.autoDrive(0.0, -0.5, gyro.getAngle());
+			
+			if(currentDriveEncoderValues() >= 16) {
+				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+				autoStep++;
+			}
+		}
+		else if(autoStep == 7) {
+			ec.setAutoSetpoint(0);
+			waitLoops = Robot.getNumLoops();
+			autoStep++;
+		}
+		else if(autoStep == 8) {
+			if(waitForNumLoops(Robot.getNumLoops())) {
+				resetDriveEncoders();
+				autoStep++;
+			}
+		}
+		else if(autoStep == 9) {
+			
+			drive.autoDrive(0.0, 0.25, gyro.getAngle());
+			
+			if(currentDriveEncoderValues() >= 4) {
+				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+				autoStep++;
+			}
+		}
 	}
 	
+	/**
+	 * Auto routine will execute the following steps:
+	 * 0) Move elevator to 250 encoder counts
+	 * 1) Move forward until it's between 8" and 12" of the tote
+	 * 2) Move the elevator to 0 encoder counts
+	 * 3) Wait half a second for the elevator to move
+	 * 4) Move elevator to 350 encoder counts
+	 * 5) Wait half a second for the elevator to move
+	 * 6) Move backwards for a total of 6 encoder counts
+	 * 7) Move left until both photosensors read true
+	 * 8) Move forward until it's between 8" and 12" of the tote
+	 * 9) Move the elevator to 0 encoder counts
+	 * 10) Wait half a second for the elevator to move
+	 * 11) Move elevator to 100 encoder counts
+	 * 12) Wait half a second for elevator to move
+	 * 13) Move backwards for a total of 16 encoder counts
+	 * 14) Move elevator to 0 encoder counts
+	 * 15) Wait half a second for elevator to move
+	 * 16) Move backwards for a total of 4 encoder counts
+	 */
 	private void pickupTwoTotes() {
-		
+		if(autoStep == 0) {
+			ec.setAutoSetpoint(250);
+			autoStep++;
+		}
+		else if(autoStep == 1) {
+			drive.autoDrive(0.0, 0.25, gyro.getAngle());
+			
+			double ultrasonicValue = ultra.getRangeInches();
+			
+			if(ultrasonicValue < maxUltrasonicValue && ultrasonicValue > minUltrasonicValue) {
+				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+				autoStep++;
+			}
+		}
+		else if(autoStep == 2) {
+			ec.setAutoSetpoint(0);
+			waitLoops = Robot.getNumLoops()+25;
+			autoStep++;
+		}
+		else if(autoStep == 3) {
+			
+		}
 	}
 	
 	private void pickupThreeTotes() {
@@ -95,7 +217,7 @@ public class AutoRoutines {
 		return (frontRight + frontLeft + rearRight + rearLeft);
 	}
 	
-	private void resetDriveTrainEncoders() {
+	private void resetDriveEncoders() {
 		CANJaguarLoader.init(new CANJaguar[] {
 				drive.getFrontLeft(),
 				drive.getFrontRight(),
@@ -104,5 +226,13 @@ public class AutoRoutines {
 			},
 			true
 		);
+	}
+	
+	private boolean waitForNumLoops(long numLoops) {
+		if(numLoops >= waitLoops) {
+			return true;
+		}
+		
+		return false;
 	}
 }
