@@ -30,6 +30,7 @@ public class Robot extends IterativeRobot {
 	
 	private boolean enableFod;
 	private boolean logged;
+	private int autoRoutine;
 	private static long numLoops;
 	
 	private Joystick driveStick, elevatorStick;
@@ -181,6 +182,8 @@ public class Robot extends IterativeRobot {
 			pivotGyro.reset();
 			pitchGyro.reset();
 			
+			autoRoutine = AutoRoutineLoader.getAutoRoutine();
+			
 		} catch(Exception ex) {
 			TryLogError("Error in autonomousInit()", ex);
 			logged = false;
@@ -196,7 +199,7 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
 		try {
 			
-			autos.executeAutonomous(AutoRoutineLoader.getAutoRoutine());
+			autos.executeAutonomous(autoRoutine);
 			
 			putDataToSmartDb();
 			
