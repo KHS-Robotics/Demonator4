@@ -17,12 +17,9 @@ import edu.wpi.first.wpilibj.Talon;
 public class ElevatorController {
 	
 	/**
-	 *
-	 * @author khsrobotics
-	 * 
 	 * The elevator operates on a separate thread, since it contains
 	 * complex math and things that should be done separate from the
-	 * main thread... brian are you happy!?
+	 * main thread
 	 *
 	 */
 	private class ElevatorThread extends Thread implements Runnable {
@@ -162,7 +159,7 @@ public class ElevatorController {
 			
 			if(Math.abs(elevStick.getY()) < JOYSTICK_DEADBAND) {
 				if(buttonPressed) {
-					autoMove(setpoints.get(buttonSelected));
+					autoMove(setpoints.getSetpoint(buttonSelected));
 				} else {
 					stopMotors();
 				}

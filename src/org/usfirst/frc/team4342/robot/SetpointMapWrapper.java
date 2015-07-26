@@ -18,7 +18,7 @@ public class SetpointMapWrapper
 {
 	private static final long serialVersionUID = -5792610831329435703L;
 	
-	private Map<Integer, Integer> map;
+	private final Map<Integer, Integer> map;
 	
 	/**
 	 * Main constructor for this class
@@ -37,29 +37,12 @@ public class SetpointMapWrapper
 	}
 	
 	/**
-	 * Adds a setpoint for the elevator
-	 * @param button the button corresponding to the setpoint
-	 * @param encValue the encoder value for the setpoint
-	 */
-	public void add(int button, int encValue) {
-		map.put(button, encValue);
-	}
-	
-	/**
 	 * Gets the encoder value/setpoint for the specific button
 	 * @param button the button on the joystick
 	 * @return the setpoint corresponding to the button
 	 */
-	public int get(int button) {
+	public int getSetpoint(int button) {
 		return map.get(button);
-	}
-	
-	/**
-	 * Removes a setpoint for the elevator
-	 * @param button the setpoint to remove
-	 */
-	public void remove(int button) {
-		map.remove(button);
 	}
 	
 	/**

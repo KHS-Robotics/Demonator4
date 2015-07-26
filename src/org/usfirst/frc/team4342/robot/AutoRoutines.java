@@ -81,6 +81,8 @@ public class AutoRoutines {
 		}
 	}
 	
+	//TODO: test'n'tune the drive train encoder counts
+	
 	/**
 	 * Auto routine will execute in the following steps:
 	 * 0) Move elevator to 250 encoder counts
@@ -157,8 +159,6 @@ public class AutoRoutines {
 			}
 		}
 	}
-	
-	//TODO: test'n'tune the drive train encoder counts
 	
 	/**
 	 * Auto routine will execute the following steps:

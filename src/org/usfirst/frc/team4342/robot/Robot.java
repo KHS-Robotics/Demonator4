@@ -24,6 +24,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * 
  * Code goes in here: http://www.andymark.com/product-p/am-3000.htm
  * 
+ * Pictures of Robot: 
+ * 		http://www.demonrobotics4342.org/apps/photos/photo?photoid=198336234
+ * 		http://www.demonrobotics4342.org/apps/photos/photo?photoid=198336362
+ * 		http://www.demonrobotics4342.org/apps/photos/photo?photoid=198336356
+ * 		http://www.demonrobotics4342.org/apps/photos/photo?photoid=198336354
+ * 
  * @author khsrobotics
  */
 public class Robot extends IterativeRobot {
@@ -48,8 +54,6 @@ public class Robot extends IterativeRobot {
 	private Gyro pivotGyro, pitchGyro;
 	
 	private CameraServer camera;
-
-	private PowerDistributionPanel pdp;
 	
 	private MecanumDrive mecDrive;
 	private ElevatorController elevController;
@@ -62,7 +66,7 @@ public class Robot extends IterativeRobot {
 	};
 	
 	private static LoggerAsync log;
-	private static PDPMonitor pdpMonitor;
+	private static PDPLogger pdpMonitor;
 	
 	/**
 	 * Initialization code for when the robot is first powered on
@@ -80,8 +84,8 @@ public class Robot extends IterativeRobot {
 		}
 		
 		try {
-			pdp = new PowerDistributionPanel();
-			pdpMonitor = new PDPMonitor(new PowerDistributionPanel());
+			pdpMonitor = new PDPLogger(new PowerDistributionPanel());
+			pdpMonitor.startLogging();
 		} catch(Exception ex) {
 			printWarningToDS("Failed to initalize and start PDP monitor, "
 					+ "please alert Ernie or Magnus when you can");
