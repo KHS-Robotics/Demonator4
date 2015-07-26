@@ -121,7 +121,7 @@ public class Robot extends IterativeRobot {
 			
 			log.debug("Successfully initialized elevator");
 			
-			ultra = new Ultrasonic(3, 4);
+			ultra = new Ultrasonic(2, 3);
 			
 			log.debug("Successfully initialized ultrasonic");
 			
@@ -177,6 +177,10 @@ public class Robot extends IterativeRobot {
 				},
 				true
 			);
+			
+			pivotGyro.reset();
+			pitchGyro.reset();
+			
 		} catch(Exception ex) {
 			TryLogError("Error in autonomousInit()", ex);
 			logged = false;
@@ -352,7 +356,7 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putNumber("Gyro-Piv", pivotGyro.getAngle());
 			SmartDashboard.putNumber("Gyro-Pit", pitchGyro.getAngle());
 			
-			SmartDashboard.putNumber("Talon-amps", pdp.getCurrent(13));
+			SmartDashboard.putNumber("U-Dist", ultra.getRangeInches());
 		}
 	}
 }

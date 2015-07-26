@@ -52,6 +52,7 @@ public class ElevatorController {
 	private double prevPidOut;
 	
 	private int setpoint;
+	private boolean isAtAutoSetpoint;
 	
 	private boolean buttonPressed;
 	private int buttonSelected;
@@ -104,9 +105,12 @@ public class ElevatorController {
 	public void autoMove(int setpoint) {
 		error = setpoint - enc.get();
 		
-		if (Math.abs(error) <= 80) {
+		if (Math.abs(error) <= 50) {
+			isAtAutoSetpoint = true;
 			return;
 		}
+		
+		isAtAutoSetpoint = false;
 		
 		double out;
 		
@@ -132,6 +136,14 @@ public class ElevatorController {
 	 */
 	public void setAutoSetpoint(int setpoint) {
 		this.setpoint = setpoint;
+	}
+	
+	/**
+	 * Returns true if the elevator is at the auto setpoint, false otherwise
+	 * @return true if the elevator is at the auto setpoint, false otherwise
+	 */
+	public boolean isAtAutoSetpoint() {
+		return isAtAutoSetpoint;
 	}
 	
 	/**
