@@ -63,7 +63,8 @@ public class Robot extends IterativeRobot {
 		new Setpoint(4, 325),
 		new Setpoint(3, 750),
 		new Setpoint(5, 1475),
-		new Setpoint(8, 1200)
+		new Setpoint(8, 1200),
+		new Setpoint(9, 2800)
 	};
 	
 	private static LoggerAsync log;

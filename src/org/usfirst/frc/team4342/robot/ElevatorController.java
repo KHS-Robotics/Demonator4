@@ -164,8 +164,7 @@ public class ElevatorController {
 					stopMotors();
 				}
 			} else {
-				buttonPressed = false;
-				buttonSelected = -1;
+				stopOperatorAutoMove();
 				
 				double input = elevStick.getY();
 				setMotors(controlSpeed(input, enc.get()));
@@ -173,6 +172,9 @@ public class ElevatorController {
 		}
 		else if(ds.isEnabled() && ds.isAutonomous()) {
 			autoMove(setpoint);
+		}
+		else if(ds.isDisabled()) {
+			stopOperatorAutoMove();
 		}
 	}
 	
@@ -310,6 +312,15 @@ public class ElevatorController {
 	 */
 	private boolean isInTopWindow(int encCounts) {
 		return encCounts >= START_TOP_WINDOW;
+	}
+	
+	/**
+	 * Stops the elevator from automatically moving to the user
+	 * selected setpoint
+	 */
+	private void stopOperatorAutoMove() {
+		buttonPressed = false;
+		buttonSelected = -1;
 	}
 	
 	public Encoder getEncoder() {
