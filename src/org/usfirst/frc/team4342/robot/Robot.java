@@ -289,7 +289,21 @@ public class Robot extends IterativeRobot {
 		}
 	}
 	
-	public void TryLogError(String message, Exception ex) {
+	/**
+	 * Gets the current number of invocations of the periodic method
+	 * the robot is executing
+	 * @return the number of invocations of the periodic method the robot is executing
+	 */
+	public static long getNumLoops() {
+		return numLoops;
+	}
+	
+	/**
+	 * Tries to log to the specified text file and Driver Station.
+	 * @param message the message to write and display
+	 * @param ex the exception associated with the error
+	 */
+	private void TryLogError(String message, Exception ex) {
 		if(!logged && log != null) {
 			log.error(message, ex);
 		}
@@ -299,15 +313,6 @@ public class Robot extends IterativeRobot {
 		}
 		
 		logged = true;
-	}
-	
-	/**
-	 * Gets the current number of invocations of the periodic method
-	 * the robot is executing
-	 * @return the number of invocations of the periodic method the robot is executing
-	 */
-	public static long getNumLoops() {
-		return numLoops;
 	}
 	
 	/**
