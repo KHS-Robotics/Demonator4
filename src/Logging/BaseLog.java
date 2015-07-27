@@ -62,11 +62,11 @@ public abstract class BaseLog implements ILog
         for (int i = 0; i < stacktrace.length; i++)
         {
             if (i == 0)
-                temp.add("Stacktrace: " + stacktrace[i] + "-");
+                temp.add("Stacktrace: " + stacktrace[i]);
             else if (i == stacktrace.length)
                 temp.add(stacktrace[i] + "-");
             else
-                temp.add("            " + stacktrace[i] + "-");
+                temp.add("            " + stacktrace[i]);
         }
         
         temp.add("Timestamp: " + message.getTimestamp() + "-");
