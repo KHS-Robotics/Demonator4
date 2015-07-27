@@ -60,8 +60,10 @@ public class Robot extends IterativeRobot {
 	
 	private Setpoint[] setpoints = {
 		new Setpoint(2, 0),
-		new Setpoint(3, 400),
-		new Setpoint(4, 1700)
+		new Setpoint(4, 325),
+		new Setpoint(3, 750),
+		new Setpoint(5, 1475),
+		new Setpoint(8, 1200)
 	};
 	
 	private static LoggerAsync log;
