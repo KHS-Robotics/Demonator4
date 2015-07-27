@@ -1,2 +1,3 @@
 # Demonator4
-yo brian waddup
+
+This repo is for FRC Team 4342's robot for the 2015 season, Recycle Rush. Our website can be found here: http://www.demonrobotics4342.org/
