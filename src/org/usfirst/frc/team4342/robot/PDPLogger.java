@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Date;
 
+import Logging.LoggerAsync;
+import Logging.RobotConsoleLog;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
@@ -20,11 +22,11 @@ public class PDPLogger
 	
 	private PDPLoggingThread logger;
 	
-	public PDPLogger(PowerDistributionPanel pdp) 
+	public PDPLogger(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog) 
 	{
 		//deleteAndRenameLogFiles();
 		
-		logger = new PDPLoggingThread(pdp);
+		logger = new PDPLoggingThread(pdp, log, consoleLog);
 	}
 	
 	public void startLogging() {
@@ -45,10 +47,14 @@ public class PDPLogger
 		private static final int MAX_LOGS = 100;
 		
 		private PowerDistributionPanel pdp;
+		private LoggerAsync log;
+		private RobotConsoleLog consoleLog;
 		
-		public PDPLoggingThread(PowerDistributionPanel pdp)
+		public PDPLoggingThread(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog)
 		{
 			this.pdp = pdp;
+			this.log = log;
+			this.consoleLog = consoleLog;
 			csvLogFile = new File("/home/lvuser/PdpLog.csv");
 		}
 		
@@ -107,13 +113,13 @@ public class PDPLogger
 			{
 				try
 				{
-					Robot.printWarningToDS("Failed to write to CSV for PDP logger,"
+					consoleLog.warning("Failed to write to CSV for PDP logger,"
 							+ " please alert Ernie or Magnus when you can");
-					Robot.getRobotLog().warning("Failed to write to CSV for PDP logger: " + ex.getMessage());
+					log.warning("Failed to write to CSV for PDP logger: " + ex.getMessage());
 				}
 				catch(Exception ex2)
 				{
-					Robot.printWarningToDS("Failed to write to CSV for PDP logger,"
+					consoleLog.warning("Failed to write to CSV for PDP logger,"
 							+ " please alert Ernie or Magnus when you can");
 				}
 			}
@@ -128,13 +134,13 @@ public class PDPLogger
 				{
 					try
 					{
-						Robot.printWarningToDS("Failed to close writer to CSV for PDP logger,"
+						consoleLog.warning("Failed to close writer to CSV for PDP logger,"
 								+ " please alert Ernie or Magnus when you can");
-						Robot.getRobotLog().warning("Failed to close writer to CSV for PDP logger: " + ex.getMessage());
+						log.warning("Failed to close writer to CSV for PDP logger");
 					}
 					catch(Exception ex2)
 					{
-						Robot.printWarningToDS("Failed to close writer to CSV for PDP logger,"
+						consoleLog.warning("Failed to close writer to CSV for PDP logger,"
 								+ " please alert Ernie or Magnus when you can");
 					}
 				}

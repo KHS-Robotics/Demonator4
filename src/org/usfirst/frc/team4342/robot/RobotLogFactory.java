@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import Logging.LocalLog;
 import Logging.LoggerAsync;
+import Logging.RobotConsoleLog;
 
 /**
  * 
@@ -56,6 +57,14 @@ public class RobotLogFactory {
 	 */
 	public static LoggerAsync createAsyncLog(boolean clearLogs) throws IOException {
 		return new LoggerAsync(createLocalLog(clearLogs));
+	}
+	
+	/**
+	 * Creates a new logger for the console on the Driver Station
+	 * @return a logger to log to the console on the DS
+	 */
+	public static RobotConsoleLog createRobotConsoleLog() {
+		return new RobotConsoleLog();
 	}
 
 	//TODO: Get these two methods working

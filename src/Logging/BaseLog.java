@@ -52,9 +52,11 @@ public abstract class BaseLog implements ILog
     private Object[] FormatErrorLogData(Severity severity, LogData message)
     {
         ArrayList<String> temp = new ArrayList<String>();
+        
         temp.add("Facility: " + this.facilityName + "-");
         temp.add("Severity: " + severity.toString() + "-");
         temp.add("Message: " + message.getMessage() + "-");
+        
         String[] stacktrace = message.getStacktrace();
         
         for (int i = 0; i < stacktrace.length; i++)

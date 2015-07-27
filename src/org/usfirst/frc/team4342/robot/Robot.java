@@ -4,7 +4,6 @@ import Logging.*;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -66,6 +65,7 @@ public class Robot extends IterativeRobot {
 	};
 	
 	private static LoggerAsync log;
+	private static RobotConsoleLog consoleLog;
 	private static PDPLogger pdpMonitor;
 	
 	/**
@@ -74,30 +74,32 @@ public class Robot extends IterativeRobot {
 	@Override
     public void robotInit() {
 		
+		String exception = null;
+		
+		consoleLog = RobotLogFactory.createRobotConsoleLog();
+		
 		try {
 			log = RobotLogFactory.createAsyncLog(true);
-			log.debug("Logger successfully initalized");
 		} catch(Exception ex) {
 			// hmmm... where to log when the log fails...
-			printWarningToDS("Failed to initalize logger, "
-				+ "please alert Ernie or Magnus when you can");
+			exception = ex.getClass().getSimpleName();
+		}
+		
+		if(log == null) {
+			consoleLog.warning("Robot log failed to initalize :: " + exception);
 		}
 		
 		try {
-			pdpMonitor = new PDPLogger(new PowerDistributionPanel());
+			pdpMonitor = new PDPLogger(new PowerDistributionPanel(), log, consoleLog);
 			pdpMonitor.startLogging();
 		} catch(Exception ex) {
-			printWarningToDS("Failed to initalize and start PDP monitor, "
-					+ "please alert Ernie or Magnus when you can");
-			TryLogError("Failed to start PDPMonitor", ex);
+			TryLogError("Failed to start PDPMonitor :: " + ex.getClass().getSimpleName(), ex);
 		}
 		
 		try {
 			
 			driveStick = new Joystick(0);
 			elevatorStick = new Joystick(1);
-			
-			log.debug("Successfully initialized joysticks");
 			
 			frontRight = new CANJaguar(22);
 			frontLeft = new CANJaguar(21);
@@ -114,8 +116,6 @@ public class Robot extends IterativeRobot {
 				false
 			);
 			
-			log.debug("Successfully initalized drive train");
-			
 			rightElev = new Talon(0);
 			leftElev = new Talon(1);
 			
@@ -124,42 +124,53 @@ public class Robot extends IterativeRobot {
 			topElevLS = new DigitalInput(7);
 			botElevLS = new DigitalInput(4);
 			
-			log.debug("Successfully initialized elevator");
-			
 			ultra = new Ultrasonic(2, 3);
-			
-			log.debug("Successfully initialized ultrasonic");
 			
 			rightPhotoSensor = new DigitalInput(0);
 			leftPhotoSensor = new DigitalInput(1);
-			
-			log.debug("Successfully initialized photosensors");
 			
 			pivotGyro = new Gyro(0);
 			pitchGyro = new Gyro(1);
 			pivotGyro.setSensitivity(0.007);
 			pitchGyro.setSensitivity(0.007);
 			
-			log.debug("Successfully initialized gyros");
-			
 			camera = CameraServer.getInstance();
 			camera.setQuality(50);
 			camera.startAutomaticCapture("cam0");
 			
-			log.debug("Successfully initialized camera");
+			mecDrive = new MecanumDrive(
+				frontLeft,
+				frontRight,
+				rearLeft, 
+				rearRight, 
+				driveStick,
+				pivotGyro, 
+				false
+			);
 			
-			mecDrive = new MecanumDrive(frontLeft, frontRight, rearLeft, 
-									rearRight, driveStick, pivotGyro, false);
+			elevController = new ElevatorController(
+				rightElev, 
+				leftElev,
+				elevatorStick,
+				elevatorEnc, 
+				topElevLS, 
+				botElevLS, 
+				new SetpointMapWrapper(setpoints)
+			);
 			
-			elevController = new ElevatorController(rightElev, leftElev, elevatorStick,
-													elevatorEnc, topElevLS, botElevLS,
-											new SetpointMapWrapper(setpoints));
-			
-			autos = new AutoRoutines(mecDrive, elevController, ultra, leftPhotoSensor, rightPhotoSensor, pivotGyro);
+			autos = new AutoRoutines(
+				mecDrive, 
+				elevController, 
+				ultra, 
+				leftPhotoSensor, 
+				rightPhotoSensor, 
+				pivotGyro, 
+				log, 
+				consoleLog
+			);
 			
 		} catch(Exception ex) {
-			TryLogError("Error in robotInit()", ex);
-			printErrorToDS("Exception in robotInit(), please alert Ernie or Magnus");
+			TryLogError(ex.getClass().getSimpleName() + " in robotInit()", ex);
 		}
     }
     
@@ -189,9 +200,8 @@ public class Robot extends IterativeRobot {
 			autoRoutine = AutoRoutineLoader.getAutoRoutine();
 			
 		} catch(Exception ex) {
-			TryLogError("Error in autonomousInit()", ex);
+			TryLogError(ex.getClass().getSimpleName() + " in autonomousInit()", ex);
 			logged = false;
-			printErrorToDS("Exception in autonomousInit(), please alert Ernie or Magnus");
 		}
     }
 	
@@ -208,10 +218,7 @@ public class Robot extends IterativeRobot {
 			putDataToSmartDb();
 			
 		} catch(Exception ex) {
-			if(!logged) {
-				printErrorToDS("Error in autonomousPeriodic(), please alert Ernie or Magnus");
-			}
-			TryLogError("Error in autonomousPeriodic()", ex);
+			TryLogError(ex.getClass().getSimpleName() + " in autonomousPeriodic()", ex);
 		}
     }
     
@@ -224,9 +231,8 @@ public class Robot extends IterativeRobot {
 			logged = false;
 			numLoops = 0;
 		} catch(Exception ex) {
-			TryLogError("Error in teleopInit()", ex);
+			TryLogError(ex.getClass().getSimpleName() + " in teleopInit()", ex);
 			logged = false;
-			printErrorToDS("Exception in teleopInit(), please alert Ernie or Magnus");
 		}
     }
     
@@ -252,10 +258,7 @@ public class Robot extends IterativeRobot {
 			putDataToSmartDb();
 			
 		} catch(Exception ex) {
-			if(!logged) {
-				printErrorToDS("Error in teleopPeriodic(), please alert Ernie or Magnus");
-			}
-			TryLogError("Error in teleopPeriodic()", ex);
+			TryLogError(ex.getClass().getSimpleName() + " in teleopPeriodic()", ex);
 		}
     }
 	
@@ -268,9 +271,8 @@ public class Robot extends IterativeRobot {
 			logged = false;
 			numLoops = 0;
 		} catch(Exception ex) {
-			TryLogError("Error in disabledInit()", ex);
+			TryLogError(ex.getClass().getSimpleName() + " in disabledInit()", ex);
 			logged = false;
-			printErrorToDS("Error in disabledInit(), please alert Ernie or Magnus");
 		}
 	}
 	
@@ -283,10 +285,7 @@ public class Robot extends IterativeRobot {
 		try {
 			putDataToSmartDb();
 		} catch(Exception ex) {
-			if(!logged) {
-				printErrorToDS("Error in disabledPeriodic(), please alert Ernie or Magnus");
-			}
-			TryLogError("Error in autonomousPeriodic()", ex);
+			TryLogError(ex.getClass().getSimpleName() + " in autonomousPeriodic()", ex);
 		}
 	}
 	
@@ -295,35 +294,11 @@ public class Robot extends IterativeRobot {
 			log.error(message, ex);
 		}
 		
-		logged = true;
-	}
-	
-	/**
-	 * Gets the logger for the robot so other classes can use it
-	 * @return the logger for the robot
-	 */
-	public static LoggerAsync getRobotLog() {
-		if(log == null) {
-			throw new NullPointerException("Robot log is equal to null");
+		if(!logged) {
+			consoleLog.error(message, ex);
 		}
 		
-		return log;
-	}
-	
-	/**
-	 * Prints an error message to the driver station
-	 * @param message the error message to print
-	 */
-	public static void printErrorToDS(String message) {
-		DriverStation.reportError("ERROR: " + message, false);
-	}
-	
-	/**
-	 * Prints a warning message to the driver station
-	 * @param message the warning message to print
-	 */
-	public static void printWarningToDS(String message) {
-		DriverStation.reportError("WARNING: " + message, false);
+		logged = true;
 	}
 	
 	/**

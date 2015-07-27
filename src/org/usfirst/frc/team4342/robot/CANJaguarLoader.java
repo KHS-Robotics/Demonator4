@@ -13,7 +13,11 @@ import edu.wpi.first.wpilibj.CANJaguar;
  * About Jaguars: http://www.vexrobotics.com/217-3367.html
  *
  */
-public class CANJaguarLoader {
+public final class CANJaguarLoader {
+	
+	private CANJaguarLoader() {
+		
+	}
 	
 	/**
 	 * Initializes the CANJaguars for the drive train. Each controller

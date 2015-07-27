@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4342.robot;
 
+import Logging.LoggerAsync;
+import Logging.RobotConsoleLog;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,6 +22,8 @@ public class AutoRoutines {
 	private static final double MinToteDist = 10.0;
 	private static final double MaxToteDist = 12.0;
 	
+	private boolean logged;
+	
 	private int autoStep;
 	
 	private boolean leftPhotoSensorMadeContact;
@@ -33,6 +37,9 @@ public class AutoRoutines {
 	private DigitalInput leftPhotoSensor, rightPhotoSensor;
 	private Gyro gyro;
 	
+	private LoggerAsync log;
+	private RobotConsoleLog consoleLog;
+	
 	/**
 	 * 
 	 * @param drive the drive train for Demonator IV
@@ -44,13 +51,19 @@ public class AutoRoutines {
 	 */
 	public AutoRoutines(MecanumDrive drive, ElevatorController ec,
 						Ultrasonic ultra, DigitalInput leftPhotoSensor,
-						DigitalInput rightPhotoSensor, Gyro gyro) {
+						DigitalInput rightPhotoSensor, Gyro gyro,
+						LoggerAsync log, RobotConsoleLog consoleLog) {
 		this.drive = drive;
 		this.ec = ec;
 		this.ultra = ultra;
 		this.leftPhotoSensor = leftPhotoSensor;
 		this.rightPhotoSensor = rightPhotoSensor;
 		this.gyro = gyro;
+		
+		this.log = log;
+		this.consoleLog = consoleLog;
+		
+		new AutoChecker().start();
 	}
 	
 	/**
@@ -73,9 +86,12 @@ public class AutoRoutines {
 					pickupOneContainer();
 					break;
 				default:
-					Robot.printWarningToDS(
-						"No valid autonomous value selected, please alert Ernie or Magnus"
-					);
+					if(!logged) {
+						log.warning("No valid autonomous value selected, please alert Ernie or Magnus");
+						consoleLog.warning("No valid autonomous value selected, please alert Ernie or Magnus");
+						
+						logged = true;
+					}
 					break;
 			}
 		}
@@ -563,5 +579,25 @@ public class AutoRoutines {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Used to reset the logged variable
+	 */
+	private class AutoChecker extends Thread implements Runnable {
+		@Override
+		public void run() {
+			while(true) {
+				if(!DriverStation.getInstance().isAutonomous()) {
+					logged = false;
+				}
+				
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException ex) {
+					// Whatever
+				}
+			}
+		}
 	}
 }

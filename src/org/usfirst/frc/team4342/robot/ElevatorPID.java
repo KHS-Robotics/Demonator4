@@ -16,6 +16,10 @@ package org.usfirst.frc.team4342.robot;
  */
 public final class ElevatorPID {
 	
+	private ElevatorPID() {
+		
+	}
+	
 	// Values for going up (higher to fight gravity)
 	public static final double kP = 0.25 / 100.0;
 	public static final double kI = 0.003 / 1000.0;

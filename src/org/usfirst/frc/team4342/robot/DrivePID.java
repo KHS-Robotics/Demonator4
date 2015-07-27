@@ -16,6 +16,10 @@ package org.usfirst.frc.team4342.robot;
  */
 public final class DrivePID {
 	
+	private DrivePID() {
+		
+	}
+	
 	/**
 	 * Front right motor controller
 	 */
