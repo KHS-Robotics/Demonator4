@@ -56,6 +56,13 @@ public final class DrivePID {
 		static final double kD = 0.001;
 	}
 	
+	/**
+	 * Values for autonomous
+	 */
+	static class Autonomous {
+		static final double kP = 0.01;
+	}
+	
 	/** Number of revolutions for one encoder count */
 	static final int kCodesPerRev = 512;
 }

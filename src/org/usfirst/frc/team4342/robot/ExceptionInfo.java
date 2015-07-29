@@ -51,7 +51,7 @@ public class ExceptionInfo {
 	}
 	
 	/**
-	 * Returns the exceptions, of the only given exception
+	 * Returns the exceptions, or the only given exception
 	 * @return the exception(s)
 	 */
 	public Exception[] getExceptions() {

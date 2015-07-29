@@ -20,7 +20,6 @@ public class ElevatorController {
 	 * The elevator operates on a separate thread, since it contains
 	 * complex math and things that should be done separate from the
 	 * main thread
-	 *
 	 */
 	private class ElevatorThread extends Thread implements Runnable {
 		
@@ -153,6 +152,7 @@ public class ElevatorController {
 		}
 		
 		if(ds.isEnabled() && ds.isOperatorControl()) {
+			
 			// Check to see if the user
 			// pressed a preset
 			checkButtonStatus();

@@ -18,9 +18,10 @@ import edu.wpi.first.wpilibj.Ultrasonic;
  */
 public class AutoRoutines {
 	
-	//TODO: test'n'tune these values
-	private static final double MinToteDist = 10.0;
-	private static final double MaxToteDist = 12.0;
+	private static final double MinToteDist = 12.0;
+	private static final double MaxToteDist = 14.0;
+	
+	private double distanceError;
 	
 	private boolean logged;
 	
@@ -118,12 +119,7 @@ public class AutoRoutines {
 			autoStep++;
 		}
 		else if(autoStep == 1) {
-			drive.autoDrive(0.0, 0.25, gyro.getAngle());
-			
-			double dist = ultra.getRangeInches();
-			
-			if(dist < MaxToteDist && dist > MinToteDist) {
-				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+			if(autoMoveDist()) {
 				autoStep++;
 			}
 		}
@@ -200,12 +196,7 @@ public class AutoRoutines {
 			autoStep++;
 		}
 		else if(autoStep == 1) {
-			drive.autoDrive(0.0, 0.25, gyro.getAngle());
-			
-			double ultrasonicValue = ultra.getRangeInches();
-			
-			if(ultrasonicValue < MaxToteDist && ultrasonicValue > MinToteDist) {
-				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+			if(autoMoveDist()) {
 				autoStep++;
 			}
 		}
@@ -250,12 +241,7 @@ public class AutoRoutines {
 			}
 		}
 		else if(autoStep == 7) {
-			drive.autoDrive(0.0, 0.25, gyro.getAngle());
-			
-			double ultrasonicValue = ultra.getRangeInches();
-			
-			if(ultrasonicValue < MaxToteDist && ultrasonicValue > MinToteDist) {
-				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+			if(autoMoveDist()) {
 				autoStep++;
 			}
 		}
@@ -332,12 +318,7 @@ public class AutoRoutines {
 			autoStep++;
 		}
 		else if(autoStep == 1) {
-			drive.autoDrive(0.0, 0.25, gyro.getAngle());
-			
-			double ultrasonicValue = ultra.getRangeInches();
-			
-			if(ultrasonicValue < MaxToteDist && ultrasonicValue > MinToteDist) {
-				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+			if(autoMoveDist()) {
 				autoStep++;
 			}
 		}
@@ -382,12 +363,7 @@ public class AutoRoutines {
 			}
 		}
 		else if(autoStep == 7) {
-			drive.autoDrive(0.0, 0.25, gyro.getAngle());
-			
-			double ultrasonicValue = ultra.getRangeInches();
-			
-			if(ultrasonicValue < MaxToteDist && ultrasonicValue > MinToteDist) {
-				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+			if(autoMoveDist()) {
 				autoStep++;
 			}
 		}
@@ -431,12 +407,7 @@ public class AutoRoutines {
 			}
 		}
 		else if(autoStep == 13) {
-			drive.autoDrive(0.0, 0.25, gyro.getAngle());
-			
-			double ultrasonicValue = ultra.getRangeInches();
-			
-			if(ultrasonicValue < MaxToteDist && ultrasonicValue > MinToteDist) {
-				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+			if(autoMoveDist()) {
 				autoStep++;
 			}
 		}
@@ -498,12 +469,7 @@ public class AutoRoutines {
 			autoStep++;
 		}
 		else if(autoStep == 1) {
-			drive.autoDrive(0.0, 0.25, gyro.getAngle());
-			
-			double ultrasonicValue = ultra.getRangeInches();
-			
-			if(ultrasonicValue < MaxToteDist && ultrasonicValue > MinToteDist) {
-				drive.autoDrive(0.0, 0.0, gyro.getAngle());
+			if(autoMoveDist()) {
 				autoStep++;
 			}
 		}
@@ -552,6 +518,24 @@ public class AutoRoutines {
 			},
 			true
 		);
+	}
+	
+	/**
+	 * Automatically moves the robot a perfect distance to the tote.
+	 * @return true if finished, false otherwise
+	 */
+	public boolean autoMoveDist() {
+		double dist = ultra.getRangeInches();
+		
+		distanceError = dist - ((MinToteDist + MaxToteDist) / 2);
+		
+		if(dist > MinToteDist && dist < MaxToteDist) {
+			drive.autoDrive(0.0, 0.0, gyro.getAngle());
+			return true;
+		} else {
+			drive.autoDrive(0.0, (distanceError*DrivePID.Autonomous.kP), gyro.getAngle());
+			return false;
+		}
 	}
 	
 	/**
