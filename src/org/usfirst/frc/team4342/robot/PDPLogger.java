@@ -20,6 +20,8 @@ public class PDPLogger
 {
 	private boolean started;
 	
+	private static final int LOG_SECONDS = 5;
+	
 	private PDPLoggingThread logger;
 	
 	public PDPLogger(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog) 
@@ -29,7 +31,7 @@ public class PDPLogger
 		logger = new PDPLoggingThread(pdp, log, consoleLog);
 	}
 	
-	public void startLogging() {
+	public void start() {
 		if(!started) {
 			logger.start();
 		}
@@ -106,22 +108,17 @@ public class PDPLogger
 			        writer.flush();
 			        
 			        numLogs++;
-			        Thread.sleep(5000);
+			        
+			        Thread.sleep(LOG_SECONDS*1000);
 				}
+				
+				writer.close();
 			}
 			catch(Exception ex)
 			{
-				try
-				{
-					consoleLog.warning("Failed to write to CSV for PDP logger,"
-							+ " please alert Ernie or Magnus when you can");
-					log.warning("Failed to write to CSV for PDP logger: " + ex.getMessage());
-				}
-				catch(Exception ex2)
-				{
-					consoleLog.warning("Failed to write to CSV for PDP logger,"
-							+ " please alert Ernie or Magnus when you can");
-				}
+				consoleLog.warning(ExceptionInfo.getType(ex) + ": Failed to write to CSV for PDP logger,"
+						+ " please alert Ernie or Magnus when you can");
+				log.warning("Failed to write to CSV for PDP logger: " + ex.getMessage());
 			}
 			finally
 			{
@@ -132,17 +129,9 @@ public class PDPLogger
 				} 
 				catch (Exception ex) 
 				{
-					try
-					{
-						consoleLog.warning("Failed to close writer to CSV for PDP logger,"
-								+ " please alert Ernie or Magnus when you can");
-						log.warning("Failed to close writer to CSV for PDP logger");
-					}
-					catch(Exception ex2)
-					{
-						consoleLog.warning("Failed to close writer to CSV for PDP logger,"
-								+ " please alert Ernie or Magnus when you can");
-					}
+					consoleLog.warning(ExceptionInfo.getType(ex) + ": Failed to close writer to CSV for PDP logger,"
+							+ " please alert Ernie or Magnus when you can");
+					log.warning("Failed to close writer to CSV for PDP logger");
 				}
 			}
 		}
@@ -171,13 +160,13 @@ public class PDPLogger
 			return;
 		}
 		
-		for(int i = 9; i >= 0; i--) {
+		for(int i = 10; i >= 1; i--) {
 			String fileName = "/home/lvuser/PdpLog[" + i + "].csv";
 			
 			if(i == 10) {
 				new File(fileName).delete();
 			}
-			else if(i <= 9 && i > 1) {
+			else if(i <= 9 && i >= 1) {
 				new File(fileName).renameTo(new File("/home/lvuser/PdpLog[" + (i+1) + "].csv"));
 			}
 		}

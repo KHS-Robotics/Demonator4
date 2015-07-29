@@ -69,7 +69,7 @@ public class Robot extends IterativeRobot {
 	
 	private static LoggerAsync log;
 	private static RobotConsoleLog consoleLog;
-	private static PDPLogger pdpMonitor;
+	private static PDPLogger pdpLogger;
 	
 	/**
 	 * Initialization code for when the robot is first powered on
@@ -77,7 +77,7 @@ public class Robot extends IterativeRobot {
 	@Override
     public void robotInit() {
 		
-		String exception = null;
+		ExceptionInfo exInfo = null;
 		
 		consoleLog = RobotLogFactory.createRobotConsoleLog();
 		
@@ -85,16 +85,16 @@ public class Robot extends IterativeRobot {
 			log = RobotLogFactory.createAsyncLog(true);
 		} catch(Exception ex) {
 			// hmmm... where to log when the log fails...
-			exception = ex.getClass().getSimpleName();
+			exInfo = new ExceptionInfo(ex);
 		}
 		
 		if(log == null) {
-			consoleLog.warning("Robot log failed to initalize :: " + exception);
+			consoleLog.warning("Robot log failed to initalize :: " + exInfo.getType());
 		}
 		
 		try {
-			pdpMonitor = new PDPLogger(new PowerDistributionPanel(), log, consoleLog);
-			pdpMonitor.startLogging();
+			pdpLogger = new PDPLogger(new PowerDistributionPanel(), log, consoleLog);
+			pdpLogger.start();
 		} catch(Exception ex) {
 			TryLogError("Failed to start PDPMonitor :: " + ex.getClass().getSimpleName(), ex);
 		}
@@ -173,7 +173,7 @@ public class Robot extends IterativeRobot {
 			);
 			
 		} catch(Exception ex) {
-			TryLogError(ex.getClass().getSimpleName() + " in robotInit()", ex);
+			TryLogError(ExceptionInfo.getType(ex) + " in robotInit()", ex);
 		}
     }
     
@@ -203,7 +203,7 @@ public class Robot extends IterativeRobot {
 			autoRoutine = AutoRoutineLoader.getAutoRoutine();
 			
 		} catch(Exception ex) {
-			TryLogError(ex.getClass().getSimpleName() + " in autonomousInit()", ex);
+			TryLogError(ExceptionInfo.getType(ex) + " in autonomousInit()", ex);
 			logged = false;
 		}
     }
@@ -221,7 +221,7 @@ public class Robot extends IterativeRobot {
 			putDataToSmartDb();
 			
 		} catch(Exception ex) {
-			TryLogError(ex.getClass().getSimpleName() + " in autonomousPeriodic()", ex);
+			TryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
 		}
     }
     
@@ -234,7 +234,7 @@ public class Robot extends IterativeRobot {
 			logged = false;
 			numLoops = 0;
 		} catch(Exception ex) {
-			TryLogError(ex.getClass().getSimpleName() + " in teleopInit()", ex);
+			TryLogError(ExceptionInfo.getType(ex) + " in teleopInit()", ex);
 			logged = false;
 		}
     }
@@ -261,7 +261,7 @@ public class Robot extends IterativeRobot {
 			putDataToSmartDb();
 			
 		} catch(Exception ex) {
-			TryLogError(ex.getClass().getSimpleName() + " in teleopPeriodic()", ex);
+			TryLogError(ExceptionInfo.getType(ex) + " in teleopPeriodic()", ex);
 		}
     }
 	
@@ -274,7 +274,7 @@ public class Robot extends IterativeRobot {
 			logged = false;
 			numLoops = 0;
 		} catch(Exception ex) {
-			TryLogError(ex.getClass().getSimpleName() + " in disabledInit()", ex);
+			TryLogError(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
 			logged = false;
 		}
 	}
@@ -288,7 +288,7 @@ public class Robot extends IterativeRobot {
 		try {
 			putDataToSmartDb();
 		} catch(Exception ex) {
-			TryLogError(ex.getClass().getSimpleName() + " in autonomousPeriodic()", ex);
+			TryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
 		}
 	}
 	
