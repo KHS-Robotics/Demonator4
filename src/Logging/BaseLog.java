@@ -16,44 +16,44 @@ public abstract class BaseLog implements ILog
     @Override
     public void info(String message)
     {
-        Log(Severity.INFO, FormatMessageLogData(Severity.INFO, message));
+        log(Severity.INFO, FormatMessageLogData(Severity.INFO, facilityName, message));
     } 
     
     @Override
     public void debug(String message)
     {
-        Log(Severity.DEBUG, FormatMessageLogData(Severity.DEBUG, message));
+        log(Severity.DEBUG, FormatMessageLogData(Severity.DEBUG, facilityName, message));
     }
     
     @Override
     public void warning(String message)
     {
-        Log(Severity.WARNING, FormatMessageLogData(Severity.WARNING, message));
+        log(Severity.WARNING, FormatMessageLogData(Severity.WARNING, facilityName, message));
     }
     
     @Override
     public void error(String message, Exception ex)
     {
-        Log(Severity.ERROR, FormatErrorLogData(Severity.ERROR, new LogData(message, ex)));
+        log(Severity.ERROR, FormatErrorLogData(Severity.ERROR, facilityName, new LogData(message, ex)));
     }
     
-    abstract void Log(Severity severity, Object... message);
+    abstract void log(Severity severity, Object... message);
     
-    private Object[] FormatMessageLogData(Severity severity, String message)
+    public static Object[] FormatMessageLogData(Severity severity, String facility, String message)
     {
         return new String[] {
-            "Facility: " + facilityName,
+            "Facility: " + facility,
             "Severity: " + severity.toString(),
             "Message: " + message,
             "Date: " + new Date(System.currentTimeMillis()).toString()
         };
     }
     
-    private Object[] FormatErrorLogData(Severity severity, LogData message)
+    public static Object[] FormatErrorLogData(Severity severity, String facility, LogData message)
     {
         ArrayList<String> temp = new ArrayList<String>();
         
-        temp.add("Facility: " + this.facilityName + "-");
+        temp.add("Facility: " + facility + "-");
         temp.add("Severity: " + severity.toString() + "-");
         temp.add("Message: " + message.getMessage() + "-");
         

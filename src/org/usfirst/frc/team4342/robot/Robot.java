@@ -79,10 +79,11 @@ public class Robot extends IterativeRobot {
 		
 		ExceptionInfo exInfo = null;
 		
+		ActiveLog.setLogFile("home/lvuser/ActiveLog.txt");
 		consoleLog = RobotLogFactory.createRobotConsoleLog();
 		
 		try {
-			log = RobotLogFactory.createAsyncLog(true);
+			log = RobotLogFactory.createAsyncLog();
 		} catch(Exception ex) {
 			// hmmm... where to log when the log fails...
 			exInfo = new ExceptionInfo(ex);

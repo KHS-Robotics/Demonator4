@@ -14,7 +14,7 @@ public class RobotConsoleLog extends BaseLog {
 	 * logs the severity level and the message.
 	 */
 	@Override
-	public void Log(Severity severity, Object... message) {
+	public void log(Severity severity, Object... message) {
 		String mssg = severity.toString().toUpperCase() + ": ";
 
 		String hackMessage = message[2].toString();

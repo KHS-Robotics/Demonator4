@@ -3,9 +3,11 @@ package org.usfirst.frc.team4342.robot;
 import java.io.File;
 import java.io.IOException;
 
+import Logging.ActiveLog;
 import Logging.LocalLog;
 import Logging.LoggerAsync;
 import Logging.RobotConsoleLog;
+import Logging.Severity;
 
 /**
  * 
@@ -15,22 +17,7 @@ import Logging.RobotConsoleLog;
  */
 public class RobotLogFactory {
 	
-	public static final String PATH = "/home/lvuser/Log.txt";
-	
-	/**
-	 * Clears the log file
-	 * 
-	 * @throws IOException
-	 */
-	public static void clearLogs() throws IOException {
-		File f = new File(PATH);
-		
-		if(f.exists()) {
-			f.delete();
-		}
-		
-		f.createNewFile();
-	}
+	public static final String ROOT = "/home/lvuser/";
 	
 	/**
 	 * Creates a simple logger that logs to a specified text file.
@@ -40,12 +27,8 @@ public class RobotLogFactory {
 	 * @return a logger that logs to a text file
 	 * @throws IOException
 	 */
-	public static LocalLog createLocalLog(boolean clearLogs) throws IOException {
-		if(clearLogs) {
-			clearLogs();
-		}
-		
-		return new LocalLog("Demonator4", PATH, true);
+	public static LocalLog createLocalLog() throws IOException {
+		return new LocalLog("Demonator4", getValidLogFile(), true);
 	}
 	
 	/**
@@ -55,8 +38,8 @@ public class RobotLogFactory {
 	 * @return a logger that logs to a text file
 	 * @throws IOException
 	 */
-	public static LoggerAsync createAsyncLog(boolean clearLogs) throws IOException {
-		return new LoggerAsync(createLocalLog(clearLogs));
+	public static LoggerAsync createAsyncLog() throws IOException {
+		return new LoggerAsync(createLocalLog());
 	}
 	
 	/**
@@ -66,43 +49,48 @@ public class RobotLogFactory {
 	public static RobotConsoleLog createRobotConsoleLog() {
 		return new RobotConsoleLog();
 	}
-
-	//TODO: Get these two methods working
-	private static File getValidLogFile() throws IOException {
-		//deleteAndRenameLogFiles();
-		
-		File validFile = new File("/home/lvuser/Log[0].txt");
-		
-		for(int i = 0; i < 10; i++) {
-			validFile = new File("/home/lvuser/Log[" + i + "].txt");
-			if(!validFile.exists()) {
-				break;
+	
+	/**
+	 * Gets a valid log location and file
+	 * @return a valid log file location
+	 */
+	private static File getValidLogFile() {
+		for(int i = 1; i <= 5; i++) {
+			File f = new File(ROOT + "Log[" + i + "].txt");
+			
+			if(!f.exists()) {
+				return f;
 			}
 		}
 		
-		return validFile;
+		shiftLogFiles();
+		
+		return new File(ROOT + "Log[1].txt");
 	}
 	
 	/**
-	 * We can save up to 10 log files! Each time we make a new
+	 * We can save up to 5 log files! Each time we make a new
 	 * LocalLog, we want to check if we have to shift
 	 * the log file index values up one and delete
 	 * the oldest file and make way for the latest
 	 * log file, [1].
 	 */
-	private static void deleteAndRenameLogFiles() {
-		if(!new File("/home/lvuser/Log[10].txt").exists()) {
+	private static void shiftLogFiles() {
+		if(!new File(ROOT + "Log[5].txt").exists()) {
 			return;
 		}
 		
-		for(int i = 9; i >= 0; i--) {
-			String fileName = "/home/lvuser/Log[" + i + "].txt";
+		new File(ROOT + "Log[5].txt").delete();
+		
+		for(int i = 4; i >= 1; i--) {
+			File f = new File(ROOT + "Log[" + i + "].txt");
 			
-			if(i == 10) {
-				new File(fileName).delete();
-			}
-			else if(i <= 9 && i > 1) {
-				new File(fileName).renameTo(new File("/home/lvuser/Log[" + (i+1) + "].txt"));
+			boolean renamed = f.renameTo(new File(ROOT + "Log[" + (i+1) + "].txt"));
+			
+			if(!renamed) {
+				ActiveLog.warning("Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				
+				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
 		}
 	}

@@ -73,7 +73,7 @@ public class LocalLog extends BaseLog
     }
     
     @Override
-    protected void Log(Severity severity, Object... message)
+    protected void log(Severity severity, Object... message)
     {
         try
         {

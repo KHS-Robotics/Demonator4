@@ -20,14 +20,13 @@ public class PDPLogger
 {
 	private boolean started;
 	
+	private static final String ROOT = "/home/lvuser/";
 	private static final int LOG_SECONDS = 5;
 	
 	private PDPLoggingThread logger;
 	
 	public PDPLogger(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog) 
 	{
-		//deleteAndRenameLogFiles();
-		
 		logger = new PDPLoggingThread(pdp, log, consoleLog);
 	}
 	
@@ -57,7 +56,8 @@ public class PDPLogger
 			this.pdp = pdp;
 			this.log = log;
 			this.consoleLog = consoleLog;
-			csvLogFile = new File("/home/lvuser/PdpLog.csv");
+			
+			csvLogFile = getValidLogFile(log ,consoleLog);
 		}
 		
 		/**
@@ -70,11 +70,7 @@ public class PDPLogger
 			
 			try
 			{
-				boolean createLogFile = csvLogFile.exists() ? 
-						csvLogFile.delete() : csvLogFile.createNewFile();
-						
-				if(createLogFile)
-					csvLogFile.createNewFile();
+				csvLogFile.createNewFile();
 				
 				writer = new FileWriter(csvLogFile);
 				
@@ -137,37 +133,54 @@ public class PDPLogger
 		}
 	}
 	
-	//TODO: Get these two methods working...
-	private void initalizeLogFile()
-	{
-		for(int i = 0; i < 10; i++)
-		{
-			logger.csvLogFile  = new File("/home/lvuser/PdpLog[" + i + "].csv");
-			if(!logger.csvLogFile.exists())
-				break;
+	/**
+	 * Gets a valid log location and file
+	 * 
+	 * @param log used to log warnings about the files
+	 * @param consoleLog used to log warnings about the files
+	 * @return a valid log file location
+	 */
+	private static File getValidLogFile(LoggerAsync log, RobotConsoleLog consoleLog) {
+		for(int i = 1; i <= 5; i++) {
+			File f = new File(ROOT + "PdpLog[" + i + "].txt");
+			
+			if(!f.exists()) {
+				return f;
+			}
 		}
+		
+		shiftLogFiles(log, consoleLog);
+		
+		return new File(ROOT + "PdpLog[1].txt");
 	}
 	
 	/**
-	 * We can save up to 10 log files! Each time we make a new
+	 * We can save up to 5 log files! Each time we make a new
 	 * LocalLog, we want to check if we have to shift
 	 * the log file index values up one and delete
 	 * the oldest file and make way for the latest
 	 * log file, [1].
+	 * 
+	 * @param log used to log warnings about the files
+	 * @param consoleLog used to log warnings about the files
 	 */
-	private void deleteAndRenameLogFiles() {
-		if(!new File("/home/lvuser/PdpLog[10].csv").exists()) {
+	private static void shiftLogFiles(LoggerAsync log, RobotConsoleLog consoleLog) {
+		if(!new File(ROOT + "PdpLog[5].txt").exists()) {
 			return;
 		}
 		
-		for(int i = 10; i >= 1; i--) {
-			String fileName = "/home/lvuser/PdpLog[" + i + "].csv";
+		new File(ROOT + "PdpLog[5].txt").delete();
+		
+		for(int i = 4; i >= 1; i--) {
+			File f = new File(ROOT + "PdpLog[" + i + "].txt");
 			
-			if(i == 10) {
-				new File(fileName).delete();
-			}
-			else if(i <= 9 && i >= 1) {
-				new File(fileName).renameTo(new File("/home/lvuser/PdpLog[" + (i+1) + "].csv"));
+			boolean renamed = f.renameTo(new File(ROOT + "PdpLog[" + (i+1) + "].txt"));
+			
+			if(!renamed) {
+				log.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				consoleLog.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				
+				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
 		}
 	}
