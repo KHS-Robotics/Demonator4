@@ -114,7 +114,7 @@ public class PDPLogger
 			{
 				consoleLog.warning(ExceptionInfo.getType(ex) + ": Failed to write to CSV for PDP logger,"
 						+ " please alert Ernie or Magnus when you can");
-				log.warning("Failed to write to CSV for PDP logger: " + ex.getMessage());
+				log.warning("Failed to write to CSV for PDP logger :: " + ExceptionInfo.getType(ex));
 			}
 			finally
 			{
@@ -142,7 +142,7 @@ public class PDPLogger
 	 */
 	private static File getValidLogFile(LoggerAsync log, RobotConsoleLog consoleLog) {
 		for(int i = 1; i <= 5; i++) {
-			File f = new File(ROOT + "PdpLog[" + i + "].txt");
+			File f = new File(ROOT + "PdpLog[" + i + "].csv");
 			
 			if(!f.exists()) {
 				return f;
@@ -151,7 +151,7 @@ public class PDPLogger
 		
 		shiftLogFiles(log, consoleLog);
 		
-		return new File(ROOT + "PdpLog[1].txt");
+		return new File(ROOT + "PdpLog[1].csv");
 	}
 	
 	/**
@@ -165,16 +165,19 @@ public class PDPLogger
 	 * @param consoleLog used to log warnings about the files
 	 */
 	private static void shiftLogFiles(LoggerAsync log, RobotConsoleLog consoleLog) {
-		if(!new File(ROOT + "PdpLog[5].txt").exists()) {
+		
+		File lastFile = new File(ROOT + "PdpLog[5].csv");
+		
+		if(!lastFile.exists()) {
 			return;
 		}
 		
-		new File(ROOT + "PdpLog[5].txt").delete();
+		lastFile.delete();
 		
 		for(int i = 4; i >= 1; i--) {
-			File f = new File(ROOT + "PdpLog[" + i + "].txt");
+			File f = new File(ROOT + "PdpLog[" + i + "].csv");
 			
-			boolean renamed = f.renameTo(new File(ROOT + "PdpLog[" + (i+1) + "].txt"));
+			boolean renamed = f.renameTo(new File(ROOT + "PdpLog[" + (i+1) + "].csv"));
 			
 			if(!renamed) {
 				log.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");

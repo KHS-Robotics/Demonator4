@@ -1,5 +1,6 @@
 package Logging;
 
+import java.io.File;
 import java.io.IOException;
 
 public final class ActiveLog {
@@ -28,16 +29,26 @@ public final class ActiveLog {
 		log(Severity.ERROR, facility, message, ex);
 	}
 	
-	public static void log(Severity severity, String facility, String message, Exception ex) {
+	private static void log(Severity severity, String facility, String message, Exception ex) {
 		synchronized(lock) {
 			try {
 				
-				LocalLog log = new LocalLog(facility, path, true);
+				LocalLog localLog = new LocalLog(facility, path, true);
+				LoggerAsync log = new LoggerAsync(localLog);
 				
-				if(ex != null) {
+				if(severity == Severity.ERROR) {
 					log.error(message, ex);
+				}
+				else if(severity == Severity.INFO) {
+					log.info(message);
+				} 
+				else if(severity == Severity.DEBUG) {
+					log.debug(message);
+				}
+				else if(severity == Severity.WARNING) {
+					log.warning(message);
 				} else {
-					log.log(severity, BaseLog.FormatMessageLogData(severity, facility, message));
+					System.err.println("Invalid parameter for Severity in ActiveLog");
 				}
 				
 			} catch (IOException e) {
@@ -48,5 +59,13 @@ public final class ActiveLog {
 	
 	public static void setLogFile(String p) {
 		path = p;
+		
+		File f = new File(path);
+		
+		try {
+			f.createNewFile();
+		} catch (IOException ex) {
+			System.err.println(ex.getClass().getSimpleName() + " in ActiveLog");
+		}
 	}
 }

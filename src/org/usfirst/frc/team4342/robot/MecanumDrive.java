@@ -53,14 +53,13 @@ public class MecanumDrive {
 	 * @param enableGyro true for field oriented, false for robot oriented
 	 */
 	public MecanumDrive(CANJaguar frontLeft, CANJaguar frontRight, CANJaguar rearLeft,
-			CANJaguar rearRight, Joystick joystick, Gyro gyro, boolean enableGyro) {
+			CANJaguar rearRight, Joystick joystick, Gyro gyro) {
 		fl = frontLeft;
 		fr = frontRight;
 		rl = rearLeft;
 		rr = rearRight;
 		this.joystick = joystick;
 		this.gyro = gyro;
-		this.enableGyro = enableGyro;
 	}
 	
 	/**

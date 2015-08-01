@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4342.robot;
 
+import java.util.Date;
+
 import Logging.*;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -79,7 +81,10 @@ public class Robot extends IterativeRobot {
 		
 		ExceptionInfo exInfo = null;
 		
-		ActiveLog.setLogFile("home/lvuser/ActiveLog.txt");
+		String path = "/home/lvuser/ActiveLog.txt";
+		ActiveLog.setLogFile(path);
+		ActiveLog.info("Demonator4", "Robot turned on: " + new Date(System.currentTimeMillis()).toString());
+		
 		consoleLog = RobotLogFactory.createRobotConsoleLog();
 		
 		try {
@@ -148,8 +153,7 @@ public class Robot extends IterativeRobot {
 				rearLeft, 
 				rearRight, 
 				driveStick,
-				pivotGyro, 
-				false
+				pivotGyro
 			);
 			
 			elevController = new ElevatorController(
