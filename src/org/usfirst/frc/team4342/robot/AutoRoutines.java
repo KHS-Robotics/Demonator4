@@ -180,7 +180,7 @@ public class AutoRoutines {
 	 * 3) Wait for the elevator to move, then move elevator to 250 encoder counts
 	 * 4) Wait for the elevator to move
 	 * 5) Move backwards for a total of 6 encoder counts
-	 * 6) Move left until both photosensors read true
+	 * 6) Move left until both photo sensors read true
 	 * 7) Move forward until it's between 10" and 12" of the tote
 	 * 8) Move the elevator to 0 encoder counts
 	 * 9) Wait for the elevator to move, move the elevator to 100 encoder counts
@@ -296,13 +296,13 @@ public class AutoRoutines {
 	 * 3) Wait for the elevator to move, then move elevator to 250 encoder counts
 	 * 4) Wait for the elevator to move
 	 * 5) Move backwards for a total of 6 encoder counts
-	 * 6) Move left until both photosensors read true
+	 * 6) Move left until both photo sensors read true
 	 * 7) Move forward until it's between 10" and 12" of the tote
 	 * 8) Move the elevator to 0 encoder counts
 	 * 9) Wait for the elevator to move, move the elevator to 250 encoder counts
 	 * 10) Wait for the elevator move
 	 * 11) Move backwards for a total of 6 encoder counts
-	 * 12) Move left until both photosensors read true
+	 * 12) Move left until both photo sensors read true
 	 * 13) Move forward until it's between 10" and 12" of the tote
 	 * 14) Move the elevator to 0 encoder counts
 	 * 15) Wait for the elevator to move, move the elevator to 100 encoder counts
@@ -539,8 +539,8 @@ public class AutoRoutines {
 	}
 	
 	/**
-	 * Checks to see if the left photosensor has made contact with a tote
-	 * when strafing. This method is used for any multi-tote autonomous.
+	 * Checks to see if the left photo sensor has made contact with a tote
+	 * when strafing. This method is used for any multiple tote autonomous's.
 	 * This comes in handy because we want the robot to slow down in order to
 	 * properly align with the tote it will pickup.
 	 */
