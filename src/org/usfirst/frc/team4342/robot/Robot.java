@@ -1,7 +1,5 @@
 package org.usfirst.frc.team4342.robot;
 
-import java.util.Date;
-
 import Logging.*;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -83,7 +81,7 @@ public class Robot extends IterativeRobot {
 		
 		String path = "/home/lvuser/ActiveLog.txt";
 		ActiveLog.setLogFile(path);
-		ActiveLog.info("Demonator4", "Robot turned on: " + new Date(System.currentTimeMillis()).toString());
+		ActiveLog.info("Demonator4", "Robot turned on");
 		
 		consoleLog = RobotLogFactory.createRobotConsoleLog();
 		
@@ -133,7 +131,8 @@ public class Robot extends IterativeRobot {
 			topElevLS = new DigitalInput(7);
 			botElevLS = new DigitalInput(4);
 			
-			ultra = new Ultrasonic(2, 3);
+			ultra = new Ultrasonic(2, 3, Ultrasonic.Unit.kInches);
+			ultra.setAutomaticMode(true);
 			
 			rightPhotoSensor = new DigitalInput(0);
 			leftPhotoSensor = new DigitalInput(1);
