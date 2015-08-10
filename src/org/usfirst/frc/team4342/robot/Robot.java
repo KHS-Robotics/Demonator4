@@ -100,7 +100,7 @@ public class Robot extends IterativeRobot {
 			pdpLogger = new PDPLogger(new PowerDistributionPanel(), log, consoleLog);
 			pdpLogger.start();
 		} catch(Exception ex) {
-			TryLogError("Failed to start PDPMonitor :: " + ex.getClass().getSimpleName(), ex);
+			tryLogError("Failed to start PDPMonitor :: " + ex.getClass().getSimpleName(), ex);
 		}
 		
 		try {
@@ -177,7 +177,7 @@ public class Robot extends IterativeRobot {
 			);
 			
 		} catch(Exception ex) {
-			TryLogError(ExceptionInfo.getType(ex) + " in robotInit()", ex);
+			tryLogError(ExceptionInfo.getType(ex) + " in robotInit()", ex);
 		}
     }
     
@@ -207,7 +207,7 @@ public class Robot extends IterativeRobot {
 			autoRoutine = AutoRoutineLoader.getAutoRoutine();
 			
 		} catch(Exception ex) {
-			TryLogError(ExceptionInfo.getType(ex) + " in autonomousInit()", ex);
+			tryLogError(ExceptionInfo.getType(ex) + " in autonomousInit()", ex);
 			logged = false;
 		}
     }
@@ -225,7 +225,7 @@ public class Robot extends IterativeRobot {
 			putDataToSmartDb();
 			
 		} catch(Exception ex) {
-			TryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
+			tryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
 		}
     }
     
@@ -238,7 +238,7 @@ public class Robot extends IterativeRobot {
 			logged = false;
 			numLoops = 0;
 		} catch(Exception ex) {
-			TryLogError(ExceptionInfo.getType(ex) + " in teleopInit()", ex);
+			tryLogError(ExceptionInfo.getType(ex) + " in teleopInit()", ex);
 			logged = false;
 		}
     }
@@ -252,20 +252,12 @@ public class Robot extends IterativeRobot {
 		try {
 			
 			mecDrive.drive();
-			
-			if(driveStick.getRawButton(7)) {
-				enableFod = enableFod ? false : true;
-				if(enableFod) {
-					mecDrive.enableFod();
-				} else {
-					mecDrive.disableFod();
-				}
-			}
+			checkForDriveTypeChange(driveStick, 7);
 			
 			putDataToSmartDb();
 			
 		} catch(Exception ex) {
-			TryLogError(ExceptionInfo.getType(ex) + " in teleopPeriodic()", ex);
+			tryLogError(ExceptionInfo.getType(ex) + " in teleopPeriodic()", ex);
 		}
     }
 	
@@ -278,7 +270,7 @@ public class Robot extends IterativeRobot {
 			logged = false;
 			numLoops = 0;
 		} catch(Exception ex) {
-			TryLogError(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
+			tryLogError(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
 			logged = false;
 		}
 	}
@@ -292,7 +284,7 @@ public class Robot extends IterativeRobot {
 		try {
 			putDataToSmartDb();
 		} catch(Exception ex) {
-			TryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
+			tryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
 		}
 	}
 	
@@ -306,11 +298,25 @@ public class Robot extends IterativeRobot {
 	}
 	
 	/**
+	 * Checks if the user wants field oriented or robot oriented
+	 */
+	private void checkForDriveTypeChange(Joystick joystick, int button) {
+		if(joystick.getRawButton(button)) {
+			enableFod = enableFod ? false : true;
+			if(enableFod) {
+				mecDrive.enableFod();
+			} else {
+				mecDrive.disableFod();
+			}
+		}
+	}
+	
+	/**
 	 * Tries to log to the specified text file and Driver Station.
 	 * @param message the message to write and display
 	 * @param ex the exception associated with the error
 	 */
-	private void TryLogError(String message, Exception ex) {
+	private void tryLogError(String message, Exception ex) {
 		if(!logged && log != null) {
 			log.error(message, ex);
 		}
