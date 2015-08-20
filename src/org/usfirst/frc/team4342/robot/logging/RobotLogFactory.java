@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4342.robot;
+package org.usfirst.frc.team4342.robot.logging;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,7 @@ import java.io.IOException;
 import Logging.ActiveLog;
 import Logging.LocalLog;
 import Logging.LoggerAsync;
-import Logging.RobotConsoleLog;
-import Logging.Severity;
+import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
 /**
  * 

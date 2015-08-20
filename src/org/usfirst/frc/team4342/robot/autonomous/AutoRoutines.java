@@ -1,7 +1,16 @@
-package org.usfirst.frc.team4342.robot;
+package org.usfirst.frc.team4342.robot.autonomous;
 
+import org.usfirst.frc.team4342.robot.Robot;
+import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
+import org.usfirst.frc.team4342.robot.drive.DrivePID;
+import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
+import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
+import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
+
+import Logging.ActiveLog;
 import Logging.LoggerAsync;
-import Logging.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.drive.DrivePID;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -103,16 +112,16 @@ public class AutoRoutines {
 	
 	/**
 	 * Auto routine will execute in the following steps:
-	 * 0) Move the elevator to 100 encoder counts
+	 * 0) Move the elevator to 200 encoder counts
 	 * 1) Wait for the elevator to move
-	 * 2) Move backwards for 16 total encoder counts of the drive train
+	 * 2) Move backwards for 141 total encoder counts of the drive train
 	 * 3) Move the elevator to 0 encoder counts
 	 * 4) Wait for the elevator to move
 	 * 5) Move backwards 1 encoder count
 	 */
 	private void pickupOneTote() {
 		if(autoStep == 0) {
-			ec.setAutoSetpoint(100);
+			ec.setAutoSetpoint(350);
 			autoStep++;
 		}
 		else if(autoStep == 1) {
@@ -125,7 +134,7 @@ public class AutoRoutines {
 			
 			drive.autoDrive(0.0, -0.5, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 16) {
+			if(currentDriveEncoderCounts() >= 14) {
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
@@ -142,7 +151,7 @@ public class AutoRoutines {
 		}
 		else if(autoStep == 5) {
 			
-			drive.autoDrive(0.0, 0.25, gyro.getAngle());
+			drive.autoDrive(0.0, -0.25, gyro.getAngle());
 			
 			if(currentDriveEncoderCounts() >= 1) {
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
@@ -161,7 +170,7 @@ public class AutoRoutines {
 	 * 5) Move the elevator to 0 encoder counts
 	 * 6) Wait for the elevator to move, move the elevator to 100 encoder counts
 	 * 7) Wait for the elevator move
-	 * 8) Move backwards for a total of 16 encoder counts
+	 * 8) Move backwards for a total of 14 encoder counts
 	 * 9) Move elevator to 0 encoder counts
 	 * 10) Wait for the elevator to move
 	 * 11) Move backwards 1 encoder count
@@ -222,7 +231,7 @@ public class AutoRoutines {
 		else if(autoStep == 8) {
 			drive.autoDrive(0.0, -0.50, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 16) {
+			if(currentDriveEncoderCounts() >= 14) {
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
@@ -238,7 +247,7 @@ public class AutoRoutines {
 			}
 		}
 		else if(autoStep == 11) {
-			drive.autoDrive(0.0, -0.50, gyro.getAngle());
+			drive.autoDrive(0.0, -0.25, gyro.getAngle());
 			
 			if(currentDriveEncoderCounts() >= 1) {
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
@@ -263,7 +272,7 @@ public class AutoRoutines {
 	 * 11) Move the elevator to 0 encoder counts
 	 * 12) Wait for the elevator to move, move the elevator to 100 encoder counts
 	 * 13) Wait for the elevator to move
-	 * 14) Move backwards for a total of 16 encoder counts
+	 * 14) Move backwards for a total of 14 encoder counts
 	 * 15) Move the elevator to 0 encoder counts
 	 * 16) Wait for the elevator to move
 	 * 17) Move backwards 1 encoder count
@@ -372,7 +381,7 @@ public class AutoRoutines {
 		else if(autoStep == 14) {
 			drive.autoDrive(0.0, -0.50, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 16) {
+			if(currentDriveEncoderCounts() >= 14) {
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
@@ -388,7 +397,7 @@ public class AutoRoutines {
 			}
 		}
 		else if(autoStep == 17) {
-			drive.autoDrive(0.0, -0.50, gyro.getAngle());
+			drive.autoDrive(0.0, -0.25, gyro.getAngle());
 			
 			if(currentDriveEncoderCounts() >= 1) {
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
@@ -401,7 +410,7 @@ public class AutoRoutines {
 	 * Auto routine will execute the following steps:
 	 * 0) Move elevator to 800 encoder counts
 	 * 1) Wait for elevator to move
-	 * 2) Move backwards for 16 encoder counts
+	 * 2) Move backwards for 14 encoder counts
 	 */
 	private void pickupOneContainer() {
 		if(autoStep == 0) {
@@ -417,7 +426,7 @@ public class AutoRoutines {
 		else if(autoStep == 2) {
 			drive.autoDrive(0.0, -0.50, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 16) {
+		if(currentDriveEncoderCounts() >= 14) {
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
@@ -505,14 +514,15 @@ public class AutoRoutines {
 		@Override
 		public void run() {
 			while(true) {
-				if(!DriverStation.getInstance().isAutonomous()) {
+				if(!DriverStation.getInstance().isAutonomous() || !DriverStation.getInstance().isEnabled()) {
+					autoStep = 0;
 					logged = false;
 				}
 				
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException ex) {
-					// Whatever
+					ActiveLog.warning("Demonator4", ExceptionInfo.getType(ex) + " in AutoRoutines.AutoChecker");
 				}
 			}
 		}

@@ -1,11 +1,11 @@
-package org.usfirst.frc.team4342.robot;
+package org.usfirst.frc.team4342.robot.logging;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Date;
 
 import Logging.LoggerAsync;
-import Logging.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
