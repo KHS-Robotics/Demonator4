@@ -27,13 +27,10 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * A letter from the editor: these are the only methods
- * that should exist within this class. Please do not
- * add any more.
- * 
  * Main class for the entire robot!
  * 
- * Code goes in here: http://www.andymark.com/product-p/am-3000.htm
+ * Code goes in here: 
+ * 		http://www.andymark.com/product-p/am-3000.htm
  * 
  * Pictures of Robot: 
  * 		http://www.demonrobotics4342.org/apps/photos/photo?photoid=198336234
@@ -41,9 +38,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * 		http://www.demonrobotics4342.org/apps/photos/photo?photoid=198336356
  * 		http://www.demonrobotics4342.org/apps/photos/photo?photoid=198336354
  * 
+ * Logger is from:
+ * 		https://github.com/Ernie3/Logger
+ * 
  * @author khsrobotics
  */
 public class Robot extends IterativeRobot {
+	
+	public static final String ACTIVE_LOG_PATH = "/home/lvuser/ActiveLog.txt";
 	
 	private boolean enableFod;
 	private boolean logged;
@@ -89,11 +91,7 @@ public class Robot extends IterativeRobot {
 	@Override
     public void robotInit() {
 		
-		ExceptionInfo exInfo = null;
-		
-		String path = "/home/lvuser/ActiveLog.txt";
-		ActiveLog.setLogFile(path);
-		ActiveLog.info("Demonator4", "Robot turned on");
+		ActiveLog.info(ACTIVE_LOG_PATH, "Demonator4", "Robot turned on");
 		
 		consoleLog = RobotLogFactory.createRobotConsoleLog();
 		
@@ -101,11 +99,7 @@ public class Robot extends IterativeRobot {
 			log = RobotLogFactory.createAsyncLog();
 		} catch(Exception ex) {
 			// hmmm... where to log when the log fails...
-			exInfo = new ExceptionInfo(ex);
-		}
-		
-		if(log == null) {
-			consoleLog.warning("Robot log failed to initalize :: " + exInfo.getType());
+			consoleLog.warning("Robot log failed to initalize :: " + ExceptionInfo.getType(ex));
 		}
 		
 		try {
