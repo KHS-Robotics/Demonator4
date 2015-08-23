@@ -39,6 +39,9 @@ public class ElevatorHealthMonitor {
 		this.consoleLog = consoleLog;
 	}
 	
+	/**
+	 * Starts monitoring the elevator
+	 */
 	public void startMonitoring() {
 		if(!started) {
 			new MonitoringThread().start();

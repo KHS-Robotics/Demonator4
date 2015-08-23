@@ -8,12 +8,26 @@ import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 import edu.wpi.first.wpilibj.CANJaguar;
 import Logging.ILog;
 
+/**
+ * This class is for running tests on the robot to make sure
+ * all sensors are working properly
+ * 
+ * @author khsrobotics
+ */
 public class Diagnostic {
 	
 	private Diagnostic() {
 		
 	}
 	
+	/**
+	 * Runs tests to take sure all sensors are working properly
+	 * @param drive the drive train controls
+	 * @param ec the elevator controls
+	 * @param log the logger to log messages to the RIO
+	 * @param consoleLog the logger to log messages to the Driver Station
+	 * @return true if no warnings; false otherwise
+	 */
 	public static boolean runSelfTest(MecanumDrive drive, ElevatorController ec, ILog log, RobotConsoleLog consoleLog) {
 		int warnings = 0;
 		
@@ -86,6 +100,12 @@ public class Diagnostic {
 		}
 	}
 	
+	/**
+	 * Tests an encoder on one of the CANJaguars on the drive train 
+	 * @param jag the jaguar to test
+	 * @return true if the encoder is working; false otherwise
+	 * @throws InterruptedException ignore
+	 */
 	private static boolean CANJaguarEncoderWorks(CANJaguar jag) throws InterruptedException {
 		jag.set(1.0);
 		Thread.sleep(1000);
@@ -94,6 +114,11 @@ public class Diagnostic {
 		return Math.abs((int) jag.getPosition()) > 1;
 	}
 	
+	/**
+	 * Tests the bottom limit switch for the elevator
+	 * @param ec the elevator controls
+	 * @return true if the bottom limit switch works; false otherwise
+	 */
 	private static boolean elevatorBottomLSWorks(ElevatorController ec) {
 		ec.setAutoSetpoint(0);
 		while(!ec.isAtAutoSetpoint()) {
@@ -103,6 +128,11 @@ public class Diagnostic {
 		return ec.getBottomLS().get();
 	}
 	
+	/**
+	 * Tests the top limit switch for the elevator
+	 * @param ec the elevator controls
+	 * @return true if the top limit switch works; false otherwise
+	 */
 	private static boolean elevatorTopLSWorks(ElevatorController ec) {
 		ec.setAutoSetpoint(3750);
 		while(!ec.isAtAutoSetpoint()) {
@@ -112,6 +142,11 @@ public class Diagnostic {
 		return ec.getTopLS().get();
 	}
 	
+	/**
+	 * Tests the encoder for the elevator
+	 * @param ec the elevator controls
+	 * @return true if the encoder works; false otherwise
+	 */
 	private static boolean elevatorEncoderWorks(ElevatorController ec) {
 		ec.setAutoSetpoint(1000);
 		while(!ec.isAtAutoSetpoint()) {

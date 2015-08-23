@@ -39,6 +39,9 @@ public class DriveHealthMonitor {
 		this.consoleLog = consoleLog;
 	}
 	
+	/**
+	 * Starts monitoring the drive train
+	 */
 	public void startMonitoring() {
 		if(!started) {
 			new MonitorThread().start();
