@@ -24,6 +24,9 @@ public class ElevatorHealthMonitor {
 	private RobotConsoleLog consoleLog;
 	
 	private static boolean started;
+	private static boolean loggedEnc;
+	private static boolean loggedBotLS;
+	private static boolean loggedTopLS;
 	
 	public ElevatorHealthMonitor(Joystick elevStick, Encoder enc, 
 								 DigitalInput top, DigitalInput bottom, 
@@ -54,22 +57,31 @@ public class ElevatorHealthMonitor {
 			while(true) {
 				try {
 					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
-						boolean y = elevStick.getY() > 0.10;
+						boolean y = Math.abs(elevStick.getY()) > 0.10;
 						
-						if(enc.get() <= 10 && y) {
+						if(Math.abs(enc.get()) <= 0 && y && !loggedEnc) {
 							log.warning("Elevator encoder may not be operating correctly");
 							consoleLog.warning("Elevator encoder may not be operating correctly");
+							loggedEnc = true;
 						}
 						
-						if(enc.get() <= 0 && !bottom.get()) {
+						if(enc.get() <= 0 && !bottom.get() && !loggedBotLS) {
 							log.warning("Bottom limit switch may not be operating correctly");
 							consoleLog.warning("Bottom limit may not be operating correctly");
+							loggedBotLS = true;
 						}
 						
-						if(enc.get() >= 3700 && !top.get()) {
+						if(enc.get() >= 3700 && !top.get() && !loggedTopLS) {
 							log.warning("Top limit switch may not be operating correctly");
 							consoleLog.warning("Top limit may not be operating correctly");
+							loggedTopLS = true;
 						}
+					}
+					
+					if(loggedEnc && loggedBotLS && loggedTopLS) {
+						// Nice! Everything in here has indicated a
+						// warning! Hopefully you're not in a match!
+						break;
 					}
 					
 					Thread.sleep(100);

@@ -8,9 +8,12 @@ import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 
 import Logging.ActiveLog;
+import Logging.LocalLog;
 import Logging.LoggerAsync;
+
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 import org.usfirst.frc.team4342.robot.drive.DrivePID;
+
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,7 +30,6 @@ import edu.wpi.first.wpilibj.Ultrasonic;
  */
 public class AutoRoutines {
 	
-	// TODO: test'n'tune these two values
 	private static final double MinToteDist = 11.0;
 	private static final double MaxToteDist = 13.0;
 	
@@ -96,6 +98,14 @@ public class AutoRoutines {
 				case 4:
 					pickupOneContainer();
 					break;
+				case 5:
+					try {
+						Diagnostic.runSelfTest(drive, ec, new LoggerAsync(new LocalLog("Demonator4", "/home/lvuser/Diagnostic.txt")), consoleLog);
+					} catch(Exception ex) {
+						log.error(ExceptionInfo.getType(ex) + " in AutoRoutines.java", ex);
+						consoleLog.error(ExceptionInfo.getType(ex) + " in AutoRoutines.java", ex);
+					}
+					break;
 				default:
 					if(!logged) {
 						log.warning("No valid autonomous value selected, please alert Ernie or Magnus");
@@ -107,8 +117,6 @@ public class AutoRoutines {
 			}
 		}
 	}
-	
-	//TODO: test'n'tune the drive train encoder counts
 	
 	/**
 	 * Auto routine will execute in the following steps:

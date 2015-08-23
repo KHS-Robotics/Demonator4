@@ -133,10 +133,7 @@ public class MecanumDrive {
 		right = x;
 
 		if (x == 0.0 && y == 0.0) {
-			fl.set(0);
-			fr.set(0);
-			rl.set(0);
-			rr.set(0);
+			stopMotors();
 			return;
 		}
 		
@@ -228,6 +225,16 @@ public class MecanumDrive {
 	 */
 	public void setInitalAngle(double angle) {
 		initialAngle = angle;
+	}
+	
+	/**
+	 * Stops all drive motors
+	 */
+	public void stopMotors() {
+		fr.set(0.0);
+		fl.set(0.0);
+		rr.set(0.0);
+		rl.set(0.0);
 	}
 	
 	/**

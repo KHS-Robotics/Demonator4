@@ -22,6 +22,11 @@ public class DriveHealthMonitor {
 	
 	private static boolean started;
 	
+	private static boolean loggedFR;
+	private static boolean loggedFL;
+	private static boolean loggedRR;
+	private static boolean loggedRL;
+	
 	public DriveHealthMonitor(Joystick driveStick, CANJaguar frontRight,
 								CANJaguar frontLeft, CANJaguar rearRight,
 								CANJaguar rearLeft, ILog log, RobotConsoleLog consoleLog) {
@@ -69,28 +74,41 @@ public class DriveHealthMonitor {
 					
 					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
 						
-						boolean x = driveStick.getX() > 0.10;
-						boolean y = driveStick.getY() > 0.10;
-						boolean z = driveStick.getZ() > 0.10;
+						boolean x = Math.abs(driveStick.getX()) > 0.10;
+						boolean y = Math.abs(driveStick.getY()) > 0.10;
+						boolean z = Math.abs(driveStick.getZ()) > 0.10;
 						
-						if(getFrontRightEncCount() <= 1 && (x || y || z)) {
+						// We use 0.05 revolutions here because the encoder counts should change
+						// more dramatically than 1/20 of a spin of the wheel
+						
+						if(getFrontRightEncCount() <= 0.05 && (x || y || z) && !loggedFR) {
 							log.warning("Front right drive encoder may not be operating correctly");
 							consoleLog.warning("Front right drive encoder may not be operating correctly");
+							loggedFR = true;
 						}
 						
-						if(getFrontLeftEncCount() <= 1 && (x || y || z)) {
+						if(getFrontLeftEncCount() <= 0.05 && (x || y || z) && !loggedFL) {
 							log.warning("Front left drive encoder may not be operating correctly");
 							consoleLog.warning("Front left drive encoder may not be operating correctly");
+							loggedFL = true;
 						}
 						
-						if(getRearRightEncCount() <= 1 && (x || y || z)) {
+						if(getRearRightEncCount() <= 0.05 && (x || y || z) && !loggedRR) {
 							log.warning("Rear right drive encoder may not be operating correctly");
 							consoleLog.warning("Rear right drive encoder may not be operating correctly");
+							loggedRR = true;
 						}
 						
-						if(getRearLeftEncCount() <= 1 && (x || y || z)) {
+						if(getRearLeftEncCount() <= 0.05 && (x || y || z) && !loggedRL) {
 							log.warning("Rear left drive encoder may not be operating correctly");
 							consoleLog.warning("Rear left drive encoder may not be operating correctly");
+							loggedRL = true;
+						}
+						
+						if(loggedFR && loggedFL && loggedRR && loggedRL) {
+							// Nice! Everything in here has indicated a
+							// warning! Hopefully you're not in a match!
+							return;
 						}
 					}
 					

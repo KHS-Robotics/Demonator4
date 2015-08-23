@@ -324,6 +324,14 @@ public class ElevatorController {
 		buttonSelected = -1;
 	}
 	
+	public DigitalInput getBottomLS() {
+		return botLS;
+	}
+	
+	public DigitalInput getTopLS() {
+		return topLS;
+	}
+	
 	public Encoder getEncoder() {
 		return enc;
 	}
