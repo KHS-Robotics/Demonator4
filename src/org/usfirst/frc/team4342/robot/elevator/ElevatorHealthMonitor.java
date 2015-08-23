@@ -51,27 +51,29 @@ public class ElevatorHealthMonitor {
 	private class MonitoringThread extends Thread implements Runnable {
 		@Override
 		public void run() {
-			while(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
+			while(true) {
 				try {
-					
-					boolean y = elevStick.getY() > 0.10;
-					
-					if(enc.get() <= 10 && y) {
-						log.warning("Elevator encoder may not be operating correctly");
-						consoleLog.warning("Elevator encoder may not be operating correctly");
-					}
-					
-					if(enc.get() <= 0 && !bottom.get()) {
-						log.warning("Bottom limit switch may not be operating correctly");
-						consoleLog.warning("Bottom limit may not be operating correctly");
-					}
-					
-					if(enc.get() >= 3700 && !top.get()) {
-						log.warning("Top limit switch may not be operating correctly");
-						consoleLog.warning("Top limit may not be operating correctly");
+					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
+						boolean y = elevStick.getY() > 0.10;
+						
+						if(enc.get() <= 10 && y) {
+							log.warning("Elevator encoder may not be operating correctly");
+							consoleLog.warning("Elevator encoder may not be operating correctly");
+						}
+						
+						if(enc.get() <= 0 && !bottom.get()) {
+							log.warning("Bottom limit switch may not be operating correctly");
+							consoleLog.warning("Bottom limit may not be operating correctly");
+						}
+						
+						if(enc.get() >= 3700 && !top.get()) {
+							log.warning("Top limit switch may not be operating correctly");
+							consoleLog.warning("Top limit may not be operating correctly");
+						}
 					}
 					
 					Thread.sleep(100);
+						
 				} catch (Exception ex) {
 					log.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 					consoleLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);

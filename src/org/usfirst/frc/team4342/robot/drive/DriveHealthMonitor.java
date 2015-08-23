@@ -64,31 +64,34 @@ public class DriveHealthMonitor {
 	private class MonitorThread extends Thread implements Runnable {
 		@Override
 		public void run() {
-			while(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
+			while(true) {
 				try {
 					
-					boolean x = driveStick.getX() > 0.10;
-					boolean y = driveStick.getY() > 0.10;
-					boolean z = driveStick.getZ() > 0.10;
-					
-					if(getFrontRightEncCount() <= 1 && (x || y || z)) {
-						log.warning("Front right drive encoder may not be operating correctly");
-						consoleLog.warning("Front right drive encoder may not be operating correctly");
-					}
-					
-					if(getFrontLeftEncCount() <= 1 && (x || y || z)) {
-						log.warning("Front left drive encoder may not be operating correctly");
-						consoleLog.warning("Front left drive encoder may not be operating correctly");
-					}
-					
-					if(getRearRightEncCount() <= 1 && (x || y || z)) {
-						log.warning("Rear right drive encoder may not be operating correctly");
-						consoleLog.warning("Rear right drive encoder may not be operating correctly");
-					}
-					
-					if(getRearLeftEncCount() <= 1 && (x || y || z)) {
-						log.warning("Rear left drive encoder may not be operating correctly");
-						consoleLog.warning("Rear left drive encoder may not be operating correctly");
+					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
+						
+						boolean x = driveStick.getX() > 0.10;
+						boolean y = driveStick.getY() > 0.10;
+						boolean z = driveStick.getZ() > 0.10;
+						
+						if(getFrontRightEncCount() <= 1 && (x || y || z)) {
+							log.warning("Front right drive encoder may not be operating correctly");
+							consoleLog.warning("Front right drive encoder may not be operating correctly");
+						}
+						
+						if(getFrontLeftEncCount() <= 1 && (x || y || z)) {
+							log.warning("Front left drive encoder may not be operating correctly");
+							consoleLog.warning("Front left drive encoder may not be operating correctly");
+						}
+						
+						if(getRearRightEncCount() <= 1 && (x || y || z)) {
+							log.warning("Rear right drive encoder may not be operating correctly");
+							consoleLog.warning("Rear right drive encoder may not be operating correctly");
+						}
+						
+						if(getRearLeftEncCount() <= 1 && (x || y || z)) {
+							log.warning("Rear left drive encoder may not be operating correctly");
+							consoleLog.warning("Rear left drive encoder may not be operating correctly");
+						}
 					}
 					
 					Thread.sleep(100);
