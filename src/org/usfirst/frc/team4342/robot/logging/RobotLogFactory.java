@@ -6,6 +6,9 @@ import java.io.IOException;
 import Logging.ActiveLog;
 import Logging.LocalLog;
 import Logging.LoggerAsync;
+import Logging.LoggingException;
+
+import org.usfirst.frc.team4342.robot.Robot;
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
 /**
@@ -25,8 +28,9 @@ public class RobotLogFactory {
 	 * @param clearLogs true to clear the log file, false to append
 	 * @return a logger that logs to a text file
 	 * @throws IOException
+	 * @throws LoggingException 
 	 */
-	public static LocalLog createLocalLog() throws IOException {
+	public static LocalLog createLocalLog() throws IOException, LoggingException {
 		return new LocalLog("Demonator4", getValidLogFile(), true);
 	}
 	
@@ -36,8 +40,9 @@ public class RobotLogFactory {
 	 * @param clearLogs true to clear the log file, false to append
 	 * @return a logger that logs to a text file
 	 * @throws IOException
+	 * @throws LoggingException 
 	 */
-	public static LoggerAsync createAsyncLog() throws IOException {
+	public static LoggerAsync createAsyncLog() throws IOException, LoggingException {
 		return new LoggerAsync(createLocalLog());
 	}
 	
@@ -87,7 +92,7 @@ public class RobotLogFactory {
 			boolean renamed = f.renameTo(new File(ROOT + "Log[" + (i+1) + "].txt"));
 			
 			if(!renamed) {
-				ActiveLog.warning("Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
 				
 				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}

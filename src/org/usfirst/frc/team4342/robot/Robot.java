@@ -3,8 +3,10 @@ package org.usfirst.frc.team4342.robot;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutineLoader;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
 import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
+import org.usfirst.frc.team4342.robot.drive.DriveHealthMonitor;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
+import org.usfirst.frc.team4342.robot.elevator.ElevatorHealthMonitor;
 import org.usfirst.frc.team4342.robot.elevator.Setpoint;
 import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
@@ -12,7 +14,9 @@ import org.usfirst.frc.team4342.robot.logging.PDPLogger;
 import org.usfirst.frc.team4342.robot.logging.RobotLogFactory;
 
 import Logging.*;
+
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
+
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -181,6 +185,29 @@ public class Robot extends IterativeRobot {
 				log, 
 				consoleLog
 			);
+			
+			DriveHealthMonitor dhm = new DriveHealthMonitor(
+				driveStick, 
+				frontRight, 
+				frontLeft, 
+				rearRight, 
+				rearLeft, 
+				log, 
+				consoleLog
+			);
+			
+			ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(
+				elevatorStick, 
+				elevatorEnc, 
+				topElevLS, 
+				botElevLS, 
+				log, 
+				consoleLog
+			);
+			
+			dhm.startMonitoring();
+			ehm.startMonitoring();
+			
 		} catch(Exception ex) {
 			tryLogError(ExceptionInfo.getType(ex) + " in robotInit()", ex);
 		}

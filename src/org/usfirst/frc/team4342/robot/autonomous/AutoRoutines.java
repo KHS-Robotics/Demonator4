@@ -522,7 +522,7 @@ public class AutoRoutines {
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException ex) {
-					ActiveLog.warning("Demonator4", ExceptionInfo.getType(ex) + " in AutoRoutines.AutoChecker");
+					ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "Demonator4", ExceptionInfo.getType(ex) + " in AutoRoutines.AutoChecker");
 				}
 			}
 		}
