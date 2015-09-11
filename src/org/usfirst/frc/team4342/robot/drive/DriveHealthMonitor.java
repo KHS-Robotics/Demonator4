@@ -1,9 +1,10 @@
 package org.usfirst.frc.team4342.robot.drive;
 
+import org.usfirst.frc.team4342.robot.Robot;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
-import Logging.ILog;
+import Logging.ActiveLog;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,7 +18,6 @@ public class DriveHealthMonitor {
 	
 	private Joystick driveStick;
 	private CANJaguar frontRight, frontLeft, rearRight, rearLeft;
-	private ILog log;
 	private RobotConsoleLog consoleLog;
 	
 	private static boolean started;
@@ -29,13 +29,12 @@ public class DriveHealthMonitor {
 	
 	public DriveHealthMonitor(Joystick driveStick, CANJaguar frontRight,
 								CANJaguar frontLeft, CANJaguar rearRight,
-								CANJaguar rearLeft, ILog log, RobotConsoleLog consoleLog) {
+								CANJaguar rearLeft, RobotConsoleLog consoleLog) {
 		this.driveStick = driveStick;
 		this.frontRight = frontRight;
 		this.frontLeft = frontLeft;
 		this.rearRight = rearRight;
 		this.rearLeft = rearLeft;
-		this.log = log;
 		this.consoleLog = consoleLog;
 	}
 	
@@ -85,25 +84,25 @@ public class DriveHealthMonitor {
 						// more dramatically than 1/20 of a spin of the wheel
 						
 						if(getFrontRightEncCount() <= 0.05 && (x || y || z) && !loggedFR) {
-							log.warning("Front right drive encoder may not be operating correctly");
+							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Front right drive encoder may not be operating correctly");
 							consoleLog.warning("Front right drive encoder may not be operating correctly");
 							loggedFR = true;
 						}
 						
 						if(getFrontLeftEncCount() <= 0.05 && (x || y || z) && !loggedFL) {
-							log.warning("Front left drive encoder may not be operating correctly");
+							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm" ,"Front left drive encoder may not be operating correctly");
 							consoleLog.warning("Front left drive encoder may not be operating correctly");
 							loggedFL = true;
 						}
 						
 						if(getRearRightEncCount() <= 0.05 && (x || y || z) && !loggedRR) {
-							log.warning("Rear right drive encoder may not be operating correctly");
+							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Rear right drive encoder may not be operating correctly");
 							consoleLog.warning("Rear right drive encoder may not be operating correctly");
 							loggedRR = true;
 						}
 						
 						if(getRearLeftEncCount() <= 0.05 && (x || y || z) && !loggedRL) {
-							log.warning("Rear left drive encoder may not be operating correctly");
+							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Rear left drive encoder may not be operating correctly");
 							consoleLog.warning("Rear left drive encoder may not be operating correctly");
 							loggedRL = true;
 						}
@@ -111,13 +110,14 @@ public class DriveHealthMonitor {
 						if(loggedFR && loggedFL && loggedRR && loggedRL) {
 							// Nice! Everything in here has indicated a
 							// warning! Hopefully you're not in a match!
+							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
 							return;
 						}
 					}
 					
 					Thread.sleep(100);
 				} catch(Exception ex) {
-					log.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
+					ActiveLog.error(Robot.ACTIVE_LOG_PATH, "D4-dhm", ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 					consoleLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 				}
 			}

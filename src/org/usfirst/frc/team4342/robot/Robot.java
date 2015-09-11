@@ -95,7 +95,7 @@ public class Robot extends IterativeRobot {
 	@Override
     public void robotInit() {
 		
-		ActiveLog.info(ACTIVE_LOG_PATH, "Demonator4", "Robot turned on");
+		ActiveLog.info(ACTIVE_LOG_PATH, "D4-main", "Robot turned on");
 		
 		consoleLog = RobotLogFactory.createRobotConsoleLog();
 		
@@ -153,8 +153,8 @@ public class Robot extends IterativeRobot {
 			pitchGyro.setSensitivity(0.007);
 			
 			camera = CameraServer.getInstance();
-			camera.setQuality(50);
-			camera.startAutomaticCapture("cam0");
+			camera.setQuality(75);
+			camera.startAutomaticCapture("elevatorCam");
 			
 			mecDrive = new MecanumDrive(
 				frontLeft,
@@ -191,8 +191,7 @@ public class Robot extends IterativeRobot {
 				frontRight, 
 				frontLeft, 
 				rearRight, 
-				rearLeft, 
-				log, 
+				rearLeft,
 				consoleLog
 			);
 			
@@ -201,7 +200,6 @@ public class Robot extends IterativeRobot {
 				elevatorEnc, 
 				topElevLS, 
 				botElevLS, 
-				log, 
 				consoleLog
 			);
 			

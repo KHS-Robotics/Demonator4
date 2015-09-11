@@ -24,12 +24,15 @@ public class ElevatorController {
 	 */
 	private class ElevatorThread extends Thread implements Runnable {
 		
-		private volatile ElevatorController ec;
+		private ElevatorController ec;
 		
 		public ElevatorThread(ElevatorController ec) {
 			this.ec = ec;
 		}
 		
+		/**
+		 * Starts listening for both teleop and auto inputs
+		 */
 		@Override
 		public void run() {
 			while(true) {
@@ -324,14 +327,25 @@ public class ElevatorController {
 		buttonSelected = -1;
 	}
 	
+	/**
+	 * Gets the status of the bottom elevator limit switch
+	 * @return true if being pressed, false if not
+	 */
 	public DigitalInput getBottomLS() {
 		return botLS;
 	}
-	
+	/**
+	 * Gets the status of the top elevator limit switch
+	 * @return true if being pressed, false if not
+	 */
 	public DigitalInput getTopLS() {
 		return topLS;
 	}
 	
+	/**
+	 * Gets the encoder for the elevator
+	 * @return the encoder for the elevator
+	 */
 	public Encoder getEncoder() {
 		return enc;
 	}

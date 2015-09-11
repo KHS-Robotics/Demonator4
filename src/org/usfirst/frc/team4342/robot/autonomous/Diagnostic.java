@@ -4,6 +4,7 @@ import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.shared.TimeoutTimer;
 
 import edu.wpi.first.wpilibj.CANJaguar;
 import Logging.ILog;
@@ -107,8 +108,15 @@ public class Diagnostic {
 	 * @throws InterruptedException ignore
 	 */
 	private static boolean CANJaguarEncoderWorks(CANJaguar jag) throws InterruptedException {
+		TimeoutTimer t = new TimeoutTimer(1);
+		t.start();
+		
 		jag.set(1.0);
-		Thread.sleep(1000);
+		
+		while(!t.isTimedOut()) {
+			
+		}
+		
 		jag.set(0.0);
 		
 		return Math.abs((int) jag.getPosition()) > 1;
@@ -120,8 +128,12 @@ public class Diagnostic {
 	 * @return true if the bottom limit switch works; false otherwise
 	 */
 	private static boolean elevatorBottomLSWorks(ElevatorController ec) {
+		TimeoutTimer t = new TimeoutTimer(5);
+		t.start();
+		
 		ec.setAutoSetpoint(0);
-		while(!ec.isAtAutoSetpoint()) {
+		
+		while(!ec.isAtAutoSetpoint() || t.isTimedOut()) {
 			// Wait until it's at the bottom...
 		}
 		
@@ -134,8 +146,12 @@ public class Diagnostic {
 	 * @return true if the top limit switch works; false otherwise
 	 */
 	private static boolean elevatorTopLSWorks(ElevatorController ec) {
+		TimeoutTimer t = new TimeoutTimer(10);
+		t.start();
+		
 		ec.setAutoSetpoint(3750);
-		while(!ec.isAtAutoSetpoint()) {
+		
+		while(!ec.isAtAutoSetpoint() || t.isTimedOut()) {
 			// Wait until it's at the top...
 		}
 		
@@ -148,16 +164,25 @@ public class Diagnostic {
 	 * @return true if the encoder works; false otherwise
 	 */
 	private static boolean elevatorEncoderWorks(ElevatorController ec) {
+		TimeoutTimer t1 = new TimeoutTimer(5);
+		t1.start();
+		
 		ec.setAutoSetpoint(1000);
-		while(!ec.isAtAutoSetpoint()) {
+		
+		while(!ec.isAtAutoSetpoint() || t1.isTimedOut()) {
 			// Wait until it's at the setpoint
 		}
 		
 		boolean isWorking = ec.getEncoder().get() > 0;
 		
-		ec.setAutoSetpoint(0);
-		while(!ec.isAtAutoSetpoint()) {
-			// Wait until it's at the bottom...
+		if(isWorking) {
+			TimeoutTimer t2 = new TimeoutTimer(5);
+			t2.start();
+			
+			ec.setAutoSetpoint(0);
+			while(!ec.isAtAutoSetpoint() || t2.isTimedOut()) {
+				// Wait until it's at the bottom...
+			}
 		}
 		
 		return isWorking;

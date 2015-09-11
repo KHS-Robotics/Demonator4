@@ -1,9 +1,10 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
+import org.usfirst.frc.team4342.robot.Robot;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
-import Logging.ILog;
+import Logging.ActiveLog;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,7 +21,6 @@ public class ElevatorHealthMonitor {
 	private Joystick elevStick;
 	private Encoder enc;
 	private DigitalInput top, bottom;
-	private ILog log;
 	private RobotConsoleLog consoleLog;
 	
 	private static boolean started;
@@ -29,13 +29,12 @@ public class ElevatorHealthMonitor {
 	private static boolean loggedTopLS;
 	
 	public ElevatorHealthMonitor(Joystick elevStick, Encoder enc, 
-								 DigitalInput top, DigitalInput bottom, 
-								 ILog log, RobotConsoleLog consoleLog) {
+								 DigitalInput top, DigitalInput bottom,
+								 RobotConsoleLog consoleLog) {
 		this.elevStick = elevStick;
 		this.enc = enc;
 		this.top = top;
 		this.bottom = bottom;
-		this.log = log;
 		this.consoleLog = consoleLog;
 	}
 	
@@ -63,19 +62,19 @@ public class ElevatorHealthMonitor {
 						boolean y = Math.abs(elevStick.getY()) > 0.10;
 						
 						if(Math.abs(enc.get()) <= 0 && y && !loggedEnc) {
-							log.warning("Elevator encoder may not be operating correctly");
+							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-ehm", "Elevator encoder may not be operating correctly");
 							consoleLog.warning("Elevator encoder may not be operating correctly");
 							loggedEnc = true;
 						}
 						
 						if(enc.get() <= 0 && !bottom.get() && !loggedBotLS) {
-							log.warning("Bottom limit switch may not be operating correctly");
+							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-ehm", "Bottom limit switch may not be operating correctly");
 							consoleLog.warning("Bottom limit may not be operating correctly");
 							loggedBotLS = true;
 						}
 						
 						if(enc.get() >= 3700 && !top.get() && !loggedTopLS) {
-							log.warning("Top limit switch may not be operating correctly");
+							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-ehm", "Top limit switch may not be operating correctly");
 							consoleLog.warning("Top limit may not be operating correctly");
 							loggedTopLS = true;
 						}
@@ -84,13 +83,14 @@ public class ElevatorHealthMonitor {
 					if(loggedEnc && loggedBotLS && loggedTopLS) {
 						// Nice! Everything in here has indicated a
 						// warning! Hopefully you're not in a match!
+						ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-ehm", "Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
 						break;
 					}
 					
 					Thread.sleep(100);
 						
 				} catch (Exception ex) {
-					log.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
+					ActiveLog.error(Robot.ACTIVE_LOG_PATH, "D4-ehm", ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 					consoleLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 				}
 			}
