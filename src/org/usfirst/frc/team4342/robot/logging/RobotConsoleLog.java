@@ -23,7 +23,7 @@ public class RobotConsoleLog extends BaseLog {
 		String hackMessage = message[2].toString();
 		hackMessage = hackMessage.substring(hackMessage.indexOf(":")+1);
 		
-		mssg += hackMessage;
+		mssg += hackMessage + "\n";
 		
 		DriverStation.reportError(mssg, false);
 	}

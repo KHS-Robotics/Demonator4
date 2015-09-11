@@ -113,10 +113,44 @@ public class Robot extends IterativeRobot {
 		}
 		
 		try {
-			
 			driveStick = new Joystick(0);
 			elevatorStick = new Joystick(1);
+		} catch(Exception ex) {
+			tryLogError("Unexpected error while initializing the joysticks", ex);
+		}
+		
+		try {
+			rightElev = new Talon(0);
+			leftElev = new Talon(1);
 			
+			topElevLS = new DigitalInput(7);
+			botElevLS = new DigitalInput(4);
+			
+			elevatorEnc = new Encoder(8, 9, false, EncodingType.k1X);
+			
+			elevController = new ElevatorController(
+					rightElev, 
+					leftElev,
+					elevatorStick,
+					elevatorEnc, 
+					topElevLS, 
+					botElevLS, 
+					new SetpointMapWrapper(setpoints)
+				);
+		} catch(Exception ex) {
+			tryLogError("Unexpected error while initializing the elevator controls", ex);
+		}
+			
+		try {
+			pivotGyro = new Gyro(0);
+			pitchGyro = new Gyro(1);
+			pivotGyro.setSensitivity(0.007);
+			pitchGyro.setSensitivity(0.007);
+		} catch(Exception ex) {
+			tryLogError("Unexpected error while initializing the gyros", ex);
+		}
+		
+		try {
 			frontRight = new CANJaguar(22);
 			frontLeft = new CANJaguar(21);
 			rearRight = new CANJaguar(23);
@@ -132,47 +166,24 @@ public class Robot extends IterativeRobot {
 				false
 			);
 			
-			rightElev = new Talon(0);
-			leftElev = new Talon(1);
-			
-			elevatorEnc = new Encoder(8, 9, false, EncodingType.k1X);
-			
-			topElevLS = new DigitalInput(7);
-			botElevLS = new DigitalInput(4);
-			
+			mecDrive = new MecanumDrive(
+					frontLeft,
+					frontRight,
+					rearLeft, 
+					rearRight, 
+					driveStick,
+					pivotGyro
+			);
+		} catch(Exception ex) {
+			tryLogError("Unexpected error while initializing the drive train", ex);
+		}
+		
+		try {
 			ultra = new Ultrasonic(2, 3, Ultrasonic.Unit.kInches);
 			ultra.setAutomaticMode(true);
 			
 			rightPhotoSensor = new DigitalInput(0);
 			leftPhotoSensor = new DigitalInput(1);
-			
-			pivotGyro = new Gyro(0);
-			pitchGyro = new Gyro(1);
-			pivotGyro.setSensitivity(0.007);
-			pitchGyro.setSensitivity(0.007);
-			
-			camera = CameraServer.getInstance();
-			camera.setQuality(75);
-			camera.startAutomaticCapture("elevatorCam");
-			
-			mecDrive = new MecanumDrive(
-				frontLeft,
-				frontRight,
-				rearLeft, 
-				rearRight, 
-				driveStick,
-				pivotGyro
-			);
-			
-			elevController = new ElevatorController(
-				rightElev, 
-				leftElev,
-				elevatorStick,
-				elevatorEnc, 
-				topElevLS, 
-				botElevLS, 
-				new SetpointMapWrapper(setpoints)
-			);
 			
 			autos = new AutoRoutines(
 				mecDrive, 
@@ -184,7 +195,11 @@ public class Robot extends IterativeRobot {
 				log, 
 				consoleLog
 			);
-			
+		} catch(Exception ex) {
+			tryLogError("Unexpected error while initializing autonomous settings", ex);
+		}
+		
+		try {
 			DriveHealthMonitor dhm = new DriveHealthMonitor(
 				driveStick, 
 				frontRight, 
@@ -194,6 +209,13 @@ public class Robot extends IterativeRobot {
 				consoleLog
 			);
 			
+			dhm.startMonitoring();
+			
+		} catch(Exception ex) {
+			tryLogError("Unexpected error while initalizing and starting the DHM", ex);
+		}
+		
+		try {
 			ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(
 				elevatorStick, 
 				elevatorEnc, 
@@ -202,11 +224,18 @@ public class Robot extends IterativeRobot {
 				consoleLog
 			);
 			
-			dhm.startMonitoring();
 			ehm.startMonitoring();
 			
 		} catch(Exception ex) {
-			tryLogError(ExceptionInfo.getType(ex) + " in robotInit()", ex);
+			tryLogError("Unexpected error while initalizing and starting the EHM", ex);
+		}
+		
+		try {
+			camera = CameraServer.getInstance();
+			camera.setQuality(75);
+			camera.startAutomaticCapture("elevatorCam");
+		} catch(Exception ex) {
+			tryLogError("Unexpected error while initalizing the camera", ex);
 		}
     }
     
@@ -313,7 +342,7 @@ public class Robot extends IterativeRobot {
 		try {
 			putDataToSmartDb();
 		} catch(Exception ex) {
-			tryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
+			tryLogError(ExceptionInfo.getType(ex) + " in disabledPeriodic()", ex);
 		}
 	}
 	
