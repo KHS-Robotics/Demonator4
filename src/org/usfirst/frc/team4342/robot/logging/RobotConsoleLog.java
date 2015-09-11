@@ -5,9 +5,10 @@ import Logging.Severity;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
+ * Logger that logs to the console on the driver station
+ * 
  * @author Ernie
  * 
- * Logger that logs to the console on the driver station
  */
 public class RobotConsoleLog extends BaseLog {
 
@@ -16,7 +17,7 @@ public class RobotConsoleLog extends BaseLog {
 	 * logs the severity level and the message.
 	 */
 	@Override
-	public void log(Severity severity, Object... message) {
+	public void log(Severity severity, Object[] message) {
 		String mssg = severity.toString().toUpperCase() + ": ";
 
 		String hackMessage = message[2].toString();

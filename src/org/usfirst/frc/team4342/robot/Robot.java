@@ -102,7 +102,6 @@ public class Robot extends IterativeRobot {
 		try {
 			log = RobotLogFactory.createAsyncLog();
 		} catch(Exception ex) {
-			// hmmm... where to log when the log fails...
 			consoleLog.warning("Robot log failed to initalize :: " + ExceptionInfo.getType(ex));
 		}
 		
