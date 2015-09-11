@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * 
@@ -22,11 +21,11 @@ public class ElevatorController {
 	 * complex math and things that should be done separate from the
 	 * main thread
 	 */
-	private class ElevatorThread extends Thread implements Runnable {
+	private class ElevatorControllerThread extends Thread implements Runnable {
 		
 		private ElevatorController ec;
 		
-		public ElevatorThread(ElevatorController ec) {
+		public ElevatorControllerThread(ElevatorController ec) {
 			this.ec = ec;
 		}
 		
@@ -57,7 +56,7 @@ public class ElevatorController {
 	private boolean buttonPressed;
 	private int buttonSelected;
 	
-	private ElevatorThread elevThread;
+	private ElevatorControllerThread elevThread;
 	
 	private SetpointMapWrapper setpoints;
 	
@@ -94,7 +93,7 @@ public class ElevatorController {
 		ds = DriverStation.getInstance();
 		enc.setDistancePerPulse(1);
 		
-		elevThread = new ElevatorThread(this);
+		elevThread = new ElevatorControllerThread(this);
 		elevThread.start();
 	}
 	

@@ -105,10 +105,9 @@ public class Diagnostic {
 	 * Tests an encoder on one of the CANJaguars on the drive train 
 	 * @param jag the jaguar to test
 	 * @return true if the encoder is working; false otherwise
-	 * @throws InterruptedException ignore
 	 */
-	private static boolean CANJaguarEncoderWorks(CANJaguar jag) throws InterruptedException {
-		TimeoutTimer t = new TimeoutTimer(1);
+	private static boolean CANJaguarEncoderWorks(CANJaguar jag) {
+		TimeoutTimer t = new TimeoutTimer(2);
 		t.start();
 		
 		jag.set(1.0);
@@ -116,6 +115,8 @@ public class Diagnostic {
 		while(!t.isTimedOut()) {
 			
 		}
+		
+		t.kill();
 		
 		jag.set(0.0);
 		
@@ -137,6 +138,8 @@ public class Diagnostic {
 			// Wait until it's at the bottom...
 		}
 		
+		t.kill();
+		
 		return ec.getBottomLS().get();
 	}
 	
@@ -155,6 +158,8 @@ public class Diagnostic {
 			// Wait until it's at the top...
 		}
 		
+		t.start();
+		
 		return ec.getTopLS().get();
 	}
 	
@@ -164,26 +169,28 @@ public class Diagnostic {
 	 * @return true if the encoder works; false otherwise
 	 */
 	private static boolean elevatorEncoderWorks(ElevatorController ec) {
-		TimeoutTimer t1 = new TimeoutTimer(5);
-		t1.start();
+		TimeoutTimer t = new TimeoutTimer(5);
+		t.start();
 		
 		ec.setAutoSetpoint(1000);
 		
-		while(!ec.isAtAutoSetpoint() || t1.isTimedOut()) {
+		while(!ec.isAtAutoSetpoint() || t.isTimedOut()) {
 			// Wait until it's at the setpoint
 		}
 		
 		boolean isWorking = ec.getEncoder().get() > 0;
 		
 		if(isWorking) {
-			TimeoutTimer t2 = new TimeoutTimer(5);
-			t2.start();
+			t.reset();
+			t.startTimer();
 			
 			ec.setAutoSetpoint(0);
-			while(!ec.isAtAutoSetpoint() || t2.isTimedOut()) {
+			while(!ec.isAtAutoSetpoint() || t.isTimedOut()) {
 				// Wait until it's at the bottom...
 			}
 		}
+		
+		t.kill();
 		
 		return isWorking;
 	}

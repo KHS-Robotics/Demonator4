@@ -109,7 +109,7 @@ public class Robot extends IterativeRobot {
 			pdpLogger = new PDPLogger(new PowerDistributionPanel(), log, consoleLog);
 			pdpLogger.start();
 		} catch(Exception ex) {
-			tryLogError("Failed to start PDPMonitor :: " + ex.getClass().getSimpleName(), ex);
+			tryLogError("Failed to start PDPMonitor :: " + ExceptionInfo.getType(ex), ex);
 		}
 		
 		try {

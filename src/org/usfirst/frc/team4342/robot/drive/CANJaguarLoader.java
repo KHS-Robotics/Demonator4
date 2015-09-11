@@ -44,6 +44,20 @@ public final class CANJaguarLoader {
 		jaguar.enableControl();
 	}
 	
+	
+	/**
+	 * Sets the jaguars to speed mode and sets their PID values with the Encoders
+	 * @param jaguars the jaguars to initialize
+	 */
+	public static void init(CANJaguar[] jaguars) {
+		init(jaguars, false);
+	}
+	
+	/**
+	 * Sets the jaguars to speed mode and sets their PID vales with the Encoders
+	 * @param jaguars the jaguars to initialize
+	 * @param resetEncoders true to reset the encoders, false to not reset them
+	 */
 	public static void init(CANJaguar[] jaguars, boolean resetEncoders) {
 		for(CANJaguar jag : jaguars) {
 			init(jag, resetEncoders);

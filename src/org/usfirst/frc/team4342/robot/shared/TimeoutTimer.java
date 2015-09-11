@@ -26,6 +26,7 @@ public class TimeoutTimer {
 	 */
 	public TimeoutTimer(int timeOut) {
 		this.timeOut = timeOut;
+		this.timedOut = true;
 	}
 	
 	/**
@@ -34,6 +35,22 @@ public class TimeoutTimer {
 	public void start() {
 		t = new TimeoutTimerThread(timeOut);
 		t.start();
+		t.startTimer();
+	}
+	
+	/**
+	 * Starts the timer
+	 */
+	public void startTimer() {
+		t.startTimer();
+	}
+	
+	/**
+	 * Sets the timeout for the timer
+	 * @param timeout the timeout
+	 */
+	public void setTimeout(int timeout) {
+		t.setTimeout(timeout);
 	}
 	
 	/**
@@ -45,17 +62,25 @@ public class TimeoutTimer {
 	}
 	
 	/**
-	 * Instantly times out the timer
+	 * Gets the current ticks of the timer
+	 * @return the current ticks of the timer
 	 */
-	public void kill() {
-		t.kill();
+	public int currentTicks() {
+		return t.currentTicks;
 	}
 	
 	/**
-	 * Instantly times out the timer and frees the resources used by this class
+	 * Resets the timer
 	 */
-	public void dispose() {
-		t.dispose();
+	public void reset() {
+		t.reset();
+	}
+	
+	/**
+	 * Instantly times out the timer and frees the resources used by the thread
+	 */
+	public void kill() {
+		t.kill();
 	}
 	
 	/**
@@ -63,6 +88,8 @@ public class TimeoutTimer {
 	 */
 	private class TimeoutTimerThread extends Thread implements Runnable {
 		private int timeout;
+		private int currentTicks;
+		private boolean killed;
 		
 		/**
 		 * Creates a timer that's on a separate thread
@@ -73,17 +100,34 @@ public class TimeoutTimer {
 		}
 		
 		/**
-		 * Manually times out the timer
+		 * Starts the timer
 		 */
-		public void kill() {
+		public void startTimer() {
+			timedOut = false;
+		}
+		
+		/**
+		 * Sets the timeout of the timer
+		 * @param timeout the timeout
+		 */
+		public void setTimeout(int timeout) {
+			this.timeout = timeout;
+		}
+		
+		/**
+		 * Resets the timer
+		 */
+		public void reset() {
+			currentTicks = 0;
 			timedOut = true;
 		}
 		
 		/**
-		 * Manually times out the time and frees the resources used by this class
+		 * Kills the timer and frees the resources used by this object
 		 */
-		public void dispose() {
-			kill();
+		public void kill() {
+			timedOut = true;
+			killed = true;
 			t = null;
 		}
 		
@@ -92,19 +136,19 @@ public class TimeoutTimer {
 		 */
 		@Override
 		public void run() {
-			int currentTime = 0;
-			
-			while(!timedOut) {
-				try {
-					if(currentTime < timeout) {
-						currentTime++;
-						Thread.sleep(1000);
-					} else {
+			while(!killed) {
+				while(!timedOut) {
+					try {
+						if(currentTicks < timeout) {
+							currentTicks++;
+							Thread.sleep(1000);
+						} else {
+							timedOut = true;
+						}
+					} catch(Exception ex) {
+						ActiveLog.error(Robot.ACTIVE_LOG_PATH, "D4-timer", ExceptionInfo.getType(ex) + " in TimedTimeout", ex);
 						timedOut = true;
 					}
-				} catch(Exception ex) {
-					ActiveLog.error(Robot.ACTIVE_LOG_PATH, "D4-timer", ExceptionInfo.getType(ex) + " in TimedTimeout", ex);
-					timedOut = true;
 				}
 			}
 		}

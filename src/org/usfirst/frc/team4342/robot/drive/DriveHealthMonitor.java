@@ -84,32 +84,44 @@ public class DriveHealthMonitor {
 						// more dramatically than 1/20 of a spin of the wheel
 						
 						if(getFrontRightEncCount() <= 0.05 && (x || y || z) && !loggedFR) {
+							frontRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
+							frontRight.enableControl();
+							
 							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Front right drive encoder may not be operating correctly");
 							consoleLog.warning("Front right drive encoder may not be operating correctly");
 							loggedFR = true;
 						}
 						
 						if(getFrontLeftEncCount() <= 0.05 && (x || y || z) && !loggedFL) {
+							frontLeft.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
+							frontLeft.enableControl();
+							
 							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm" ,"Front left drive encoder may not be operating correctly");
 							consoleLog.warning("Front left drive encoder may not be operating correctly");
 							loggedFL = true;
 						}
 						
 						if(getRearRightEncCount() <= 0.05 && (x || y || z) && !loggedRR) {
+							rearRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
+							rearRight.enableControl();
+							
 							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Rear right drive encoder may not be operating correctly");
 							consoleLog.warning("Rear right drive encoder may not be operating correctly");
 							loggedRR = true;
 						}
 						
 						if(getRearLeftEncCount() <= 0.05 && (x || y || z) && !loggedRL) {
+							rearLeft.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
+							rearLeft.enableControl();
+							
 							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Rear left drive encoder may not be operating correctly");
 							consoleLog.warning("Rear left drive encoder may not be operating correctly");
 							loggedRL = true;
 						}
 						
 						if(loggedFR && loggedFL && loggedRR && loggedRL) {
-							// Nice! Everything in here has indicated a
-							// warning! Hopefully you're not in a match!
+							// Everything has indicated a warning, so no need
+							// to use unnecessary resources
 							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
 							return;
 						}
@@ -124,3 +136,4 @@ public class DriveHealthMonitor {
 		}
 	}
 }
+

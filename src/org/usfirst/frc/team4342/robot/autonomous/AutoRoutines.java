@@ -12,7 +12,6 @@ import Logging.LocalLog;
 import Logging.LoggerAsync;
 
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
-import org.usfirst.frc.team4342.robot.drive.DrivePID;
 
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -40,8 +39,6 @@ public class AutoRoutines {
 	private int autoStep;
 	
 	private boolean leftPhotoSensorMadeContact;
-	
-	private long waitLoops;
 	
 	private MecanumDrive drive;
 	private ElevatorController ec;
@@ -498,21 +495,6 @@ public class AutoRoutines {
 		if(leftPhotoSensor.get()) {
 			leftPhotoSensorMadeContact = true;
 		}
-	}
-	
-	/**
-	 * A simple wait method in case anything the robot does will need extra
-	 * time to complete. In order to use this method, one needs to set
-	 * waitLoops to Robot.getNumLoops() + the amount iterations they want to wait
-	 * (50 is 1 second).
-	 * @return true if done waiting, false otherwise
-	 */
-	private boolean waitForNumLoops() {
-		if(Robot.getNumLoops() >= waitLoops) {
-			return true;
-		}
-		
-		return false;
 	}
 	
 	/**

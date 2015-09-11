@@ -24,7 +24,7 @@ public class SetpointMapWrapper
 	 * Main constructor for this class
 	 * @param setpoints the button and setpoints for the elevator
 	 * 
-	 * @throws IllegalArgumentException if setpoints is null
+	 * @throws IllegalArgumentException if setpoints is null or empty
 	 */
 	public SetpointMapWrapper(Setpoint[] setpoints) {
 		if(setpoints == null) {

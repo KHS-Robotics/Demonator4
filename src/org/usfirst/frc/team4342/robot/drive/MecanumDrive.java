@@ -66,9 +66,9 @@ public class MecanumDrive {
 	 * Moved the robot based on the joystick inputs
 	 */
 	public void drive() {
-		double kX = Math.abs(joystick.getX()) < JOYSTICK_DEADBAND ? 0 : joystick.getX();
-		double kY = Math.abs(joystick.getY()) < JOYSTICK_DEADBAND ? 0 : joystick.getY();
-		double kZ = Math.abs(joystick.getZ()) < JOYSTICK_DEADBAND ? 0 : joystick.getZ();
+		double kX = Math.abs(joystick.getX()) > JOYSTICK_DEADBAND ? joystick.getX() : 0.0;
+		double kY = Math.abs(joystick.getY()) > JOYSTICK_DEADBAND ? joystick.getY() : 0.0;
+		double kZ = Math.abs(joystick.getZ()) > JOYSTICK_DEADBAND ? joystick.getZ() : 0.0;
 
 		forward = -kY;
 		right = kX;
@@ -77,7 +77,6 @@ public class MecanumDrive {
 		if(enableGyro) {
 			gyroAngle = gyro.getAngle();
 			
-			//gyroAngle += 180;
 			gyroAngle %= 360.0;
 			
 			if (gyroAngle < 0) {
