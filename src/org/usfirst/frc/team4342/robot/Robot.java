@@ -136,7 +136,7 @@ public class Robot extends IterativeRobot {
 					topElevLS, 
 					botElevLS, 
 					new SetpointMapWrapper(setpoints)
-				);
+			);
 		} catch(Exception ex) {
 			tryLogError("Unexpected error while initializing the elevator controls", ex);
 		}

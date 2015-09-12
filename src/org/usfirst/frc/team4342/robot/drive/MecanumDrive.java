@@ -203,8 +203,6 @@ public class MecanumDrive {
 		enableGyro = true;
 	}
 	
-	
-	// TODO: change to percent v bus mode if the encoders fail to give a value
 	/**
 	 * Disables field oriented drive and goes to robot oriented
 	 */

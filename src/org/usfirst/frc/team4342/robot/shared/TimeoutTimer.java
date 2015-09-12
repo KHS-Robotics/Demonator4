@@ -128,7 +128,6 @@ public class TimeoutTimer {
 		public void kill() {
 			timedOut = true;
 			killed = true;
-			t = null;
 		}
 		
 		/**
