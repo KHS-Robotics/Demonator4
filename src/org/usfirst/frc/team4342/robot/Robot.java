@@ -232,7 +232,7 @@ public class Robot extends IterativeRobot {
 		
 		try {
 			camera = CameraServer.getInstance();
-			camera.setQuality(75);
+			camera.setQuality(50);
 			camera.startAutomaticCapture("elevatorCam");
 		} catch(Exception ex) {
 			tryLogError("Unexpected error while initalizing the camera", ex);
