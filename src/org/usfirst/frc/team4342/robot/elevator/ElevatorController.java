@@ -192,7 +192,6 @@ public class ElevatorController {
 			if(elevStick.getRawButton(i) && setpoints.containsButton(i)) {
 				buttonPressed = true;
 				buttonSelected = i;
-				
 			}
 		}
 	}
