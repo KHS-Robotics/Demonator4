@@ -6,17 +6,16 @@ import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 import Logging.ActiveLog;
 
 /**
- * 
  * This class is for creating timeouts for automated robot tasks in case
  * a sensor breaks and causes an infinite loop in the automated task.
  * 
  * @author khsrobotics
- *
  */
 public class TimeoutTimer {
 	
 	private volatile boolean timedOut;
-	private int timeOut;
+	private volatile boolean killed;
+	private volatile boolean stopped;
 	
 	private TimeoutTimerThread t;
 	
@@ -25,24 +24,31 @@ public class TimeoutTimer {
 	 * @param timeOut
 	 */
 	public TimeoutTimer(int timeOut) {
-		this.timeOut = timeOut;
 		this.timedOut = true;
+		t = new TimeoutTimerThread(timeOut);
 	}
 	
 	/**
 	 * Starts the timer on another thread
 	 */
 	public void start() {
-		t = new TimeoutTimerThread(timeOut);
 		t.start();
 		t.startTimer();
 	}
 	
 	/**
-	 * Starts the timer
+	 * Starts the timer. Only call this if you plan on using the timer more than once.
+	 * Otherwise, use start() instead.
 	 */
 	public void startTimer() {
 		t.startTimer();
+	}
+	
+	/**
+	 * Stops the timer
+	 */
+	public void stop() {
+		stopped = true;
 	}
 	
 	/**
@@ -59,6 +65,10 @@ public class TimeoutTimer {
 	 */
 	public boolean isTimedOut() {
 		return timedOut;
+	}
+	
+	public boolean isKilled() {
+		return killed;
 	}
 	
 	/**
@@ -89,7 +99,6 @@ public class TimeoutTimer {
 	private class TimeoutTimerThread extends Thread implements Runnable {
 		private int timeout;
 		private int currentTicks;
-		private boolean killed;
 		
 		/**
 		 * Creates a timer that's on a separate thread
@@ -136,7 +145,7 @@ public class TimeoutTimer {
 		@Override
 		public void run() {
 			while(!killed) {
-				while(!timedOut) {
+				while(!timedOut && !stopped) {
 					try {
 						if(currentTicks < timeout) {
 							currentTicks++;
