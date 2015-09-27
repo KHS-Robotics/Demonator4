@@ -13,6 +13,7 @@ import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.PDPLogger;
 import org.usfirst.frc.team4342.robot.logging.RobotLogFactory;
+import org.usfirst.frc.team4342.robot.logging.SmartDashboardUpdater;
 
 import Logging.*;
 
@@ -29,7 +30,6 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Main class for the entire robot!
@@ -63,6 +63,7 @@ public class Robot extends IterativeRobot {
 	private Joystick driveStick, elevatorStick;
 	
 	private CANJaguar frontRight, frontLeft, rearRight, rearLeft;
+	private CANJaguar[] jaguars = { frontRight, frontLeft, rearRight, rearLeft };
 	
 	private Talon rightElev, leftElev;
 	
@@ -92,6 +93,7 @@ public class Robot extends IterativeRobot {
 	
 	private static LoggerAsync log;
 	private static RobotConsoleLog consoleLog;
+	private static MultiLog multiLog;
 	private static PDPLogger pdpLogger;
 	
 	/**
@@ -106,22 +108,24 @@ public class Robot extends IterativeRobot {
 		
 		try {
 			log = RobotLogFactory.createAsyncLog();
+			multiLog = new MultiLog(new ILog[] { log, consoleLog });
 		} catch(Exception ex) {
+			multiLog = new MultiLog(new ILog[] { consoleLog });
 			consoleLog.warning("Robot log failed to initalize :: " + ExceptionInfo.getType(ex));
 		}
 		
 		try {
-			pdpLogger = new PDPLogger(new PowerDistributionPanel(), log, consoleLog);
+			pdpLogger = new PDPLogger(new PowerDistributionPanel(), multiLog);
 			pdpLogger.start();
 		} catch(Exception ex) {
-			tryLogError("Failed to start PDPMonitor :: " + ExceptionInfo.getType(ex), ex);
+			multiLog.warning("Failed to start PDPMonitor");
 		}
 		
 		try {
 			driveStick = new Joystick(0);
 			elevatorStick = new Joystick(1);
 		} catch(Exception ex) {
-			tryLogError("Unexpected error while initializing the joysticks", ex);
+			multiLog.error("Unexpected error while initializing the joysticks", ex);
 		}
 		
 		try {
@@ -143,7 +147,7 @@ public class Robot extends IterativeRobot {
 				new SetpointMapWrapper(setpoints)
 			);
 		} catch(Exception ex) {
-			tryLogError("Unexpected error while initializing the elevator controls", ex);
+			multiLog.error("Unexpected error while initializing the elevator controls", ex);
 		}
 			
 		try {
@@ -152,7 +156,7 @@ public class Robot extends IterativeRobot {
 			pivotGyro.setSensitivity(0.007);
 			pitchGyro.setSensitivity(0.007);
 		} catch(Exception ex) {
-			tryLogError("Unexpected error while initializing the gyros", ex);
+			multiLog.error("Unexpected error while initializing the gyros", ex);
 		}
 		
 		try {
@@ -161,15 +165,7 @@ public class Robot extends IterativeRobot {
 			rearRight = new CANJaguar(23);
 			rearLeft = new CANJaguar(20);
 			
-			CANJaguarLoader.init(
-				new CANJaguar[] {
-					frontRight,
-					frontLeft,
-					rearRight,
-					rearLeft
-				},
-				false
-			);
+			CANJaguarLoader.init(jaguars, false);
 			
 			mecDrive = new MecanumDrive(
 				frontLeft,
@@ -180,7 +176,7 @@ public class Robot extends IterativeRobot {
 				pivotGyro
 			);
 		} catch(Exception ex) {
-			tryLogError("Unexpected error while initializing the drive train", ex);
+			multiLog.error("Unexpected error while initializing the drive train", ex);
 		}
 		
 		try {
@@ -197,11 +193,61 @@ public class Robot extends IterativeRobot {
 				leftPhotoSensor, 
 				rightPhotoSensor, 
 				pivotGyro, 
-				log, 
+				multiLog, 
 				consoleLog
 			);
 		} catch(Exception ex) {
-			tryLogError("Unexpected error while initializing autonomous settings", ex);
+			multiLog.error("Unexpected error while initializing autonomous settings", ex);
+		}
+		
+		try {
+			SmartDashboardUpdater.addJoystick("Joy-Drive", driveStick);
+			SmartDashboardUpdater.addJoystick("Joy-Elev", elevatorStick);
+		} catch(Exception ex) {
+			multiLog.warning("Failed to add Joysticks on SDB");
+		}
+		
+		try {
+			SmartDashboardUpdater.addEncoder("Enc-Elev", elevatorEnc);
+		} catch(Exception ex) {
+			multiLog.warning("Failed to add Encoders on SDB");
+		}
+		
+		try {
+			SmartDashboardUpdater.addJagaur("FR", frontRight);
+			SmartDashboardUpdater.addJagaur("FL", frontLeft);
+			SmartDashboardUpdater.addJagaur("RR", rearRight);
+			SmartDashboardUpdater.addJagaur("RL", rearLeft);
+		} catch(Exception ex) {
+			multiLog.warning("Failed to add CANJaguars on SDB");
+		}
+		
+		try {
+			SmartDashboardUpdater.addDigitalInput("LS-Top", topElevLS);
+			SmartDashboardUpdater.addDigitalInput("LS-Bottom", botElevLS);
+			SmartDashboardUpdater.addDigitalInput("Photo-R", rightPhotoSensor);
+			SmartDashboardUpdater.addDigitalInput("Photo-L", leftPhotoSensor);
+		} catch(Exception ex) {
+			multiLog.warning("Failed to add DigitalInputs on SDB");
+		}
+		
+		try {
+			SmartDashboardUpdater.addGyro("G-Pivot", pivotGyro);
+			SmartDashboardUpdater.addGyro("G-Pitch", pitchGyro);
+		} catch(Exception ex) {
+			multiLog.warning("Failed to add Gyros on SDB");
+		}
+		
+		try {
+			SmartDashboardUpdater.setUltrasonic(ultra);
+		} catch(Exception ex) {
+			multiLog.warning("Failed to add Ultrasonic on SDB");
+		}
+		
+		try {
+			SmartDashboardUpdater.startUpdating(multiLog);
+		} catch(Exception ex) {
+			multiLog.warning("Failed to start updating SmartDashboard");
 		}
 		
 		try {
@@ -211,13 +257,13 @@ public class Robot extends IterativeRobot {
 				frontLeft, 
 				rearRight, 
 				rearLeft,
-				consoleLog
+				multiLog
 			);
 			
 			dhm.startMonitoring();
 			
 		} catch(Exception ex) {
-			tryLogError("Unexpected error while initalizing and starting the DHM", ex);
+			multiLog.warning("Failed to start the DHM");
 		}
 		
 		try {
@@ -226,13 +272,13 @@ public class Robot extends IterativeRobot {
 				elevatorEnc, 
 				topElevLS, 
 				botElevLS, 
-				consoleLog
+				multiLog
 			);
 			
 			ehm.startMonitoring();
 			
 		} catch(Exception ex) {
-			tryLogError("Unexpected error while initalizing and starting the EHM", ex);
+			multiLog.warning("Failed to start the EHM");
 		}
 		
 		try {
@@ -240,7 +286,7 @@ public class Robot extends IterativeRobot {
 			camera.setQuality(50);
 			camera.startAutomaticCapture("cam0");
 		} catch(Exception ex) {
-			tryLogError("Unexpected error while initalizing the camera", ex);
+			multiLog.warning("Failed to initialize the camera");
 		}
     }
     
@@ -254,15 +300,7 @@ public class Robot extends IterativeRobot {
 			
 			numLoops = 0;
 			
-			CANJaguarLoader.init(
-				new CANJaguar[] {
-					frontRight,
-					frontLeft,
-					rearRight,
-					rearLeft
-				},
-				true
-			);
+			CANJaguarLoader.init(jaguars, true);
 			
 			pivotGyro.reset();
 			pitchGyro.reset();
@@ -282,11 +320,7 @@ public class Robot extends IterativeRobot {
 	@Override
     public void autonomousPeriodic() {
 		try {
-			
 			autos.executeAutonomous(autoRoutine);
-			
-			putDataToSmartDb();
-			
 		} catch(Exception ex) {
 			tryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
 		}
@@ -313,12 +347,8 @@ public class Robot extends IterativeRobot {
 	@Override
     public void teleopPeriodic() {
 		try {
-			
 			mecDrive.drive();
 			checkForDriveTypeChange(driveStick, 7);
-			
-			putDataToSmartDb();
-			
 		} catch(Exception ex) {
 			tryLogError(ExceptionInfo.getType(ex) + " in teleopPeriodic()", ex);
 		}
@@ -332,6 +362,7 @@ public class Robot extends IterativeRobot {
 		try {
 			logged = false;
 			numLoops = 0;
+			CANJaguarLoader.setCoast(jaguars);
 		} catch(Exception ex) {
 			tryLogError(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
 			logged = false;
@@ -344,11 +375,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledPeriodic() {
-		try {
-			putDataToSmartDb();
-		} catch(Exception ex) {
-			tryLogError(ExceptionInfo.getType(ex) + " in disabledPeriodic()", ex);
-		}
+		
 	}
 	
 	/**
@@ -380,46 +407,10 @@ public class Robot extends IterativeRobot {
 	 * @param ex the exception associated with the error
 	 */
 	private void tryLogError(String message, Exception ex) {
-		if(!logged && log != null) {
-			log.error(message, ex);
-		}
-		
 		if(!logged) {
-			consoleLog.error(message, ex);
+			multiLog.error(message, ex);
 		}
 		
 		logged = true;
-	}
-	
-	/**
-	 * Prints sensor data to the driver stations smart dash board,
-	 * mostly used for debugging
-	 */
-	private void putDataToSmartDb() {
-		if(numLoops % 10 == 0) {
-			SmartDashboard.putBoolean("Fod", enableFod);
-			SmartDashboard.putBoolean("MecD-Fod", mecDrive.isFodEnabled());
-			
-			SmartDashboard.putNumber("Joy-D-X", driveStick.getX());
-			SmartDashboard.putNumber("Joy-D-Y", driveStick.getY());
-			SmartDashboard.putNumber("Joy-D-Z", driveStick.getZ());
-			
-			SmartDashboard.putNumber("Joy-E-Y", elevatorStick.getY());
-			
-			SmartDashboard.putNumber("Enc-FR", frontRight.getPosition());
-			SmartDashboard.putNumber("Enc-FL", frontLeft.getPosition());
-			SmartDashboard.putNumber("Enc-RL", rearLeft.getPosition());
-			SmartDashboard.putNumber("Enc-RR", rearRight.getPosition());
-			
-			SmartDashboard.putNumber("Enc-Elev", elevatorEnc.get());
-			
-			SmartDashboard.putBoolean("LS-Top", topElevLS.get());
-			SmartDashboard.putBoolean("LS-Bot", botElevLS.get());
-			
-			SmartDashboard.putNumber("Gyro-Piv", pivotGyro.getAngle());
-			SmartDashboard.putNumber("Gyro-Pit", pitchGyro.getAngle());
-			
-			SmartDashboard.putNumber("U-Dist", ultra.getRangeInches());
-		}
 	}
 }

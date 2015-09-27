@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Date;
 
-import Logging.LoggerAsync;
-import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
+import Logging.MultiLog;
+
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
@@ -32,8 +32,8 @@ public class PDPLogger {
 	 * @param log the log to log to
 	 * @param consoleLog the console log to log to
 	 */
-	public PDPLogger(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog)  {
-		logger = new PDPLoggingThread(pdp, log, consoleLog);
+	public PDPLogger(PowerDistributionPanel pdp, MultiLog multiLog)  {
+		logger = new PDPLoggingThread(pdp, multiLog);
 	}
 	
 	/**
@@ -57,8 +57,7 @@ public class PDPLogger {
 		private static final int MAX_LOGS = 100;
 		
 		private PowerDistributionPanel pdp;
-		private LoggerAsync log;
-		private RobotConsoleLog consoleLog;
+		private MultiLog multiLog;
 		
 		/**
 		 * Constructs a PDP Logger to log PDP data
@@ -66,12 +65,11 @@ public class PDPLogger {
 		 * @param log the log to log to
 		 * @param consoleLog the console log to log to
 		 */
-		public PDPLoggingThread(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog) {
+		public PDPLoggingThread(PowerDistributionPanel pdp, MultiLog multiLog) {
 			this.pdp = pdp;
-			this.log = log;
-			this.consoleLog = consoleLog;
+			this.multiLog = multiLog;
 			
-			csvLogFile = FileHelper.getValidPdpLogFile(log ,consoleLog);
+			csvLogFile = FileHelper.getValidPdpLogFile(multiLog);
 		}
 		
 		/**
@@ -119,17 +117,13 @@ public class PDPLogger {
 				
 				writer.close();
 			} catch(Exception ex) {
-				consoleLog.warning(ExceptionInfo.getType(ex) + ": Failed to write to CSV for PDP logger,"
-						+ " please alert Ernie or Magnus when you can");
-				log.warning("Failed to write to CSV for PDP logger :: " + ExceptionInfo.getType(ex));
+				multiLog.warning("Failed to write to CSV for PDP logger :: " + ExceptionInfo.getType(ex));
 			} finally {
 				try {
 					if(writer != null)
 						writer.close();
 				} catch (Exception ex) {
-					consoleLog.warning(ExceptionInfo.getType(ex) + ": Failed to close writer to CSV for PDP logger,"
-							+ " please alert Ernie or Magnus when you can");
-					log.warning("Failed to close writer to CSV for PDP logger");
+					multiLog.warning("Failed to close writer to CSV for PDP logger");
 				}
 			}
 		}

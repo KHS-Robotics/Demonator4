@@ -10,6 +10,7 @@ import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 import Logging.ActiveLog;
 import Logging.LocalLog;
 import Logging.LoggerAsync;
+import Logging.MultiLog;
 
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
@@ -50,7 +51,7 @@ public class AutoRoutines {
 	private DigitalInput leftPhotoSensor, rightPhotoSensor;
 	private Gyro gyro;
 	
-	private LoggerAsync log;
+	private MultiLog multiLog;
 	private RobotConsoleLog consoleLog;
 	
 	/**
@@ -65,7 +66,7 @@ public class AutoRoutines {
 	public AutoRoutines(MecanumDrive drive, ElevatorController ec,
 						Ultrasonic ultra, DigitalInput leftPhotoSensor,
 						DigitalInput rightPhotoSensor, Gyro gyro,
-						LoggerAsync log, RobotConsoleLog consoleLog) {
+						MultiLog multiLog, RobotConsoleLog consoleLog) {
 		this.drive = drive;
 		this.ec = ec;
 		this.ultra = ultra;
@@ -73,7 +74,7 @@ public class AutoRoutines {
 		this.rightPhotoSensor = rightPhotoSensor;
 		this.gyro = gyro;
 		
-		this.log = log;
+		this.multiLog = multiLog;
 		this.consoleLog = consoleLog;
 		
 		new AutoChecker().start();
@@ -103,18 +104,12 @@ public class AutoRoutines {
 					break;
 				
 				case DiagnosticCheck:
-					try {
-						Diagnostic.runSelfTest(drive, ec, new LoggerAsync(new LocalLog("Demonator4", "/home/lvuser/Diagnostic.txt")), consoleLog);
-					} catch(Exception ex) {
-						log.error(ExceptionInfo.getType(ex) + " in AutoRoutines.java", ex);
-						consoleLog.error(ExceptionInfo.getType(ex) + " in AutoRoutines.java", ex);
-					}
+					runDiagnosticCheck(consoleLog);
 					break;
 				
 				default:
 					if(!logged) {
-						log.warning("No valid autonomous value selected, please alert Ernie or Magnus");
-						consoleLog.warning("No valid autonomous value selected, please alert Ernie or Magnus");
+						multiLog.warning("No valid autonomous value selected, please alert Ernie or Magnus");
 						
 						logged = true;
 					}
@@ -445,6 +440,14 @@ public class AutoRoutines {
 			}
 		}
  	}
+	
+	public void runDiagnosticCheck(RobotConsoleLog consoleLog) {
+		try {
+			Diagnostic.runSelfTest(drive, ec, new LoggerAsync(new LocalLog("Demonator4", "/home/lvuser/Diagnostic.txt")), consoleLog);
+		} catch(Exception ex) {
+			multiLog.error(ExceptionInfo.getType(ex) + " in AutoRoutines.java", ex);
+		}
+	}
 	
 	/**
 	 * Adds up all encoder counts of the drive train

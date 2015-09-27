@@ -1,10 +1,9 @@
 package org.usfirst.frc.team4342.robot.drive;
 
-import org.usfirst.frc.team4342.robot.Robot;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
-import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
-import Logging.ActiveLog;
+import Logging.MultiLog;
+
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -22,7 +21,7 @@ public class DriveHealthMonitor {
 	
 	private static Joystick driveStick;
 	private static CANJaguar frontRight, frontLeft, rearRight, rearLeft;
-	private static RobotConsoleLog consoleLog;
+	private static MultiLog multiLog;
 	
 	// We really only want one instance of this class,
 	// so if someone creates multiple instances, there
@@ -48,14 +47,14 @@ public class DriveHealthMonitor {
 	 */
 	public DriveHealthMonitor(Joystick driveStick, CANJaguar frontRight,
 								CANJaguar frontLeft, CANJaguar rearRight,
-								CANJaguar rearLeft, RobotConsoleLog consoleLog) {
+								CANJaguar rearLeft, MultiLog multiLog) {
 		if(!constructed) {
 			this.driveStick = driveStick;
 			this.frontRight = frontRight;
 			this.frontLeft = frontLeft;
 			this.rearRight = rearRight;
 			this.rearLeft = rearLeft;
-			this.consoleLog = consoleLog;
+			this.multiLog = multiLog;
 		}
 	}
 	
@@ -108,8 +107,7 @@ public class DriveHealthMonitor {
 							frontRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							frontRight.enableControl();
 							
-							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Front right drive encoder may not be operating correctly");
-							consoleLog.warning("Front right drive encoder may not be operating correctly");
+							multiLog.warning("Front right drive encoder may not be operating correctly");
 							loggedFR = true;
 						}
 						
@@ -117,8 +115,7 @@ public class DriveHealthMonitor {
 							frontLeft.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							frontLeft.enableControl();
 							
-							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm" ,"Front left drive encoder may not be operating correctly");
-							consoleLog.warning("Front left drive encoder may not be operating correctly");
+							multiLog.warning("Front left drive encoder may not be operating correctly");
 							loggedFL = true;
 						}
 						
@@ -126,8 +123,7 @@ public class DriveHealthMonitor {
 							rearRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							rearRight.enableControl();
 							
-							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Rear right drive encoder may not be operating correctly");
-							consoleLog.warning("Rear right drive encoder may not be operating correctly");
+							multiLog.warning("Rear right drive encoder may not be operating correctly");
 							loggedRR = true;
 						}
 						
@@ -135,15 +131,14 @@ public class DriveHealthMonitor {
 							rearLeft.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							rearLeft.enableControl();
 							
-							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Rear left drive encoder may not be operating correctly");
-							consoleLog.warning("Rear left drive encoder may not be operating correctly");
+							multiLog.warning("Rear left drive encoder may not be operating correctly");
 							loggedRL = true;
 						}
 						
 						if(loggedFR && loggedFL && loggedRR && loggedRL) {
 							// Everything has indicated a warning, so no need
 							// to use unnecessary resources
-							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
+							multiLog.warning("Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
 							constructed = started = false;
 							return;
 						}
@@ -151,8 +146,7 @@ public class DriveHealthMonitor {
 					
 					Thread.sleep(100);
 				} catch(Exception ex) {
-					ActiveLog.error(Robot.ACTIVE_LOG_PATH, "D4-dhm", ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
-					consoleLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
+					multiLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 				}
 			}
 		}

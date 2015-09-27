@@ -6,6 +6,7 @@ import org.usfirst.frc.team4342.robot.Robot;
 
 import Logging.ActiveLog;
 import Logging.LoggerAsync;
+import Logging.MultiLog;
 
 /**
  * This class is used to shift and get valid log files
@@ -49,7 +50,7 @@ public class FileHelper {
 	 * @param consoleLog used to log warnings about the files
 	 * @return a valid log file location
 	 */
-	public static File getValidPdpLogFile(LoggerAsync log, RobotConsoleLog consoleLog) {
+	public static File getValidPdpLogFile(MultiLog multiLog) {
 		for(int i = 1; i <= 5; i++) {
 			File f = new File(ROOT + "PdpLog[" + i + "].csv");
 			
@@ -58,7 +59,7 @@ public class FileHelper {
 			}
 		}
 		
-		shiftPdpLogFiles(log, consoleLog);
+		shiftPdpLogFiles(multiLog);
 		
 		return new File(ROOT + "PdpLog[1].csv");
 	}
@@ -100,7 +101,7 @@ public class FileHelper {
 	 * @param log used to log warnings about the files
 	 * @param consoleLog used to log warnings about the files
 	 */
-	private static void shiftPdpLogFiles(LoggerAsync log, RobotConsoleLog consoleLog) {
+	private static void shiftPdpLogFiles(MultiLog multiLog) {
 		
 		File lastFile = new File(ROOT + "PdpLog[5].csv");
 		
@@ -116,8 +117,7 @@ public class FileHelper {
 			boolean renamed = f.renameTo(new File(ROOT + "PdpLog[" + (i+1) + "].csv"));
 			
 			if(!renamed) {
-				log.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");
-				consoleLog.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				multiLog.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");
 				
 				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}

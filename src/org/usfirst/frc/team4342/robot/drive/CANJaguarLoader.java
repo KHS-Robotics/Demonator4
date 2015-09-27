@@ -46,6 +46,15 @@ public final class CANJaguarLoader {
 		
 		jaguar.enableControl();
 	}
+	/**
+	 * Sets the CANJaguar's neutral mode to coast
+	 * @param jaguars the jaguars to set
+	 */
+	public static void setCoast(CANJaguar[] jaguars) {
+		for(CANJaguar jaguar : jaguars) {
+			jaguar.configNeutralMode(CANJaguar.NeutralMode.Coast);
+		}
+	}
 	
 	/**
 	 * Sets the jaguars to speed mode and sets their PID values with the Encoders
