@@ -1,11 +1,11 @@
 package org.usfirst.frc.team4342.robot;
 
-import org.usfirst.frc.team4342.configurators.CameraConfigurator;
-import org.usfirst.frc.team4342.configurators.DriveConfigurator;
-import org.usfirst.frc.team4342.configurators.ElevatorConfigurator;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutineLoader;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
+import org.usfirst.frc.team4342.robot.configurators.CameraConfigurator;
+import org.usfirst.frc.team4342.robot.configurators.DriveConfigurator;
+import org.usfirst.frc.team4342.robot.configurators.ElevatorConfigurator;
 import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.elevator.Setpoint;
 import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
