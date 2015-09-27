@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4342.robot.drive;
 
 import edu.wpi.first.wpilibj.CANJaguar;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -19,8 +20,22 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class MecanumDrive {
 	
+	private class MecanumDriveThread extends Thread implements Runnable {
+		private MecanumDrive mecanumDrive;
+		
+		public MecanumDriveThread(MecanumDrive mecanumDrive) {
+			this.mecanumDrive = mecanumDrive;
+		}
+		
+		@Override
+		public void run() {
+			while(true) {
+				mecanumDrive.drive();
+			}
+		}
+	}
+	
 	private static final double JOYSTICK_DEADBAND = 0.1;
-	private static final double kP = 0.02;
 	
 	private double forward;
 	private double right;
@@ -63,65 +78,67 @@ public class MecanumDrive {
 		rr = rearRight;
 		this.joystick = joystick;
 		this.gyro = gyro;
+		new MecanumDriveThread(this).start();
 	}
 	
 	/**
 	 * Moved the robot based on the joystick inputs
 	 */
-	public void drive() {
-		double kX = Math.abs(joystick.getX()) > JOYSTICK_DEADBAND ? joystick.getX() : 0.0;
-		double kY = Math.abs(joystick.getY()) > JOYSTICK_DEADBAND ? joystick.getY() : 0.0;
-		double kZ = Math.abs(joystick.getZ()) > JOYSTICK_DEADBAND ? joystick.getZ() : 0.0;
-
-		forward = -kY;
-		right = kX;
-		twist = kZ;
-		
-		if(enableGyro) {
-			gyroAngle = gyro.getAngle();
+	private void drive() {
+		if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
+			double kX = Math.abs(joystick.getX()) > JOYSTICK_DEADBAND ? joystick.getX() : 0.0;
+			double kY = Math.abs(joystick.getY()) > JOYSTICK_DEADBAND ? joystick.getY() : 0.0;
+			double kZ = Math.abs(joystick.getZ()) > JOYSTICK_DEADBAND ? joystick.getZ() : 0.0;
+	
+			forward = -kY;
+			right = kX;
+			twist = kZ;
 			
-			gyroAngle %= 360.0;
-			
-			if (gyroAngle < 0) {
-				gyroAngle += 360;
+			if(enableGyro) {
+				gyroAngle = gyro.getAngle();
+				
+				gyroAngle %= 360.0;
+				
+				if (gyroAngle < 0) {
+					gyroAngle += 360;
+				}
+			} else {
+				gyroAngle = 0.0;
 			}
-		} else {
-			gyroAngle = 0.0;
+	
+			temp = forward * Math.cos(gyroAngle * (Math.PI / 180)) + right
+					* Math.sin(gyroAngle * (Math.PI / 180));
+			right = -forward * Math.sin(gyroAngle * (Math.PI / 180)) + right
+					* Math.cos(gyroAngle * (Math.PI / 180));
+			forward = temp;
+	
+			f_l = forward + twist + right;
+			f_r = forward - twist - right;
+			r_l = forward + twist - right;
+			r_r = forward - twist + right;
+	
+			double max = Math.abs(f_l);
+			if (Math.abs(f_r) > max) {
+				max = Math.abs(f_r);
+			}
+			if (Math.abs(r_l) > max) {
+				max = Math.abs(r_l);
+			}
+			if (Math.abs(r_r) > max) {
+				max = Math.abs(r_r);
+			}
+			if (max > 1) {
+				f_l /= max;
+				f_r /= max;
+				r_l /= max;
+				r_r /= max;
+			}
+	
+			fl.set(f_l * 470);
+			fr.set(f_r * 470);
+			rl.set(r_l * 470);
+			rr.set(r_r * 470);
 		}
-
-		temp = forward * Math.cos(gyroAngle * (Math.PI / 180)) + right
-				* Math.sin(gyroAngle * (Math.PI / 180));
-		right = -forward * Math.sin(gyroAngle * (Math.PI / 180)) + right
-				* Math.cos(gyroAngle * (Math.PI / 180));
-		forward = temp;
-
-		f_l = forward + twist + right;
-		f_r = forward - twist - right;
-		r_l = forward + twist - right;
-		r_r = forward - twist + right;
-
-		double max = Math.abs(f_l);
-		if (Math.abs(f_r) > max) {
-			max = Math.abs(f_r);
-		}
-		if (Math.abs(r_l) > max) {
-			max = Math.abs(r_l);
-		}
-		if (Math.abs(r_r) > max) {
-			max = Math.abs(r_r);
-		}
-		if (max > 1) {
-			f_l /= max;
-			f_r /= max;
-			r_l /= max;
-			r_r /= max;
-		}
-
-		fl.set(f_l * 470);
-		fr.set(f_r * 470);
-		rl.set(r_l * 470);
-		rr.set(r_r * 470);
-
 	}
 
 	/**
@@ -131,72 +148,74 @@ public class MecanumDrive {
 	 * @param gyroAngle the current angle of the robot
 	 */
 	public void autoDrive(double x, double y, double gyroAngle) {
-		forward = y;
-		right = x;
-
-		if (x == 0.0 && y == 0.0) {
-			stopMotors();
-			return;
+		if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isAutonomous()) {
+			forward = y;
+			right = x;
+	
+			if (x == 0.0 && y == 0.0) {
+				stopMotors();
+				return;
+			}
+			
+			// gyroAngle += 180;
+			gyroAngle %= 360;
+			
+			double error = initialAngle - gyroAngle;
+			
+			if (error >= 180) {
+				error -= 360;
+			} else if (error <= -180) {
+				error += 360;
+			}
+			
+			if (error >= -0.5 && error <= 0.5) {
+				twist = 0.0;
+			} else {
+				twist = error * DrivePID.Autonomous.kP;
+			}
+			
+			gyroAngle %= 360.0;
+			if (gyroAngle < 0) {
+				gyroAngle += 360;
+			}
+			
+			temp = forward * Math.cos(gyroAngle * (Math.PI / 180)) + right
+					* Math.sin(gyroAngle * (Math.PI / 180));
+			right = -forward * Math.sin(gyroAngle * (Math.PI / 180)) + right
+					* Math.cos(gyroAngle * (Math.PI / 180));
+			forward = temp;
+	
+			f_l = forward + twist + right;
+			f_r = forward - twist - right;
+			r_l = forward + twist - right;
+			r_r = forward - twist + right;
+	
+			double max = Math.abs(f_l);
+			
+			if (Math.abs(f_r) > max) {
+				max = Math.abs(f_r);
+			}
+			
+			if (Math.abs(r_l) > max) {
+				max = Math.abs(r_l);
+			}
+			
+			if (Math.abs(r_r) > max) {
+				max = Math.abs(r_r);
+			}
+			
+			if (max > 1) {
+				f_l /= max;
+				f_r /= max;
+				r_l /= max;
+				r_r /= max;
+			}
+	
+			fl.set(f_l * 470);
+			fr.set(f_r * 470);
+			rl.set(r_l * 470);
+			rr.set(r_r * 470);
 		}
-		
-		// gyroAngle += 180;
-		gyroAngle %= 360;
-		
-		double error = initialAngle - gyroAngle;
-		
-		if (error >= 180) {
-			error -= 360;
-		} else if (error <= -180) {
-			error += 360;
-		}
-		
-		if (error >= -0.5 && error <= 0.5) {
-			twist = 0.0;
-		} else {
-			twist = error * kP;
-		}
-		
-		gyroAngle %= 360.0;
-		if (gyroAngle < 0) {
-			gyroAngle += 360;
-		}
-		
-		temp = forward * Math.cos(gyroAngle * (Math.PI / 180)) + right
-				* Math.sin(gyroAngle * (Math.PI / 180));
-		right = -forward * Math.sin(gyroAngle * (Math.PI / 180)) + right
-				* Math.cos(gyroAngle * (Math.PI / 180));
-		forward = temp;
-
-		f_l = forward + twist + right;
-		f_r = forward - twist - right;
-		r_l = forward + twist - right;
-		r_r = forward - twist + right;
-
-		double max = Math.abs(f_l);
-		
-		if (Math.abs(f_r) > max) {
-			max = Math.abs(f_r);
-		}
-		
-		if (Math.abs(r_l) > max) {
-			max = Math.abs(r_l);
-		}
-		
-		if (Math.abs(r_r) > max) {
-			max = Math.abs(r_r);
-		}
-		
-		if (max > 1) {
-			f_l /= max;
-			f_r /= max;
-			r_l /= max;
-			r_r /= max;
-		}
-
-		fl.set(f_l * 470);
-		fr.set(f_r * 470);
-		rl.set(r_l * 470);
-		rr.set(r_r * 470);
 	}
 	
 	/**

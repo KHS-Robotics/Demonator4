@@ -1,13 +1,12 @@
 package org.usfirst.frc.team4342.robot;
 
+import org.usfirst.frc.team4342.configurators.CameraConfigurator;
+import org.usfirst.frc.team4342.configurators.DriveConfigurator;
+import org.usfirst.frc.team4342.configurators.ElevatorConfigurator;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutineLoader;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
 import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
-import org.usfirst.frc.team4342.robot.drive.DriveHealthMonitor;
-import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
-import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
-import org.usfirst.frc.team4342.robot.elevator.ElevatorHealthMonitor;
 import org.usfirst.frc.team4342.robot.elevator.Setpoint;
 import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
@@ -56,29 +55,31 @@ public class Robot extends IterativeRobot {
 	
 	public static final String ACTIVE_LOG_PATH = "/home/lvuser/ActiveLog.txt";
 	
-	private boolean enableFod;
-	private boolean logged;
-	private static long numLoops;
+	private Joystick driveStick = new Joystick(0), elevatorStick = new Joystick(1);
 	
-	private Joystick driveStick, elevatorStick;
+	private CANJaguar frontRight = new CANJaguar(22),
+					  frontLeft = new CANJaguar(21), 
+					  rearRight = new CANJaguar(23), 
+					  rearLeft = new CANJaguar(20);
+	private CANJaguar[] jaguars = { frontLeft, frontRight, rearLeft, rearRight };
 	
-	private CANJaguar frontRight, frontLeft, rearRight, rearLeft;
-	private CANJaguar[] jaguars = { frontRight, frontLeft, rearRight, rearLeft };
+	private Talon rightElev = new Talon(0), leftElev = new Talon(1);
+	private Talon[] talons = { rightElev, leftElev };
 	
-	private Talon rightElev, leftElev;
+	private Encoder elevatorEnc = new Encoder(8, 9, false, EncodingType.k1X);;
 	
-	private Encoder elevatorEnc;
+	private DigitalInput topElevLS = new DigitalInput(7), 
+						 botElevLS = new DigitalInput(4), 
+						 rightPhotoSensor = new DigitalInput(0), 
+						 leftPhotoSensor = new DigitalInput(1);
+	private DigitalInput[] limitSwitches = { topElevLS, botElevLS };
 	
-	private DigitalInput topElevLS, botElevLS, rightPhotoSensor, leftPhotoSensor;
+	private Ultrasonic ultra = new Ultrasonic(2, 3, Ultrasonic.Unit.kInches);
 	
-	private Ultrasonic ultra;
-	
-	private Gyro pivotGyro, pitchGyro;
+	private Gyro pivotGyro = new Gyro(0), pitchGyro = new Gyro(1);;
 	
 	private CameraServer camera;
 	
-	private MecanumDrive mecDrive;
-	private ElevatorController elevController;
 	private AutoRoutines autos;
 	private AutoRoutine autoRoutine;
 	
@@ -121,74 +122,56 @@ public class Robot extends IterativeRobot {
 			multiLog.warning("Failed to start PDPMonitor");
 		}
 		
-		try {
-			driveStick = new Joystick(0);
-			elevatorStick = new Joystick(1);
-		} catch(Exception ex) {
-			multiLog.error("Unexpected error while initializing the joysticks", ex);
-		}
+		pivotGyro.setSensitivity(0.007);
+		pitchGyro.setSensitivity(0.007);
+		
+		ultra.setAutomaticMode(true);
+		
+		SmartDashboardUpdater.addJoystick("Joy-Drive", driveStick);
+		SmartDashboardUpdater.addJoystick("Joy-Elev", elevatorStick);
+		
+		SmartDashboardUpdater.addEncoder("Enc-Elev", elevatorEnc);
+		
+		SmartDashboardUpdater.addJagaur("FR", frontRight);
+		SmartDashboardUpdater.addJagaur("FL", frontLeft);
+		SmartDashboardUpdater.addJagaur("RR", rearRight);
+		SmartDashboardUpdater.addJagaur("RL", rearLeft);
+		
+		SmartDashboardUpdater.addDigitalInput("LS-Top", topElevLS);
+		SmartDashboardUpdater.addDigitalInput("LS-Bottom", botElevLS);
+		SmartDashboardUpdater.addDigitalInput("Photo-R", rightPhotoSensor);
+		SmartDashboardUpdater.addDigitalInput("Photo-L", leftPhotoSensor);
+		
+		SmartDashboardUpdater.addGyro("G-Pivot", pivotGyro);
+		SmartDashboardUpdater.addGyro("G-Pitch", pitchGyro);
+		
+		SmartDashboardUpdater.setUltrasonic(ultra);
+		
+		SmartDashboardUpdater.startUpdating(multiLog);
 		
 		try {
-			rightElev = new Talon(0);
-			leftElev = new Talon(1);
-			
-			topElevLS = new DigitalInput(7);
-			botElevLS = new DigitalInput(4);
-			
-			elevatorEnc = new Encoder(8, 9, false, EncodingType.k1X);
-			
-			elevController = new ElevatorController(
-				rightElev, 
-				leftElev,
+			ElevatorConfigurator.configure(
+				talons,
 				elevatorStick,
-				elevatorEnc, 
-				topElevLS, 
-				botElevLS, 
-				new SetpointMapWrapper(setpoints)
+				elevatorEnc,
+				limitSwitches,
+				new SetpointMapWrapper(setpoints), 
+				multiLog
 			);
 		} catch(Exception ex) {
 			multiLog.error("Unexpected error while initializing the elevator controls", ex);
 		}
-			
-		try {
-			pivotGyro = new Gyro(0);
-			pitchGyro = new Gyro(1);
-			pivotGyro.setSensitivity(0.007);
-			pitchGyro.setSensitivity(0.007);
-		} catch(Exception ex) {
-			multiLog.error("Unexpected error while initializing the gyros", ex);
-		}
 		
 		try {
-			frontRight = new CANJaguar(22);
-			frontLeft = new CANJaguar(21);
-			rearRight = new CANJaguar(23);
-			rearLeft = new CANJaguar(20);
-			
-			CANJaguarLoader.init(jaguars, false);
-			
-			mecDrive = new MecanumDrive(
-				frontLeft,
-				frontRight,
-				rearLeft, 
-				rearRight, 
-				driveStick,
-				pivotGyro
-			);
+			DriveConfigurator.configure(jaguars, driveStick, pivotGyro, multiLog);
 		} catch(Exception ex) {
 			multiLog.error("Unexpected error while initializing the drive train", ex);
 		}
 		
 		try {
-			ultra = new Ultrasonic(2, 3, Ultrasonic.Unit.kInches);
-			ultra.setAutomaticMode(true);
-			
-			rightPhotoSensor = new DigitalInput(0);
-			leftPhotoSensor = new DigitalInput(1);
-			
 			autos = new AutoRoutines(
-				mecDrive, 
-				elevController, 
+				DriveConfigurator.getMecanumDrive(), 
+				ElevatorConfigurator.getElevatorController(), 
 				ultra, 
 				leftPhotoSensor, 
 				rightPhotoSensor, 
@@ -201,92 +184,15 @@ public class Robot extends IterativeRobot {
 		}
 		
 		try {
-			SmartDashboardUpdater.addJoystick("Joy-Drive", driveStick);
-			SmartDashboardUpdater.addJoystick("Joy-Elev", elevatorStick);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to add Joysticks on SDB");
-		}
-		
-		try {
-			SmartDashboardUpdater.addEncoder("Enc-Elev", elevatorEnc);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to add Encoders on SDB");
-		}
-		
-		try {
-			SmartDashboardUpdater.addJagaur("FR", frontRight);
-			SmartDashboardUpdater.addJagaur("FL", frontLeft);
-			SmartDashboardUpdater.addJagaur("RR", rearRight);
-			SmartDashboardUpdater.addJagaur("RL", rearLeft);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to add CANJaguars on SDB");
-		}
-		
-		try {
-			SmartDashboardUpdater.addDigitalInput("LS-Top", topElevLS);
-			SmartDashboardUpdater.addDigitalInput("LS-Bottom", botElevLS);
-			SmartDashboardUpdater.addDigitalInput("Photo-R", rightPhotoSensor);
-			SmartDashboardUpdater.addDigitalInput("Photo-L", leftPhotoSensor);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to add DigitalInputs on SDB");
-		}
-		
-		try {
-			SmartDashboardUpdater.addGyro("G-Pivot", pivotGyro);
-			SmartDashboardUpdater.addGyro("G-Pitch", pitchGyro);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to add Gyros on SDB");
-		}
-		
-		try {
-			SmartDashboardUpdater.setUltrasonic(ultra);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to add Ultrasonic on SDB");
-		}
-		
-		try {
-			SmartDashboardUpdater.startUpdating(multiLog);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to start updating SmartDashboard");
-		}
-		
-		try {
-			DriveHealthMonitor dhm = new DriveHealthMonitor(
-				driveStick, 
-				frontRight, 
-				frontLeft, 
-				rearRight, 
-				rearLeft,
-				multiLog
-			);
-			
-			dhm.startMonitoring();
-			
-		} catch(Exception ex) {
-			multiLog.warning("Failed to start the DHM");
-		}
-		
-		try {
-			ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(
-				elevatorStick, 
-				elevatorEnc, 
-				topElevLS, 
-				botElevLS, 
-				multiLog
-			);
-			
-			ehm.startMonitoring();
-			
-		} catch(Exception ex) {
-			multiLog.warning("Failed to start the EHM");
-		}
-		
-		try {
-			camera = CameraServer.getInstance();
-			camera.setQuality(50);
-			camera.startAutomaticCapture("cam0");
+			CameraConfigurator.configure(camera);
 		} catch(Exception ex) {
 			multiLog.warning("Failed to initialize the camera");
+		}
+		
+		try {
+			LoggingMonitor.startMonitoring();
+		} catch(Exception ex) {
+			multiLog.warning("Failed to initialize Logging Monitor");
 		}
     }
     
@@ -296,20 +202,13 @@ public class Robot extends IterativeRobot {
 	@Override
     public void autonomousInit() {
 		try {
-			logged = false;
-			
-			numLoops = 0;
-			
-			CANJaguarLoader.init(jaguars, true);
-			
 			pivotGyro.reset();
 			pitchGyro.reset();
 			
 			autoRoutine = AutoRoutineLoader.getAutoRoutine();
 			
 		} catch(Exception ex) {
-			tryLogError(ExceptionInfo.getType(ex) + " in autonomousInit()", ex);
-			logged = false;
+			multiLog.error(ExceptionInfo.getType(ex) + " in autonomousInit()", ex);
 		}
     }
 	
@@ -332,11 +231,9 @@ public class Robot extends IterativeRobot {
 	@Override
     public void teleopInit() {
 		try {
-			logged = false;
-			numLoops = 0;
+			CANJaguarLoader.init(jaguars, false);
 		} catch(Exception ex) {
-			tryLogError(ExceptionInfo.getType(ex) + " in teleopInit()", ex);
-			logged = false;
+			multiLog.error(ExceptionInfo.getType(ex) + " in teleopInit()", ex);
 		}
     }
     
@@ -346,12 +243,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
     public void teleopPeriodic() {
-		try {
-			mecDrive.drive();
-			checkForDriveTypeChange(driveStick, 7);
-		} catch(Exception ex) {
-			tryLogError(ExceptionInfo.getType(ex) + " in teleopPeriodic()", ex);
-		}
+		
     }
 	
 	/**
@@ -360,12 +252,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 		try {
-			logged = false;
-			numLoops = 0;
 			CANJaguarLoader.setCoast(jaguars);
 		} catch(Exception ex) {
-			tryLogError(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
-			logged = false;
+			multiLog.error(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
 		}
 	}
 	
@@ -379,38 +268,15 @@ public class Robot extends IterativeRobot {
 	}
 	
 	/**
-	 * Gets the current number of invocations of the periodic method
-	 * the robot is executing
-	 * @return the number of invocations of the periodic method the robot is executing
-	 */
-	public static long getNumLoops() {
-		return numLoops;
-	}
-	
-	/**
-	 * Checks if the user wants field oriented or robot oriented
-	 */
-	private void checkForDriveTypeChange(Joystick joystick, int button) {
-		if(joystick.getRawButton(button)) {
-			enableFod = enableFod ? false : true;
-			if(enableFod) {
-				mecDrive.enableFod();
-			} else {
-				mecDrive.disableFod();
-			}
-		}
-	}
-	
-	/**
 	 * Tries to log to the specified text file and Driver Station.
 	 * @param message the message to write and display
 	 * @param ex the exception associated with the error
 	 */
 	private void tryLogError(String message, Exception ex) {
-		if(!logged) {
+		if(!LoggingMonitor.hasLogged()) {
 			multiLog.error(message, ex);
 		}
 		
-		logged = true;
+		LoggingMonitor.logged();
 	}
 }

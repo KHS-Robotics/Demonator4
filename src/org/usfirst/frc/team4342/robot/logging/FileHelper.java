@@ -5,7 +5,6 @@ import java.io.File;
 import org.usfirst.frc.team4342.robot.Robot;
 
 import Logging.ActiveLog;
-import Logging.LoggerAsync;
 import Logging.MultiLog;
 
 /**

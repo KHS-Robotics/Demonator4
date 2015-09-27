@@ -45,9 +45,9 @@ public class DriveHealthMonitor {
 	 * @param rearLeft the rear left motor controller to monitor
 	 * @param consoleLog the log to log to
 	 */
-	public DriveHealthMonitor(Joystick driveStick, CANJaguar frontRight,
-								CANJaguar frontLeft, CANJaguar rearRight,
-								CANJaguar rearLeft, MultiLog multiLog) {
+	public DriveHealthMonitor(Joystick driveStick, CANJaguar frontLeft,
+								CANJaguar frontRight, CANJaguar rearLeft,
+								CANJaguar rearRight, MultiLog multiLog) {
 		if(!constructed) {
 			this.driveStick = driveStick;
 			this.frontRight = frontRight;

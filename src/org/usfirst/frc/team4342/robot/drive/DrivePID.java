@@ -63,7 +63,7 @@ public final class DrivePID {
 	 * Values for autonomous
 	 */
 	public static class Autonomous {
-		public static final double kP = 0.01;
+		public static final double kP = 0.02;
 	}
 	
 	/** Number of encoder revolutions for one spin of the wheel */
