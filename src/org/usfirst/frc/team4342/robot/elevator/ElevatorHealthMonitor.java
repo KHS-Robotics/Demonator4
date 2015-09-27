@@ -14,28 +14,48 @@ import edu.wpi.first.wpilibj.Joystick;
  * This class is for monitoring the health of the encoder and limit switches
  * for the elevator
  * 
- * @author khsrobotics
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class ElevatorHealthMonitor {
 	
-	private Joystick elevStick;
-	private Encoder enc;
-	private DigitalInput top, bottom;
-	private RobotConsoleLog consoleLog;
+	private static Joystick elevStick;
+	private static Encoder enc;
+	private static DigitalInput top, bottom;
+	private static RobotConsoleLog consoleLog;
 	
+	// We really only want one instance of this class,
+	// so if someone creates multiple instances, there
+	// isn't any harm done
+	private static boolean constructed;
 	private static boolean started;
+	
 	private static boolean loggedEnc;
 	private static boolean loggedBotLS;
 	private static boolean loggedTopLS;
 	
+	/**
+	 * Constructs a health monitor for the elevator. This includes making sure:
+	 * the top limit, bottom limit switch an the encoder are functioning properly.
+	 * @param elevStick the joystick to monitor
+	 * @param enc the encoder to monitor
+	 * @param top the top limit switch to monitor
+	 * @param bottom the bottom limit switch to monitor
+	 * @param consoleLog the log to log to
+	 */
 	public ElevatorHealthMonitor(Joystick elevStick, Encoder enc, 
 								 DigitalInput top, DigitalInput bottom,
 								 RobotConsoleLog consoleLog) {
-		this.elevStick = elevStick;
-		this.enc = enc;
-		this.top = top;
-		this.bottom = bottom;
-		this.consoleLog = consoleLog;
+		if(!constructed) {
+			this.elevStick = elevStick;
+			this.enc = enc;
+			this.top = top;
+			this.bottom = bottom;
+			this.consoleLog = consoleLog;
+		}
 	}
 	
 	/**
@@ -84,6 +104,7 @@ public class ElevatorHealthMonitor {
 						// Nice! Everything in here has indicated a
 						// warning! Hopefully you're not in a match!
 						ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-ehm", "Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
+						constructed = started = false;
 						break;
 					}
 					

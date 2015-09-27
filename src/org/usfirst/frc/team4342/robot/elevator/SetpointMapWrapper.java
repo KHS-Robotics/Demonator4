@@ -4,15 +4,17 @@ import java.util.Hashtable;
 import java.util.Map;
 
 /**
- * 
- * @author khsrobotics
- * 
  * Wraps the java.util.Hashtable class for the robot's elevator setpoints.
  * The setpoints are used for automatic elevator movement when a specific
  * button is pressed on the elevator joystick
  * 
  * About encoders: http://www.dynapar.com/Technology/Encoder_Basics/Motor_Encoders/
  * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class SetpointMapWrapper
 {

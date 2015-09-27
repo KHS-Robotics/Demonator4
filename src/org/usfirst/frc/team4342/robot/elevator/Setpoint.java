@@ -1,12 +1,15 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
 /**
- * 
- * @author khsrobotics
- * 
  * This class is used for automatic elevator movement. The user can press
  * a button on the joystick in order to move to a certain height of the
  * elevator. This class is used for the SetpointMapWrapper
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class Setpoint {
 	

@@ -1,9 +1,6 @@
 package org.usfirst.frc.team4342.robot.drive;
 
 /**
- * 
- * @author khsrobotics
- *
  * This class simply holds PID values for the drive train.
  * 
  * PID = Proportional Integral Derivative (three values needed
@@ -13,6 +10,12 @@ package org.usfirst.frc.team4342.robot.drive;
  * where P = P in PID, I = I in PID, and D = D in PID
  * 
  * About PID: https://en.wikipedia.org/wiki/PID_controller
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public final class DrivePID {
 	
@@ -63,6 +66,6 @@ public final class DrivePID {
 		public static final double kP = 0.01;
 	}
 	
-	/** Number of revolutions for one encoder count */
+	/** Number of encoder revolutions for one spin of the wheel */
 	public static final int kCodesPerRev = 512;
 }

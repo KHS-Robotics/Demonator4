@@ -9,7 +9,11 @@ import Logging.ActiveLog;
  * This class is for creating timeouts for automated robot tasks in case
  * a sensor breaks and causes an infinite loop in the automated task.
  * 
- * @author khsrobotics
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class TimeoutTimer {
 	

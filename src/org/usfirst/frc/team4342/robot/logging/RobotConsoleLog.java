@@ -7,8 +7,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 /**
  * Logger that logs to the console on the driver station
  * 
- * @author Ernie
- * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class RobotConsoleLog extends BaseLog {
 

@@ -12,14 +12,22 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  * This class is used to monitor the health of the drive train encoders
  * 
- * @author khsrobotics
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class DriveHealthMonitor {
 	
-	private Joystick driveStick;
-	private CANJaguar frontRight, frontLeft, rearRight, rearLeft;
-	private RobotConsoleLog consoleLog;
+	private static Joystick driveStick;
+	private static CANJaguar frontRight, frontLeft, rearRight, rearLeft;
+	private static RobotConsoleLog consoleLog;
 	
+	// We really only want one instance of this class,
+	// so if someone creates multiple instances, there
+	// isn't any harm done
+	private static boolean constructed;
 	private static boolean started;
 	
 	private static boolean loggedFR;
@@ -27,15 +35,28 @@ public class DriveHealthMonitor {
 	private static boolean loggedRR;
 	private static boolean loggedRL;
 	
+	/**
+	 * Constructs a health monitor for the drive train. This includes making sure:
+	 * the front right encoder, front left encoder, rear right encoder and the rear 
+	 * left encoder are functioning properly.
+	 * @param driveStick the joystick to monitor
+	 * @param frontRight the front right motor controller to monitor
+	 * @param frontLeft the front left motor controller to monitor
+	 * @param rearRight the rear right motor controller to monitor
+	 * @param rearLeft the rear left motor controller to monitor
+	 * @param consoleLog the log to log to
+	 */
 	public DriveHealthMonitor(Joystick driveStick, CANJaguar frontRight,
 								CANJaguar frontLeft, CANJaguar rearRight,
 								CANJaguar rearLeft, RobotConsoleLog consoleLog) {
-		this.driveStick = driveStick;
-		this.frontRight = frontRight;
-		this.frontLeft = frontLeft;
-		this.rearRight = rearRight;
-		this.rearLeft = rearLeft;
-		this.consoleLog = consoleLog;
+		if(!constructed) {
+			this.driveStick = driveStick;
+			this.frontRight = frontRight;
+			this.frontLeft = frontLeft;
+			this.rearRight = rearRight;
+			this.rearLeft = rearLeft;
+			this.consoleLog = consoleLog;
+		}
 	}
 	
 	/**
@@ -123,6 +144,7 @@ public class DriveHealthMonitor {
 							// Everything has indicated a warning, so no need
 							// to use unnecessary resources
 							ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "D4-dhm", "Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
+							constructed = started = false;
 							return;
 						}
 					}

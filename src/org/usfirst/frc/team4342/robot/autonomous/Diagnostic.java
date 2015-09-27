@@ -13,7 +13,11 @@ import Logging.ILog;
  * This class is for running tests on the robot to make sure
  * all sensors are working properly
  * 
- * @author khsrobotics
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class Diagnostic {
 	

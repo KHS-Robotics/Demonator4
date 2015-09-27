@@ -20,12 +20,15 @@ import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
 /**
- * 
- * @author khsrobotics
- * 
  * This class contains all of the autonomous routines for the robot.
  * Autonomous is the 15 second period at the beginning, when
  * it runs by itself, of the match.
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class AutoRoutines {
 	
@@ -80,22 +83,26 @@ public class AutoRoutines {
 	 * Executes the auto routine 
 	 * @param autoRoutine the auto routine to run
 	 */
-	public void executeAutonomous(int autoRoutine) {
+	public void executeAutonomous(AutoRoutine autoRoutine) {
 		if(DriverStation.getInstance().isAutonomous()) {
 			switch(autoRoutine) {
-				case 1:
+				case PickUpOneTote:
 					pickupOneTote();
 					break;
-				case 2:
+				
+				case PickUpTwoTotes:
 					pickupTwoTotes();
 					break;
-				case 3:
+				
+				case PickUpThreeTotes:
 					pickupThreeTotes();
 					break;
-				case 4:
+				
+				case PickUpOneContainer:
 					pickupOneContainer();
 					break;
-				case 5:
+				
+				case DiagnosticCheck:
 					try {
 						Diagnostic.runSelfTest(drive, ec, new LoggerAsync(new LocalLog("Demonator4", "/home/lvuser/Diagnostic.txt")), consoleLog);
 					} catch(Exception ex) {
@@ -103,6 +110,7 @@ public class AutoRoutines {
 						consoleLog.error(ExceptionInfo.getType(ex) + " in AutoRoutines.java", ex);
 					}
 					break;
+				
 				default:
 					if(!logged) {
 						log.warning("No valid autonomous value selected, please alert Ernie or Magnus");

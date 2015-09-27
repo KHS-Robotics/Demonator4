@@ -9,38 +9,47 @@ import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
- * 
- * @author khsrobotics
- * 
  * Logs the Power Distribution Panel's voltage and amperage to a CSV file
  * 
  * About the PDP: http://www.vexrobotics.com/217-4244.html
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
-public class PDPLogger
-{
+public class PDPLogger {
 	private boolean started;
 	
-	private static final String ROOT = "/home/lvuser/";
 	private static final int LOG_SECONDS = 5;
 	
 	private PDPLoggingThread logger;
 	
-	public PDPLogger(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog) 
-	{
+	/**
+	 * Constructs a PDP Logger to log PDP data
+	 * @param pdp the PDP to get data from
+	 * @param log the log to log to
+	 * @param consoleLog the console log to log to
+	 */
+	public PDPLogger(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog)  {
 		logger = new PDPLoggingThread(pdp, log, consoleLog);
 	}
 	
+	/**
+	 * Starts logging for 10 minutes
+	 */
 	public void start() {
 		if(!started) {
 			logger.start();
+			started = true;
 		}
-		
-		started = true;
 	}
 	
-	
-	private class PDPLoggingThread extends Thread implements Runnable
-	{
+	/**
+	 * The magic behind this class...
+	 */
+	private class PDPLoggingThread extends Thread implements Runnable {
 		private int numLogs = 0;
 		
 		File csvLogFile;
@@ -51,31 +60,33 @@ public class PDPLogger
 		private LoggerAsync log;
 		private RobotConsoleLog consoleLog;
 		
-		public PDPLoggingThread(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog)
-		{
+		/**
+		 * Constructs a PDP Logger to log PDP data
+		 * @param pdp the PDP to get data from
+		 * @param log the log to log to
+		 * @param consoleLog the console log to log to
+		 */
+		public PDPLoggingThread(PowerDistributionPanel pdp, LoggerAsync log, RobotConsoleLog consoleLog) {
 			this.pdp = pdp;
 			this.log = log;
 			this.consoleLog = consoleLog;
 			
-			csvLogFile = getValidLogFile(log ,consoleLog);
+			csvLogFile = FileHelper.getValidPdpLogFile(log ,consoleLog);
 		}
 		
 		/**
 		 * Logs to the RoboRIO for 10 minutes
 		 */
 		@Override
-		public void run()
-		{
+		public void run() {
 			FileWriter writer = null;
 			
-			try
-			{
+			try {
 				csvLogFile.createNewFile();
 				
 				writer = new FileWriter(csvLogFile);
 				
-				for(int channel = 0; channel < 16; channel++)
-		        {
+				for(int channel = 0; channel < 16; channel++) {
 		        	writer.write("PDP-A" + channel);
 		        	writer.write(',');
 		        }
@@ -87,10 +98,8 @@ public class PDPLogger
 				
 				writer.write('\r');
 	
-				while(numLogs < MAX_LOGS)
-				{
-			        for(int channel = 0; channel < 16; channel++)
-			        {
+				while(numLogs < MAX_LOGS) {
+			        for(int channel = 0; channel < 16; channel++) {
 			        	writer.write("" + pdp.getCurrent(channel));
 			        	writer.write(',');
 			        }
@@ -109,81 +118,19 @@ public class PDPLogger
 				}
 				
 				writer.close();
-			}
-			catch(Exception ex)
-			{
+			} catch(Exception ex) {
 				consoleLog.warning(ExceptionInfo.getType(ex) + ": Failed to write to CSV for PDP logger,"
 						+ " please alert Ernie or Magnus when you can");
 				log.warning("Failed to write to CSV for PDP logger :: " + ExceptionInfo.getType(ex));
-			}
-			finally
-			{
-				try 
-				{
+			} finally {
+				try {
 					if(writer != null)
 						writer.close();
-				} 
-				catch (Exception ex) 
-				{
+				} catch (Exception ex) {
 					consoleLog.warning(ExceptionInfo.getType(ex) + ": Failed to close writer to CSV for PDP logger,"
 							+ " please alert Ernie or Magnus when you can");
 					log.warning("Failed to close writer to CSV for PDP logger");
 				}
-			}
-		}
-	}
-	
-	/**
-	 * Gets a valid log location and file
-	 * 
-	 * @param log used to log warnings about the files
-	 * @param consoleLog used to log warnings about the files
-	 * @return a valid log file location
-	 */
-	private static File getValidLogFile(LoggerAsync log, RobotConsoleLog consoleLog) {
-		for(int i = 1; i <= 5; i++) {
-			File f = new File(ROOT + "PdpLog[" + i + "].csv");
-			
-			if(!f.exists()) {
-				return f;
-			}
-		}
-		
-		shiftLogFiles(log, consoleLog);
-		
-		return new File(ROOT + "PdpLog[1].csv");
-	}
-	
-	/**
-	 * We can save up to 5 log files! Each time we make a new
-	 * LocalLog, we want to check if we have to shift
-	 * the log file index values up one and delete
-	 * the oldest file and make way for the latest
-	 * log file, [1].
-	 * 
-	 * @param log used to log warnings about the files
-	 * @param consoleLog used to log warnings about the files
-	 */
-	private static void shiftLogFiles(LoggerAsync log, RobotConsoleLog consoleLog) {
-		
-		File lastFile = new File(ROOT + "PdpLog[5].csv");
-		
-		if(!lastFile.exists()) {
-			return;
-		}
-		
-		lastFile.delete();
-		
-		for(int i = 4; i >= 1; i--) {
-			File f = new File(ROOT + "PdpLog[" + i + "].csv");
-			
-			boolean renamed = f.renameTo(new File(ROOT + "PdpLog[" + (i+1) + "].csv"));
-			
-			if(!renamed) {
-				log.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");
-				consoleLog.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");
-				
-				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
 		}
 	}

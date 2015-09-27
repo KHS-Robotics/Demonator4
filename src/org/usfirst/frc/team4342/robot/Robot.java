@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4342.robot;
 
+import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutineLoader;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
 import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
@@ -45,7 +46,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Logger is from:
  * 		https://github.com/Ernie3/Logger
  * 
- * @author khsrobotics
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class Robot extends IterativeRobot {
 	
@@ -53,7 +58,6 @@ public class Robot extends IterativeRobot {
 	
 	private boolean enableFod;
 	private boolean logged;
-	private int autoRoutine;
 	private static long numLoops;
 	
 	private Joystick driveStick, elevatorStick;
@@ -75,6 +79,7 @@ public class Robot extends IterativeRobot {
 	private MecanumDrive mecDrive;
 	private ElevatorController elevController;
 	private AutoRoutines autos;
+	private AutoRoutine autoRoutine;
 	
 	private Setpoint[] setpoints = {
 		new Setpoint(2, 0),

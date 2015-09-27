@@ -1,21 +1,21 @@
 package org.usfirst.frc.team4342.robot.logging;
 
-import java.io.File;
 import java.io.IOException;
 
-import Logging.ActiveLog;
 import Logging.LocalLog;
 import Logging.LoggerAsync;
 import Logging.LoggingException;
 
-import org.usfirst.frc.team4342.robot.Robot;
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
 /**
- * 
- * @author khsrobotics
- * 
  * Factory to create loggers for the robot
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class RobotLogFactory {
 	
@@ -31,7 +31,7 @@ public class RobotLogFactory {
 	 * @throws LoggingException 
 	 */
 	public static LocalLog createLocalLog() throws IOException, LoggingException {
-		return new LocalLog("Demonator4", getValidLogFile(), true);
+		return new LocalLog("Demonator4", FileHelper.getValidLogFile(), true);
 	}
 	
 	/**
@@ -52,50 +52,5 @@ public class RobotLogFactory {
 	 */
 	public static RobotConsoleLog createRobotConsoleLog() {
 		return new RobotConsoleLog();
-	}
-	
-	/**
-	 * Gets a valid log location and file
-	 * @return a valid log file location
-	 */
-	private static File getValidLogFile() {
-		for(int i = 1; i <= 5; i++) {
-			File f = new File(ROOT + "Log[" + i + "].txt");
-			
-			if(!f.exists()) {
-				return f;
-			}
-		}
-		
-		shiftLogFiles();
-		
-		return new File(ROOT + "Log[1].txt");
-	}
-	
-	/**
-	 * We can save up to 5 log files! Each time we make a new
-	 * LocalLog, we want to check if we have to shift
-	 * the log file index values up one and delete
-	 * the oldest file and make way for the latest
-	 * log file, [1].
-	 */
-	private static void shiftLogFiles() {
-		if(!new File(ROOT + "Log[5].txt").exists()) {
-			return;
-		}
-		
-		new File(ROOT + "Log[5].txt").delete();
-		
-		for(int i = 4; i >= 1; i--) {
-			File f = new File(ROOT + "Log[" + i + "].txt");
-			
-			boolean renamed = f.renameTo(new File(ROOT + "Log[" + (i+1) + "].txt"));
-			
-			if(!renamed) {
-				ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
-				
-				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
-			}
-		}
 	}
 }

@@ -4,14 +4,17 @@ import edu.wpi.first.wpilibj.CANJaguar;
 
 /**
  * 
- * @author khsrobotics
- * 
  * This class initializes and/or resets the CANJaguars (motor controllers) 
  * for the drive train.
  * 
  * About CAN bus: https://en.wikipedia.org/wiki/CAN_bus
  * About Jaguars: http://www.vexrobotics.com/217-3367.html
- *
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public final class CANJaguarLoader {
 	
@@ -43,7 +46,6 @@ public final class CANJaguarLoader {
 		
 		jaguar.enableControl();
 	}
-	
 	
 	/**
 	 * Sets the jaguars to speed mode and sets their PID values with the Encoders

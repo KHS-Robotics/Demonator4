@@ -5,14 +5,17 @@ import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * 
- * @author khsrobotics 
- * 
  * This class is for the drive train of the robot. The drive train is composed
  * of four motors, using mecanum wheels.
  * 
  * About mecanum wheels: https://en.wikipedia.org/wiki/Mecanum_wheel
  * How mecanum wheels work in 30 seconds: https://www.youtube.com/watch?v=o-j9TReI1aQ
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class MecanumDrive {
 	

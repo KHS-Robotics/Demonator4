@@ -1,9 +1,6 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
 /**
- * 
- * @author khsrobotics
- *
  * This class simply holds PID values for the elevator.
  * 
  * PID = Proportional Integral Derivative (three values needed
@@ -13,6 +10,12 @@ package org.usfirst.frc.team4342.robot.elevator;
  * where P = P in PID, I = I in PID, and D = D in PID
  * 
  * About PID: https://en.wikipedia.org/wiki/PID_controller
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public final class ElevatorPID {
 	

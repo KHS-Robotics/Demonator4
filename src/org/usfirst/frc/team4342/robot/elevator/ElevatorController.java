@@ -7,12 +7,15 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
- * 
- * @author khsrobotics
- * 
  * This class is for controller the elevator of the robot.
  * The elevator is for picking up totes and containers in order
  * to stack them to earn points.
+ * 
+ * @author Magnus Murray
+ * @author Ernest Wilson
+ * @author Katie Schuetz
+ * @author Brian Lucas
+ * @author Steve Chapman
  */
 public class ElevatorController {
 	
