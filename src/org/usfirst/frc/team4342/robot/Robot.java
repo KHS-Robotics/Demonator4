@@ -58,28 +58,31 @@ public class Robot extends IterativeRobot {
 	
 	public static final String ACTIVE_LOG_PATH = "/home/lvuser/ActiveLog.txt";
 	
-	private Joystick driveStick = new Joystick(0), elevatorStick = new Joystick(1);
+	private Joystick driveStick = new Joystick(0);
+	private Joystick elevatorStick = new Joystick(1);
 	
-	private CANJaguar frontRight = new CANJaguar(22),
-					  frontLeft = new CANJaguar(21), 
-					  rearRight = new CANJaguar(23), 
-					  rearLeft = new CANJaguar(20);
+	private CANJaguar frontRight = new CANJaguar(22);
+	private CANJaguar frontLeft = new CANJaguar(21);
+	private CANJaguar rearRight = new CANJaguar(23); 
+	private CANJaguar rearLeft = new CANJaguar(20);
 	private CANJaguar[] jaguars = { frontLeft, frontRight, rearLeft, rearRight };
 	
-	private Talon rightElev = new Talon(0), leftElev = new Talon(1);
+	private Talon rightElev = new Talon(0);
+	private Talon leftElev = new Talon(1);
 	private Talon[] talons = { rightElev, leftElev };
 	
 	private Encoder elevatorEnc = new Encoder(8, 9, false, EncodingType.k1X);;
 	
-	private DigitalInput topElevLS = new DigitalInput(7), 
-						 botElevLS = new DigitalInput(4), 
-						 rightPhotoSensor = new DigitalInput(0), 
-						 leftPhotoSensor = new DigitalInput(1);
+	private DigitalInput topElevLS = new DigitalInput(7); 
+	private DigitalInput botElevLS = new DigitalInput(4); 
+	private DigitalInput rightPhotoSensor = new DigitalInput(0);
+	private DigitalInput leftPhotoSensor = new DigitalInput(1);
 	private DigitalInput[] limitSwitches = { topElevLS, botElevLS };
 	
 	private Ultrasonic ultra = new Ultrasonic(2, 3, Ultrasonic.Unit.kInches);
 	
-	private Gyro pivotGyro = new Gyro(0), pitchGyro = new Gyro(1);;
+	private Gyro pivotGyro = new Gyro(0);
+	private Gyro pitchGyro = new Gyro(1);;
 	
 	private CameraServer camera;
 	
@@ -246,7 +249,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
     public void teleopPeriodic() {
-		
+		// No need to put code in here,
+		// everything that needs to run
+		// is on separate threads
     }
 	
 	/**
@@ -267,7 +272,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledPeriodic() {
-		
+		// No need to put code in here,
+		// everything that needs to run
+		// is on separate threads
 	}
 	
 	/**

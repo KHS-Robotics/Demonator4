@@ -35,7 +35,7 @@ public class DriveConfigurator {
 	}
 	
 	/**
-	 * Initialized the drive train
+	 * Initializes the drive train
 	 * @param jaguars the jagaurs associated with the drive  train
 	 * @param driveStick the joystick to track
 	 * @param pivotGyro the gyro to get data from

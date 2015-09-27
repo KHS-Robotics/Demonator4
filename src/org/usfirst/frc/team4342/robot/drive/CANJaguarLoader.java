@@ -46,6 +46,7 @@ public final class CANJaguarLoader {
 		
 		jaguar.enableControl();
 	}
+	
 	/**
 	 * Sets the CANJaguar's neutral mode to coast
 	 * @param jaguars the jaguars to set

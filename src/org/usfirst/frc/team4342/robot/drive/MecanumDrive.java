@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class MecanumDrive {
 	
+	/**
+	 * The magic behind this class...
+	 */
 	private class MecanumDriveThread extends Thread implements Runnable {
 		private MecanumDrive mecanumDrive;
 		
@@ -27,6 +30,9 @@ public class MecanumDrive {
 			this.mecanumDrive = mecanumDrive;
 		}
 		
+		/**
+		 * Starts listening to teleop inputs
+		 */
 		@Override
 		public void run() {
 			while(true) {

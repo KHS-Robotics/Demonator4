@@ -136,17 +136,19 @@ public class SmartDashboardUpdater {
 		 */
 		@Override
 		public void run() {
-			putJoystickData();
-			putEncoderData();
-			putJagaurData();
-			putLimitSwitchData();
-			putGyroData();
-			putUltrasonicData();
-			
-			try {
-				Thread.sleep(100);
-			} catch(Exception ex) {
-				multiLog.error(ExceptionInfo.getType(ex) + " in SDU", ex);
+			while(true) {
+				putJoystickData();
+				putEncoderData();
+				putJagaurData();
+				putLimitSwitchData();
+				putGyroData();
+				putUltrasonicData();
+				
+				try {
+					Thread.sleep(100);
+				} catch(Exception ex) {
+					multiLog.error(ExceptionInfo.getType(ex) + " in SDU", ex);
+				}
 			}
 		}
 		
