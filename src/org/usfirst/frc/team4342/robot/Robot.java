@@ -134,13 +134,13 @@ public class Robot extends IterativeRobot {
 			elevatorEnc = new Encoder(8, 9, false, EncodingType.k1X);
 			
 			elevController = new ElevatorController(
-					rightElev, 
-					leftElev,
-					elevatorStick,
-					elevatorEnc, 
-					topElevLS, 
-					botElevLS, 
-					new SetpointMapWrapper(setpoints)
+				rightElev, 
+				leftElev,
+				elevatorStick,
+				elevatorEnc, 
+				topElevLS, 
+				botElevLS, 
+				new SetpointMapWrapper(setpoints)
 			);
 		} catch(Exception ex) {
 			tryLogError("Unexpected error while initializing the elevator controls", ex);
@@ -172,12 +172,12 @@ public class Robot extends IterativeRobot {
 			);
 			
 			mecDrive = new MecanumDrive(
-					frontLeft,
-					frontRight,
-					rearLeft, 
-					rearRight, 
-					driveStick,
-					pivotGyro
+				frontLeft,
+				frontRight,
+				rearLeft, 
+				rearRight, 
+				driveStick,
+				pivotGyro
 			);
 		} catch(Exception ex) {
 			tryLogError("Unexpected error while initializing the drive train", ex);
