@@ -4,8 +4,8 @@ import java.io.File;
 
 import org.usfirst.frc.team4342.robot.Robot;
 
-import Logging.ActiveLog;
-import Logging.MultiLog;
+import ernie.logging.loggers.ActiveLog;
+import ernie.logging.loggers.MultiLog;
 
 /**
  * This class is used to shift and get valid log files

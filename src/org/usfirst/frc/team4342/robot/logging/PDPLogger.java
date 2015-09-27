@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Date;
 
-import Logging.MultiLog;
+import ernie.logging.loggers.MultiLog;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 

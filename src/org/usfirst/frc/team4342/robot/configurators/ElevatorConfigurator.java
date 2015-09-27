@@ -4,7 +4,7 @@ import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorHealthMonitor;
 import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
 
-import Logging.MultiLog;
+import ernie.logging.loggers.MultiLog;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;

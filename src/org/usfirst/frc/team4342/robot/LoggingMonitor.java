@@ -3,7 +3,7 @@ package org.usfirst.frc.team4342.robot;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import Logging.ActiveLog;
+import ernie.logging.loggers.ActiveLog;
 
 /**
  * This class is used to tell whether or not the robot should log

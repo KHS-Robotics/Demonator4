@@ -14,7 +14,10 @@ import org.usfirst.frc.team4342.robot.logging.PDPLogger;
 import org.usfirst.frc.team4342.robot.logging.RobotLogFactory;
 import org.usfirst.frc.team4342.robot.logging.SmartDashboardUpdater;
 
-import Logging.*;
+import ernie.logging.loggers.ILog;
+import ernie.logging.loggers.LoggerAsync;
+import ernie.logging.loggers.MultiLog;
+import ernie.logging.loggers.ActiveLog;
 
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 

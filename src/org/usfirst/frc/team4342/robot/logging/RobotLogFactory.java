@@ -2,9 +2,8 @@ package org.usfirst.frc.team4342.robot.logging;
 
 import java.io.IOException;
 
-import Logging.LocalLog;
-import Logging.LoggerAsync;
-import Logging.LoggingException;
+import ernie.logging.loggers.LocalLog;
+import ernie.logging.loggers.LoggerAsync;
 
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
@@ -30,7 +29,7 @@ public class RobotLogFactory {
 	 * @throws IOException
 	 * @throws LoggingException 
 	 */
-	public static LocalLog createLocalLog() throws IOException, LoggingException {
+	public static LocalLog createLocalLog() throws IOException {
 		return new LocalLog("Demonator4", FileHelper.getValidLogFile(), true);
 	}
 	
@@ -42,7 +41,7 @@ public class RobotLogFactory {
 	 * @throws IOException
 	 * @throws LoggingException 
 	 */
-	public static LoggerAsync createAsyncLog() throws IOException, LoggingException {
+	public static LoggerAsync createAsyncLog() throws IOException {
 		return new LoggerAsync(createLocalLog());
 	}
 	

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4342.robot.logging;
 
-import Logging.BaseLog;
-import Logging.Severity;
+import ernie.logging.loggers.BaseLog;
+import ernie.logging.Severity;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**

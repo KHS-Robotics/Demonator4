@@ -2,7 +2,7 @@ package org.usfirst.frc.team4342.robot.elevator;
 
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 
-import Logging.MultiLog;
+import ernie.logging.loggers.MultiLog;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;

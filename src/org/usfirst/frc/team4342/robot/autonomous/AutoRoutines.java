@@ -7,10 +7,10 @@ import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 
-import Logging.ActiveLog;
-import Logging.LocalLog;
-import Logging.LoggerAsync;
-import Logging.MultiLog;
+import ernie.logging.loggers.ActiveLog;
+import ernie.logging.loggers.LocalLog;
+import ernie.logging.loggers.LoggerAsync;
+import ernie.logging.loggers.MultiLog;
 
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 

@@ -7,7 +7,7 @@ import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 import org.usfirst.frc.team4342.robot.shared.TimeoutTimer;
 
 import edu.wpi.first.wpilibj.CANJaguar;
-import Logging.ILog;
+import ernie.logging.loggers.ILog;
 
 /**
  * This class is for running tests on the robot to make sure

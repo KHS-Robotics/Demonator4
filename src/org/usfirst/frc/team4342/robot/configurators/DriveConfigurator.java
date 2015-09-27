@@ -4,7 +4,7 @@ import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.drive.DriveHealthMonitor;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 
-import Logging.MultiLog;
+import ernie.logging.loggers.MultiLog;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;

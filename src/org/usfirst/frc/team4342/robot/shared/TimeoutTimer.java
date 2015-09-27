@@ -3,7 +3,7 @@ package org.usfirst.frc.team4342.robot.shared;
 import org.usfirst.frc.team4342.robot.Robot;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 
-import Logging.ActiveLog;
+import ernie.logging.loggers.ActiveLog;
 
 /**
  * This class is for creating timeouts for automated robot tasks in case
