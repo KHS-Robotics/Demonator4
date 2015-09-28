@@ -98,10 +98,11 @@ public class Robot extends IterativeRobot {
 		
 		ElevatorConfigurator.configure(
 			new SetpointMapWrapper(setpoints), 
-			multiLog
+			log,
+			consoleLog
 		);
 		
-		DriveConfigurator.configure(multiLog);
+		DriveConfigurator.configure(log, consoleLog);
 		
 		try {
 			autos = new AutoRoutines(
@@ -114,11 +115,7 @@ public class Robot extends IterativeRobot {
 			multiLog.error("Unexpected error while initializing autonomous settings", ex);
 		}
 		
-		try {
-			CameraConfigurator.configure(camera);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to initialize the camera");
-		}
+		CameraConfigurator.configure(camera, log, consoleLog);
 		
 		try {
 			SmartDashboardUpdater.startUpdating(multiLog);
