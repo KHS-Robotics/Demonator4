@@ -101,11 +101,7 @@ public class Robot extends IterativeRobot {
 			multiLog
 		);
 		
-		try {
-			DriveConfigurator.configure(multiLog);
-		} catch(Exception ex) {
-			multiLog.error("Unexpected error while initializing the drive train", ex);
-		}
+		DriveConfigurator.configure(multiLog);
 		
 		try {
 			autos = new AutoRoutines(
