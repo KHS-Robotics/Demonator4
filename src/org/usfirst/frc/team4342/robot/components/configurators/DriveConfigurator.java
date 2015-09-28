@@ -4,8 +4,9 @@ import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.drive.DriveHealthMonitor;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
 
-import ernie.logging.loggers.MultiLog;
+import ernie.logging.loggers.ILog;
 
 /**
  * This class is for initializing the drive train
@@ -39,7 +40,7 @@ public class DriveConfigurator {
 	 * @param pivotGyro the gyro to get data from
 	 * @param multiLog the log to log to
 	 */
-	public static void configure(MultiLog multiLog) {
+	public static void configure(ILog log, RobotConsole consoleLog) {
 		try {
 			CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
 			CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
@@ -57,7 +58,8 @@ public class DriveConfigurator {
 			
 			drive = mecDrive;
 		} catch(Exception ex) {
-			multiLog.error("Unexpected error while initializing the drive train", ex);
+			consoleLog.error("Unexpected error while initializing the drive train", ex);
+			log.error("Unexpected error while initializing the drive train", ex);
 		}
 		
 		try {
@@ -65,7 +67,8 @@ public class DriveConfigurator {
 			
 			dhm.startMonitoring();
 		} catch(Exception ex) {
-			multiLog.warning("Failed to start DHM");
+			consoleLog.warning("Failed to start DHM");
+			log.error("Failed to start DHM", ex);
 		}
 	}
 }
