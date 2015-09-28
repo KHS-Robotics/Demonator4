@@ -3,8 +3,9 @@ package org.usfirst.frc.team4342.robot.components.configurators;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorHealthMonitor;
 import org.usfirst.frc.team4342.robot.elevator.setpoints.SetpointMapWrapper;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
 
-import ernie.logging.loggers.MultiLog;
+import ernie.logging.loggers.ILog;
 
 /**
  * This class is for initializing the elevator
@@ -40,14 +41,15 @@ public class ElevatorConfigurator {
 	 * @param setpoints the elevator presets
 	 * @param multiLog the log to log to
 	 */
-	public static void configure(SetpointMapWrapper setpoints, MultiLog multiLog) {
+	public static void configure(SetpointMapWrapper setpoints, ILog log, RobotConsoleLog consoleLog) {
 		try {
 		
 			ElevatorController elevController = new ElevatorController(setpoints);
 			
 			elevatorController = elevController;
 		} catch(Exception ex) {
-			multiLog.error("Unexpected error while initializing the elevator controls", ex);
+			consoleLog.error("Unexpected error while initializing the elevator controls", ex);
+			log.error("Unexpected error while initializing the elevator controls", ex);
 		}
 		
 		try {
@@ -55,7 +57,8 @@ public class ElevatorConfigurator {
 			
 			ehm.startMonitoring();
 		} catch(Exception ex) {
-			multiLog.warning("Failed to start EHM");
+			consoleLog.warning("Failed to start EHM");
+			log.error("Failed to start EHM", ex);
 		}
 	}
 }
