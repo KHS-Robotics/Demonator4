@@ -1,11 +1,13 @@
-package org.usfirst.frc.team4342.robot.logging;
+package org.usfirst.frc.team4342.robot.logging.loggers;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Date;
 
-import ernie.logging.loggers.MultiLog;
+import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
+import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
+import ernie.logging.loggers.MultiLog;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**

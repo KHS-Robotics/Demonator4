@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4342.robot.drive;
 
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
-import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
+import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
 import ernie.logging.loggers.MultiLog;
 import edu.wpi.first.wpilibj.CANJaguar;

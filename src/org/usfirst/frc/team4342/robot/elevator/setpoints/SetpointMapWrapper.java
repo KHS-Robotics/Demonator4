@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4342.robot.elevator;
+package org.usfirst.frc.team4342.robot.elevator.setpoints;
 
 import java.util.Hashtable;
 import java.util.Map;

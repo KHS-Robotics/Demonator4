@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4342.robot.logging;
+package org.usfirst.frc.team4342.robot.logging.shared;
 
 import java.io.File;
 

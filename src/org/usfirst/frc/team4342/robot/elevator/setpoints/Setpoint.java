@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4342.robot.elevator;
+package org.usfirst.frc.team4342.robot.elevator.setpoints;
 
 /**
  * This class is used for automatic elevator movement. The user can press

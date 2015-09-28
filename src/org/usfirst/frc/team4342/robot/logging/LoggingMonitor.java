@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4342.robot.logging;
 
 import org.usfirst.frc.team4342.robot.Robot;
+import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import ernie.logging.loggers.ActiveLog;

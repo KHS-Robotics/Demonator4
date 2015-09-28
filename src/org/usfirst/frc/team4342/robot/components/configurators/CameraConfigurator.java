@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4342.robot.configurators;
+package org.usfirst.frc.team4342.robot.components.configurators;
 
 import edu.wpi.first.wpilibj.CameraServer;
 

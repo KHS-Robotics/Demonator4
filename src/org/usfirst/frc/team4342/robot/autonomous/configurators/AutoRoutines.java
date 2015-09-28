@@ -1,20 +1,22 @@
-package org.usfirst.frc.team4342.robot.autonomous;
+package org.usfirst.frc.team4342.robot.autonomous.configurators;
 
 import org.usfirst.frc.team4342.robot.Robot;
+import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
+import org.usfirst.frc.team4342.robot.autonomous.Diagnostic;
 import org.usfirst.frc.team4342.robot.components.Autonomous;
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
-import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.drive.DrivePID;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
+import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
-import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 
 import ernie.logging.loggers.ActiveLog;
 import ernie.logging.loggers.LocalLog;
 import ernie.logging.loggers.LoggerAsync;
 import ernie.logging.loggers.MultiLog;
 
-import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;

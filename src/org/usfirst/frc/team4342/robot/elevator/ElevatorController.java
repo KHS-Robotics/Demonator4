@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
 import org.usfirst.frc.team4342.robot.components.Elevator;
+import org.usfirst.frc.team4342.robot.elevator.setpoints.SetpointMapWrapper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;

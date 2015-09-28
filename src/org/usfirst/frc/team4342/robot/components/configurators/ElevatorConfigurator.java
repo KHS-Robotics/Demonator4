@@ -1,8 +1,8 @@
-package org.usfirst.frc.team4342.robot.configurators;
+package org.usfirst.frc.team4342.robot.components.configurators;
 
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorHealthMonitor;
-import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
+import org.usfirst.frc.team4342.robot.elevator.setpoints.SetpointMapWrapper;
 
 import ernie.logging.loggers.MultiLog;
 

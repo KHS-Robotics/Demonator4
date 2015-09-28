@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4342.robot.shared;
 
 import org.usfirst.frc.team4342.robot.Robot;
-import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
+import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
 import ernie.logging.loggers.ActiveLog;
 

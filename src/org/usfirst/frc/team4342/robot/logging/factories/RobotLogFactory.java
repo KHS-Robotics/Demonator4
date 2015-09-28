@@ -1,11 +1,12 @@
-package org.usfirst.frc.team4342.robot.logging;
+package org.usfirst.frc.team4342.robot.logging.factories;
 
 import java.io.IOException;
 
 import ernie.logging.loggers.LocalLog;
 import ernie.logging.loggers.LoggerAsync;
 
-import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
 /**
  * Factory to create loggers for the robot

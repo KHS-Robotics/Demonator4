@@ -1,9 +1,9 @@
-package org.usfirst.frc.team4342.robot.configurators;
+package org.usfirst.frc.team4342.robot.components.configurators;
 
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
-import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.drive.DriveHealthMonitor;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
+import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
 
 import ernie.logging.loggers.MultiLog;
 

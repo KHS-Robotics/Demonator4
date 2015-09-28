@@ -1,27 +1,27 @@
 package org.usfirst.frc.team4342.robot;
 
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
-import org.usfirst.frc.team4342.robot.autonomous.AutoRoutineLoader;
-import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
+import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutineLoader;
+import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutines;
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
-import org.usfirst.frc.team4342.robot.configurators.CameraConfigurator;
-import org.usfirst.frc.team4342.robot.configurators.DriveConfigurator;
-import org.usfirst.frc.team4342.robot.configurators.ElevatorConfigurator;
-import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
-import org.usfirst.frc.team4342.robot.elevator.Setpoint;
-import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
-import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
+import org.usfirst.frc.team4342.robot.components.configurators.CameraConfigurator;
+import org.usfirst.frc.team4342.robot.components.configurators.DriveConfigurator;
+import org.usfirst.frc.team4342.robot.components.configurators.ElevatorConfigurator;
+import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
+import org.usfirst.frc.team4342.robot.elevator.setpoints.Setpoint;
+import org.usfirst.frc.team4342.robot.elevator.setpoints.SetpointMapWrapper;
 import org.usfirst.frc.team4342.robot.logging.LoggingMonitor;
-import org.usfirst.frc.team4342.robot.logging.PDPLogger;
-import org.usfirst.frc.team4342.robot.logging.RobotLogFactory;
-import org.usfirst.frc.team4342.robot.logging.SmartDashboardUpdater;
 
 import ernie.logging.loggers.ILog;
 import ernie.logging.loggers.LoggerAsync;
 import ernie.logging.loggers.MultiLog;
 import ernie.logging.loggers.ActiveLog;
 
-import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.factories.RobotLogFactory;
+import org.usfirst.frc.team4342.robot.logging.loggers.PDPLogger;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.SmartDashboardUpdater;
+import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;

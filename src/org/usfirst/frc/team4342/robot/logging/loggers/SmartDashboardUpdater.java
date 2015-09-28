@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4342.robot.logging;
+package org.usfirst.frc.team4342.robot.logging.loggers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +7,7 @@ import java.util.Map;
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.components.Elevator;
 import org.usfirst.frc.team4342.robot.components.Autonomous;
+import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
 import ernie.logging.loggers.MultiLog;
 import edu.wpi.first.wpilibj.DigitalInput;

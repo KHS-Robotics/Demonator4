@@ -2,8 +2,8 @@ package org.usfirst.frc.team4342.robot.autonomous;
 
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
-import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
-import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.shared.TimeoutTimer;
 
 import edu.wpi.first.wpilibj.CANJaguar;
