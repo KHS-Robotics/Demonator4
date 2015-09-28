@@ -52,7 +52,7 @@ public class DriveTrain {
 		 */
 		public static CANJaguar getInstance() {
 			if(frontRight == null) {
-				frontRight = new CANJaguar(21);
+				frontRight = new CANJaguar(22);
 			}
 			
 			return frontRight;
@@ -88,7 +88,7 @@ public class DriveTrain {
 		 */
 		public static CANJaguar getInstance() {
 			if(rearRight == null) {
-				rearRight = new CANJaguar(21);
+				rearRight = new CANJaguar(23);
 			}
 			
 			return rearRight;
@@ -106,7 +106,7 @@ public class DriveTrain {
 		 */
 		public static CANJaguar getInstance() {
 			if(rearLeft == null) {
-				rearLeft = new CANJaguar(21);
+				rearLeft = new CANJaguar(20);
 			}
 			
 			return rearLeft;
