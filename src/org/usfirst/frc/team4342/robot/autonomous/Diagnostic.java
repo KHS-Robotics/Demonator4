@@ -138,7 +138,7 @@ public class Diagnostic {
 		
 		ec.setAutoSetpoint(0);
 		
-		while(!ec.isAtAutoSetpoint() || t.isTimedOut()) {
+		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) {
 			// Wait until it's at the bottom...
 		}
 		
@@ -158,7 +158,7 @@ public class Diagnostic {
 		
 		ec.setAutoSetpoint(3750);
 		
-		while(!ec.isAtAutoSetpoint() || t.isTimedOut()) {
+		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) {
 			// Wait until it's at the top...
 		}
 		
@@ -178,7 +178,7 @@ public class Diagnostic {
 		
 		ec.setAutoSetpoint(1000);
 		
-		while(!ec.isAtAutoSetpoint() || t.isTimedOut()) {
+		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) {
 			// Wait until it's at the setpoint
 		}
 		
@@ -189,7 +189,7 @@ public class Diagnostic {
 			t.startTimer();
 			
 			ec.setAutoSetpoint(0);
-			while(!ec.isAtAutoSetpoint() || t.isTimedOut()) {
+			while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) {
 				// Wait until it's at the bottom...
 			}
 		}
