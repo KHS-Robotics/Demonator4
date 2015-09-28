@@ -41,13 +41,17 @@ public class ElevatorConfigurator {
 	 * @param multiLog the log to log to
 	 */
 	public static void configure(SetpointMapWrapper setpoints, MultiLog multiLog) {
+		try {
 		
-		ElevatorController elevController = new ElevatorController(setpoints);
-		
-		elevatorController = elevController;
-		
-		ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(multiLog);
-		
-		ehm.startMonitoring();
+			ElevatorController elevController = new ElevatorController(setpoints);
+			
+			elevatorController = elevController;
+			
+			ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(multiLog);
+			
+			ehm.startMonitoring();
+		} catch(Exception ex) {
+			multiLog.error("Unexpected error while initializing the elevator controls", ex);
+		}
 	}
 }
