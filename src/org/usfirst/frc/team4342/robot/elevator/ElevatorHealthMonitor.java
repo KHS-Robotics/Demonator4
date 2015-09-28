@@ -80,7 +80,7 @@ public class ElevatorHealthMonitor {
 					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
 						boolean y = Math.abs(elevStick.getY()) > 0.10;
 						
-						if(Math.abs(enc.get()) <= 0 && y && !loggedEnc) {
+						if(Math.abs(enc.get()) == 0 && y && !loggedEnc) {
 							multiLog.warning("Elevator encoder may not be operating correctly");
 							loggedEnc = true;
 						}

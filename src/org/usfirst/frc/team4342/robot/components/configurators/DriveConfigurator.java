@@ -47,14 +47,7 @@ public class DriveConfigurator {
 			CANJaguarLoader.init(DriveTrain.RearRight.getInstance(), false);
 			CANJaguarLoader.init(DriveTrain.RearLeft.getInstance(), false);
 			
-			MecanumDrive mecDrive = new MecanumDrive(
-				DriveTrain.FrontRight.getInstance(),
-				DriveTrain.FrontLeft.getInstance(),
-				DriveTrain.RearRight.getInstance(), 
-				DriveTrain.RearLeft.getInstance(), 
-				DriveTrain.Stick.getInstance(),
-				DriveTrain.PivotGyro.getInstance()
-			);
+			MecanumDrive mecDrive = new MecanumDrive();
 			
 			drive = mecDrive;
 		} catch(Exception ex) {

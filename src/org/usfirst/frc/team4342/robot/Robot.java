@@ -172,9 +172,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
     public void teleopPeriodic() {
-		// No need to put code in here,
-		// everything that needs to run
-		// is on separate threads
+		try {
+			DriveConfigurator.getMecanumDrive().drive();
+		} catch(Exception ex) {
+			tryLogError("Error in teleopPeriodic()", ex);
+		}
     }
 	
 	/**
