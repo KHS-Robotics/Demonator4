@@ -96,14 +96,10 @@ public class Robot extends IterativeRobot {
 			multiLog.warning("Failed to start PDPMonitor");
 		}
 		
-		try {
-			ElevatorConfigurator.configure(
-				new SetpointMapWrapper(setpoints), 
-				multiLog
-			);
-		} catch(Exception ex) {
-			multiLog.error("Unexpected error while initializing the elevator controls", ex);
-		}
+		ElevatorConfigurator.configure(
+			new SetpointMapWrapper(setpoints), 
+			multiLog
+		);
 		
 		try {
 			DriveConfigurator.configure(multiLog);
