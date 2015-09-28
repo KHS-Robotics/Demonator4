@@ -40,25 +40,32 @@ public class DriveConfigurator {
 	 * @param multiLog the log to log to
 	 */
 	public static void configure(MultiLog multiLog) {
+		try {
+			CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
+			CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
+			CANJaguarLoader.init(DriveTrain.RearRight.getInstance(), false);
+			CANJaguarLoader.init(DriveTrain.RearLeft.getInstance(), false);
+			
+			MecanumDrive mecDrive = new MecanumDrive(
+				DriveTrain.FrontRight.getInstance(),
+				DriveTrain.FrontLeft.getInstance(),
+				DriveTrain.RearRight.getInstance(), 
+				DriveTrain.RearLeft.getInstance(), 
+				DriveTrain.Stick.getInstance(),
+				DriveTrain.PivotGyro.getInstance()
+			);
+			
+			drive = mecDrive;
+		} catch(Exception ex) {
+			multiLog.error("Unexpected error while initializing the drive train", ex);
+		}
 		
-		CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
-		CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
-		CANJaguarLoader.init(DriveTrain.RearRight.getInstance(), false);
-		CANJaguarLoader.init(DriveTrain.RearLeft.getInstance(), false);
-		
-		MecanumDrive mecDrive = new MecanumDrive(
-			DriveTrain.FrontRight.getInstance(),
-			DriveTrain.FrontLeft.getInstance(),
-			DriveTrain.RearRight.getInstance(), 
-			DriveTrain.RearLeft.getInstance(), 
-			DriveTrain.Stick.getInstance(),
-			DriveTrain.PivotGyro.getInstance()
-		);
-		
-		drive = mecDrive;
-		
-		DriveHealthMonitor dhm = new DriveHealthMonitor(multiLog);
-		
-		dhm.startMonitoring();
+		try {
+			DriveHealthMonitor dhm = new DriveHealthMonitor(multiLog);
+			
+			dhm.startMonitoring();
+		} catch(Exception ex) {
+			multiLog.warning("Failed to start DHM");
+		}
 	}
 }
