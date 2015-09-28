@@ -1,6 +1,9 @@
 package org.usfirst.frc.team4342.robot.components.configurators;
 
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+
 import edu.wpi.first.wpilibj.CameraServer;
+import ernie.logging.loggers.ILog;
 
 /**
  * This class is used for initializing the camera

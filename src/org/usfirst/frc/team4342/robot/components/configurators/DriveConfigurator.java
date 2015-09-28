@@ -40,7 +40,7 @@ public class DriveConfigurator {
 	 * @param pivotGyro the gyro to get data from
 	 * @param multiLog the log to log to
 	 */
-	public static void configure(ILog log, RobotConsole consoleLog) {
+	public static void configure(ILog log, RobotConsoleLog consoleLog) {
 		try {
 			CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
 			CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
@@ -63,7 +63,7 @@ public class DriveConfigurator {
 		}
 		
 		try {
-			DriveHealthMonitor dhm = new DriveHealthMonitor(multiLog);
+			DriveHealthMonitor dhm = new DriveHealthMonitor(log, consoleLog);
 			
 			dhm.startMonitoring();
 		} catch(Exception ex) {

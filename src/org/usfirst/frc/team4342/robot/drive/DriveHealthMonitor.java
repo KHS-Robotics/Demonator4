@@ -1,8 +1,10 @@
 package org.usfirst.frc.team4342.robot.drive;
 
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
+import ernie.logging.loggers.ILog;
 import ernie.logging.loggers.MultiLog;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -45,14 +47,14 @@ public class DriveHealthMonitor {
 	 * @param rearLeft the rear left motor controller to monitor
 	 * @param consoleLog the log to log to
 	 */
-	public DriveHealthMonitor(MultiLog multiLog) {
+	public DriveHealthMonitor(ILog log, RobotConsoleLog consoleLog) {
 		if(!constructed) {
 			this.driveStick = DriveTrain.Stick.getInstance();
 			this.frontRight = DriveTrain.FrontRight.getInstance();
 			this.frontLeft = DriveTrain.FrontLeft.getInstance();
 			this.rearRight = DriveTrain.RearRight.getInstance();
 			this.rearLeft = DriveTrain.RearLeft.getInstance();
-			this.multiLog = multiLog;
+			this.multiLog = new MultiLog(new ILog[] { log, consoleLog });
 		}
 	}
 	

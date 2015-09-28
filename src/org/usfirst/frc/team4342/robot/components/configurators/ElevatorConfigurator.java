@@ -53,7 +53,7 @@ public class ElevatorConfigurator {
 		}
 		
 		try {
-			ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(multiLog);
+			ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(log, consoleLog);
 			
 			ehm.startMonitoring();
 		} catch(Exception ex) {
