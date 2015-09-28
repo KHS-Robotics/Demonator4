@@ -30,11 +30,16 @@ public class CameraConfigurator {
 	 * Initializes the camera
 	 * @param camera the camera to initialize
 	 */
-	public static void configure(CameraServer camera) {
-		camera = CameraServer.getInstance();
-		camera.setQuality(50);
-		camera.startAutomaticCapture("cam0");
-		
-		CameraConfigurator.camera = camera;
+	public static void configure(CameraServer camera, ILog log, RobotConsoleLog consoleLog) {
+		try {
+			camera = CameraServer.getInstance();
+			camera.setQuality(50);
+			camera.startAutomaticCapture("cam0");
+			
+			CameraConfigurator.camera = camera;
+		} catch(Exception ex) {
+			consoleLog.warning("Failed to start camera");
+			log.error("Failed to start camera", ex);
+		}
 	}
 }
