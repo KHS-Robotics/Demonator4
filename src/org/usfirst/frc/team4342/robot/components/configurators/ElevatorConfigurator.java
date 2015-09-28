@@ -46,12 +46,16 @@ public class ElevatorConfigurator {
 			ElevatorController elevController = new ElevatorController(setpoints);
 			
 			elevatorController = elevController;
-			
+		} catch(Exception ex) {
+			multiLog.error("Unexpected error while initializing the elevator controls", ex);
+		}
+		
+		try {
 			ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(multiLog);
 			
 			ehm.startMonitoring();
 		} catch(Exception ex) {
-			multiLog.error("Unexpected error while initializing the elevator controls", ex);
+			multiLog.warning("Failed to start EHM");
 		}
 	}
 }
