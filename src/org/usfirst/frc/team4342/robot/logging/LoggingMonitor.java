@@ -1,6 +1,6 @@
-package org.usfirst.frc.team4342.robot;
+package org.usfirst.frc.team4342.robot.logging;
 
-import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
+import org.usfirst.frc.team4342.robot.Robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import ernie.logging.loggers.ActiveLog;
@@ -59,7 +59,7 @@ public class LoggingMonitor {
 				}
 				
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(5000);
 				} catch(Exception ex) {
 					ActiveLog.error(Robot.ACTIVE_LOG_PATH, "D4-LM", ExceptionInfo.getType(ex) + " in LoggingMonitor", ex);
 				}

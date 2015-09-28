@@ -3,6 +3,7 @@ package org.usfirst.frc.team4342.robot;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutineLoader;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
+import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.configurators.CameraConfigurator;
 import org.usfirst.frc.team4342.robot.configurators.DriveConfigurator;
 import org.usfirst.frc.team4342.robot.configurators.ElevatorConfigurator;
@@ -10,6 +11,7 @@ import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.elevator.Setpoint;
 import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
+import org.usfirst.frc.team4342.robot.logging.LoggingMonitor;
 import org.usfirst.frc.team4342.robot.logging.PDPLogger;
 import org.usfirst.frc.team4342.robot.logging.RobotLogFactory;
 import org.usfirst.frc.team4342.robot.logging.SmartDashboardUpdater;
@@ -21,17 +23,9 @@ import ernie.logging.loggers.ActiveLog;
 
 import org.usfirst.frc.team4342.robot.logging.RobotConsoleLog;
 
-import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
-import edu.wpi.first.wpilibj.Ultrasonic;
 
 /**
  * Main class for the entire robot!
@@ -57,32 +51,6 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 public class Robot extends IterativeRobot {
 	
 	public static final String ACTIVE_LOG_PATH = "/home/lvuser/ActiveLog.txt";
-	
-	private Joystick driveStick = new Joystick(0);
-	private Joystick elevatorStick = new Joystick(1);
-	
-	private CANJaguar frontRight = new CANJaguar(22);
-	private CANJaguar frontLeft = new CANJaguar(21);
-	private CANJaguar rearRight = new CANJaguar(23); 
-	private CANJaguar rearLeft = new CANJaguar(20);
-	private CANJaguar[] jaguars = { frontLeft, frontRight, rearLeft, rearRight };
-	
-	private Talon rightElev = new Talon(0);
-	private Talon leftElev = new Talon(1);
-	private Talon[] talons = { rightElev, leftElev };
-	
-	private Encoder elevatorEnc = new Encoder(8, 9, false, EncodingType.k1X);;
-	
-	private DigitalInput topElevLS = new DigitalInput(7); 
-	private DigitalInput botElevLS = new DigitalInput(4); 
-	private DigitalInput rightPhotoSensor = new DigitalInput(0);
-	private DigitalInput leftPhotoSensor = new DigitalInput(1);
-	private DigitalInput[] limitSwitches = { topElevLS, botElevLS };
-	
-	private Ultrasonic ultra = new Ultrasonic(2, 3, Ultrasonic.Unit.kInches);
-	
-	private Gyro pivotGyro = new Gyro(0);
-	private Gyro pitchGyro = new Gyro(1);;
 	
 	private CameraServer camera;
 	
@@ -128,39 +96,8 @@ public class Robot extends IterativeRobot {
 			multiLog.warning("Failed to start PDPMonitor");
 		}
 		
-		pivotGyro.setSensitivity(0.007);
-		pitchGyro.setSensitivity(0.007);
-		
-		ultra.setAutomaticMode(true);
-		
-		SmartDashboardUpdater.addJoystick("Joy-Drive", driveStick);
-		SmartDashboardUpdater.addJoystick("Joy-Elev", elevatorStick);
-		
-		SmartDashboardUpdater.addEncoder("Enc-Elev", elevatorEnc);
-		
-		SmartDashboardUpdater.addJagaur("FR", frontRight);
-		SmartDashboardUpdater.addJagaur("FL", frontLeft);
-		SmartDashboardUpdater.addJagaur("RR", rearRight);
-		SmartDashboardUpdater.addJagaur("RL", rearLeft);
-		
-		SmartDashboardUpdater.addDigitalInput("LS-Top", topElevLS);
-		SmartDashboardUpdater.addDigitalInput("LS-Bottom", botElevLS);
-		SmartDashboardUpdater.addDigitalInput("Photo-R", rightPhotoSensor);
-		SmartDashboardUpdater.addDigitalInput("Photo-L", leftPhotoSensor);
-		
-		SmartDashboardUpdater.addGyro("G-Pivot", pivotGyro);
-		SmartDashboardUpdater.addGyro("G-Pitch", pitchGyro);
-		
-		SmartDashboardUpdater.setUltrasonic(ultra);
-		
-		SmartDashboardUpdater.startUpdating(multiLog);
-		
 		try {
 			ElevatorConfigurator.configure(
-				talons,
-				elevatorStick,
-				elevatorEnc,
-				limitSwitches,
 				new SetpointMapWrapper(setpoints), 
 				multiLog
 			);
@@ -169,7 +106,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		try {
-			DriveConfigurator.configure(jaguars, driveStick, pivotGyro, multiLog);
+			DriveConfigurator.configure(multiLog);
 		} catch(Exception ex) {
 			multiLog.error("Unexpected error while initializing the drive train", ex);
 		}
@@ -177,11 +114,7 @@ public class Robot extends IterativeRobot {
 		try {
 			autos = new AutoRoutines(
 				DriveConfigurator.getMecanumDrive(), 
-				ElevatorConfigurator.getElevatorController(), 
-				ultra, 
-				leftPhotoSensor, 
-				rightPhotoSensor, 
-				pivotGyro, 
+				ElevatorConfigurator.getElevatorController(),
 				multiLog, 
 				consoleLog
 			);
@@ -196,10 +129,12 @@ public class Robot extends IterativeRobot {
 		}
 		
 		try {
-			LoggingMonitor.startMonitoring();
+			SmartDashboardUpdater.startUpdating(multiLog);
 		} catch(Exception ex) {
-			multiLog.warning("Failed to initialize Logging Monitor");
+			multiLog.warning("Failed to start updating SDB");
 		}
+		
+		LoggingMonitor.startMonitoring();
     }
     
 	/**
@@ -208,8 +143,8 @@ public class Robot extends IterativeRobot {
 	@Override
     public void autonomousInit() {
 		try {
-			pivotGyro.reset();
-			pitchGyro.reset();
+			DriveTrain.PivotGyro.getInstance().reset();
+			DriveTrain.PitchGyro.getInstance().reset();
 			
 			autoRoutine = AutoRoutineLoader.getAutoRoutine();
 			
@@ -237,7 +172,10 @@ public class Robot extends IterativeRobot {
 	@Override
     public void teleopInit() {
 		try {
-			CANJaguarLoader.init(jaguars, false);
+			CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
+			CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
+			CANJaguarLoader.init(DriveTrain.RearRight.getInstance(), false);
+			CANJaguarLoader.init(DriveTrain.RearLeft.getInstance(), false);
 		} catch(Exception ex) {
 			multiLog.error(ExceptionInfo.getType(ex) + " in teleopInit()", ex);
 		}
@@ -260,7 +198,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 		try {
-			CANJaguarLoader.setCoast(jaguars);
+			CANJaguarLoader.setCoast(DriveTrain.FrontRight.getInstance());
+			CANJaguarLoader.setCoast(DriveTrain.FrontLeft.getInstance());
+			CANJaguarLoader.setCoast(DriveTrain.RearRight.getInstance());
+			CANJaguarLoader.setCoast(DriveTrain.RearRight.getInstance());
 		} catch(Exception ex) {
 			multiLog.error(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
 		}

@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
+import org.usfirst.frc.team4342.robot.components.Elevator;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -80,17 +82,14 @@ public class ElevatorController {
 	 * @param botLS the bottom limit switch to stop the elevator from moving off the track
 	 * @param setpoints the encoder setpoints for buttons on the joystick for automatic arm movement
 	 */
-	public ElevatorController(Talon rightMotor, Talon leftMotor, 
-							Joystick elevStick, Encoder enc,
-							DigitalInput topLS, DigitalInput botLS,
-							SetpointMapWrapper setpoints) {
+	public ElevatorController(SetpointMapWrapper setpoints) {
 		
-		this.rightMotor = rightMotor;
-		this.leftMotor = leftMotor;
-		this.elevStick = elevStick;
-		this.enc = enc;
-		this.topLS = topLS;
-		this.botLS = botLS;
+		this.rightMotor = Elevator.RightMotor.getInstance();
+		this.leftMotor = Elevator.LeftMotor.getInstance();
+		this.elevStick = Elevator.Stick.getInstance();
+		this.enc = Elevator.Encoder.getInstance();
+		this.topLS = Elevator.TopLimitSwitch.getInstance();
+		this.botLS = Elevator.BottomLimitSwitch.getInstance();
 		this.setpoints = setpoints;
 		
 		ds = DriverStation.getInstance();

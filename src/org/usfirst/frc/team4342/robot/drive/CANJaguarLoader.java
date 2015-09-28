@@ -48,13 +48,11 @@ public final class CANJaguarLoader {
 	}
 	
 	/**
-	 * Sets the CANJaguar's neutral mode to coast
-	 * @param jaguars the jaguars to set
+	 * Sets the CANJaguar neutral mode to coast
+	 * @param jaguars the jaguar to set
 	 */
-	public static void setCoast(CANJaguar[] jaguars) {
-		for(CANJaguar jaguar : jaguars) {
-			jaguar.configNeutralMode(CANJaguar.NeutralMode.Coast);
-		}
+	public static void setCoast(CANJaguar jaguar) {
+		jaguar.configNeutralMode(CANJaguar.NeutralMode.Coast);
 	}
 	
 	/**

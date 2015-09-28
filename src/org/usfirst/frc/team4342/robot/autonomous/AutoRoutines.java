@@ -1,6 +1,8 @@
 package org.usfirst.frc.team4342.robot.autonomous;
 
 import org.usfirst.frc.team4342.robot.Robot;
+import org.usfirst.frc.team4342.robot.components.Autonomous;
+import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.drive.DrivePID;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
@@ -64,15 +66,13 @@ public class AutoRoutines {
 	 * @param gyro the gyro to ensure the robot is moving straight
 	 */
 	public AutoRoutines(MecanumDrive drive, ElevatorController ec,
-						Ultrasonic ultra, DigitalInput leftPhotoSensor,
-						DigitalInput rightPhotoSensor, Gyro gyro,
 						MultiLog multiLog, RobotConsoleLog consoleLog) {
 		this.drive = drive;
 		this.ec = ec;
-		this.ultra = ultra;
-		this.leftPhotoSensor = leftPhotoSensor;
-		this.rightPhotoSensor = rightPhotoSensor;
-		this.gyro = gyro;
+		this.ultra = Autonomous.Ultrasonic.getInstance();
+		this.leftPhotoSensor = Autonomous.LeftPhotoSensor.getInstance();
+		this.rightPhotoSensor = Autonomous.RightPhotoSensor.getInstance();
+		this.gyro = DriveTrain.PivotGyro.getInstance();
 		
 		this.multiLog = multiLog;
 		this.consoleLog = consoleLog;

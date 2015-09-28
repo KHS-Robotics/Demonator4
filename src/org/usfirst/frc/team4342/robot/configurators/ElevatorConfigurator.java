@@ -5,10 +5,6 @@ import org.usfirst.frc.team4342.robot.elevator.ElevatorHealthMonitor;
 import org.usfirst.frc.team4342.robot.elevator.SetpointMapWrapper;
 
 import ernie.logging.loggers.MultiLog;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
 
 /**
  * This class is for initializing the elevator
@@ -44,28 +40,13 @@ public class ElevatorConfigurator {
 	 * @param setpoints the elevator presets
 	 * @param multiLog the log to log to
 	 */
-	public static void configure(Talon[] elevatorMotors, Joystick elevStick, Encoder elevEnc,
-						  DigitalInput[] limitSwitches, SetpointMapWrapper setpoints, MultiLog multiLog) {
+	public static void configure(SetpointMapWrapper setpoints, MultiLog multiLog) {
 		
-		ElevatorController elevController = new ElevatorController(
-			elevatorMotors[0], 
-			elevatorMotors[1],
-			elevStick,
-			elevEnc, 
-			limitSwitches[0], 
-			limitSwitches[1], 
-			setpoints
-		);
+		ElevatorController elevController = new ElevatorController(setpoints);
 		
 		elevatorController = elevController;
 		
-		ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(
-			elevStick, 
-			elevEnc, 
-			limitSwitches[0], 
-			limitSwitches[1], 
-			multiLog
-		);
+		ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(multiLog);
 		
 		ehm.startMonitoring();
 	}

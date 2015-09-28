@@ -1,13 +1,11 @@
 package org.usfirst.frc.team4342.robot.configurators;
 
+import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.drive.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.drive.DriveHealthMonitor;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 
 import ernie.logging.loggers.MultiLog;
-import edu.wpi.first.wpilibj.CANJaguar;
-import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * This class is for initializing the drive train
@@ -41,29 +39,25 @@ public class DriveConfigurator {
 	 * @param pivotGyro the gyro to get data from
 	 * @param multiLog the log to log to
 	 */
-	public static void configure(CANJaguar[] jaguars, Joystick driveStick, Gyro pivotGyro, MultiLog multiLog) {
+	public static void configure(MultiLog multiLog) {
 		
-		CANJaguarLoader.init(jaguars, false);
+		CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
+		CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
+		CANJaguarLoader.init(DriveTrain.RearRight.getInstance(), false);
+		CANJaguarLoader.init(DriveTrain.RearLeft.getInstance(), false);
 		
 		MecanumDrive mecDrive = new MecanumDrive(
-			jaguars[0],
-			jaguars[1],
-			jaguars[2], 
-			jaguars[3], 
-			driveStick,
-			pivotGyro
+			DriveTrain.FrontRight.getInstance(),
+			DriveTrain.FrontLeft.getInstance(),
+			DriveTrain.RearRight.getInstance(), 
+			DriveTrain.RearLeft.getInstance(), 
+			DriveTrain.Stick.getInstance(),
+			DriveTrain.PivotGyro.getInstance()
 		);
 		
 		drive = mecDrive;
 		
-		DriveHealthMonitor dhm = new DriveHealthMonitor(
-			driveStick, 
-			jaguars[0], 
-			jaguars[1], 
-			jaguars[2], 
-			jaguars[3],
-			multiLog
-		);
+		DriveHealthMonitor dhm = new DriveHealthMonitor(multiLog);
 		
 		dhm.startMonitoring();
 	}

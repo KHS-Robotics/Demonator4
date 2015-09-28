@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import ernie.logging.loggers.MultiLog;
+import org.usfirst.frc.team4342.robot.components.DriveTrain;
+import org.usfirst.frc.team4342.robot.components.Elevator;
+import org.usfirst.frc.team4342.robot.components.Autonomous;
 
+import ernie.logging.loggers.MultiLog;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
@@ -136,6 +139,8 @@ public class SmartDashboardUpdater {
 		 */
 		@Override
 		public void run() {
+			init();
+			
 			while(true) {
 				putJoystickData();
 				putEncoderData();
@@ -150,6 +155,29 @@ public class SmartDashboardUpdater {
 					multiLog.error(ExceptionInfo.getType(ex) + " in SDU", ex);
 				}
 			}
+		}
+		
+		private void init() {
+			SmartDashboardUpdater.addJoystick("Joy-Drive", DriveTrain.Stick.getInstance());
+			SmartDashboardUpdater.addJoystick("Joy-Elev", Elevator.Stick.getInstance());
+			
+			SmartDashboardUpdater.addEncoder("Enc-Elev", Elevator.Encoder.getInstance());
+			
+			SmartDashboardUpdater.addJagaur("FR", DriveTrain.FrontRight.getInstance());
+			SmartDashboardUpdater.addJagaur("FL", DriveTrain.FrontLeft.getInstance());
+			SmartDashboardUpdater.addJagaur("RR", DriveTrain.RearRight.getInstance());
+			SmartDashboardUpdater.addJagaur("RL", DriveTrain.RearLeft.getInstance());
+			
+			SmartDashboardUpdater.addDigitalInput("LS-Top", Elevator.TopLimitSwitch.getInstance());
+			SmartDashboardUpdater.addDigitalInput("LS-Bottom", Elevator.BottomLimitSwitch.getInstance());
+			SmartDashboardUpdater.addDigitalInput("Photo-R", Autonomous.RightPhotoSensor.getInstance());
+			SmartDashboardUpdater.addDigitalInput("Photo-L", Autonomous.LeftPhotoSensor.getInstance());
+			
+			SmartDashboardUpdater.addGyro("G-Pivot", DriveTrain.PivotGyro.getInstance());
+			SmartDashboardUpdater.addGyro("G-Pitch", DriveTrain.PitchGyro.getInstance());
+			
+			SmartDashboardUpdater.setUltrasonic(Autonomous.Ultrasonic.getInstance());
+			
 		}
 		
 		/**

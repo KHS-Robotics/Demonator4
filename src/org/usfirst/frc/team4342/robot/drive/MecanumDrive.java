@@ -76,8 +76,8 @@ public class MecanumDrive {
 	 * @param gyro the gyro to ensure the robot is driving straight
 	 * @param enableGyro true for field oriented, false for robot oriented
 	 */
-	public MecanumDrive(CANJaguar frontLeft, CANJaguar frontRight, CANJaguar rearLeft,
-			CANJaguar rearRight, Joystick joystick, Gyro gyro) {
+	public MecanumDrive(CANJaguar frontRight, CANJaguar frontLeft, CANJaguar rearRight,
+			CANJaguar rearLeft, Joystick joystick, Gyro gyro) {
 		fl = frontLeft;
 		fr = frontRight;
 		rl = rearLeft;

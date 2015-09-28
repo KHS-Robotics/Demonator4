@@ -1,9 +1,9 @@
 package org.usfirst.frc.team4342.robot.drive;
 
+import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 
 import ernie.logging.loggers.MultiLog;
-
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -45,15 +45,13 @@ public class DriveHealthMonitor {
 	 * @param rearLeft the rear left motor controller to monitor
 	 * @param consoleLog the log to log to
 	 */
-	public DriveHealthMonitor(Joystick driveStick, CANJaguar frontLeft,
-								CANJaguar frontRight, CANJaguar rearLeft,
-								CANJaguar rearRight, MultiLog multiLog) {
+	public DriveHealthMonitor(MultiLog multiLog) {
 		if(!constructed) {
-			this.driveStick = driveStick;
-			this.frontRight = frontRight;
-			this.frontLeft = frontLeft;
-			this.rearRight = rearRight;
-			this.rearLeft = rearLeft;
+			this.driveStick = DriveTrain.Stick.getInstance();
+			this.frontRight = DriveTrain.FrontRight.getInstance();
+			this.frontLeft = DriveTrain.FrontLeft.getInstance();
+			this.rearRight = DriveTrain.RearRight.getInstance();
+			this.rearLeft = DriveTrain.RearLeft.getInstance();
 			this.multiLog = multiLog;
 		}
 	}

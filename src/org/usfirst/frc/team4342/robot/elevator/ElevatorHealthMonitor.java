@@ -1,9 +1,9 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
+import org.usfirst.frc.team4342.robot.components.Elevator;
 import org.usfirst.frc.team4342.robot.logging.ExceptionInfo;
 
 import ernie.logging.loggers.MultiLog;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -45,14 +45,12 @@ public class ElevatorHealthMonitor {
 	 * @param bottom the bottom limit switch to monitor
 	 * @param consoleLog the log to log to
 	 */
-	public ElevatorHealthMonitor(Joystick elevStick, Encoder enc, 
-								 DigitalInput top, DigitalInput bottom,
-								 MultiLog consoleLog) {
+	public ElevatorHealthMonitor(MultiLog consoleLog) {
 		if(!constructed) {
-			this.elevStick = elevStick;
-			this.enc = enc;
-			this.top = top;
-			this.bottom = bottom;
+			this.elevStick = Elevator.Stick.getInstance();
+			this.enc = Elevator.Encoder.getInstance();
+			this.top = Elevator.TopLimitSwitch.getInstance();
+			this.bottom = Elevator.BottomLimitSwitch.getInstance();
 			this.multiLog = multiLog;
 		}
 	}
