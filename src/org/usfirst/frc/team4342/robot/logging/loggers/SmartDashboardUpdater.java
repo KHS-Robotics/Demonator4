@@ -159,26 +159,30 @@ public class SmartDashboardUpdater {
 		}
 		
 		private void init() {
-			SmartDashboardUpdater.addJoystick("Joy-Drive", DriveTrain.Stick.getInstance());
-			SmartDashboardUpdater.addJoystick("Joy-Elev", Elevator.Stick.getInstance());
+			try {
+				SmartDashboardUpdater.addJoystick("Joy-Drive", DriveTrain.Stick.getInstance());
+				SmartDashboardUpdater.addJoystick("Joy-Elev", Elevator.Stick.getInstance());
+				
+				SmartDashboardUpdater.addEncoder("Enc-Elev", Elevator.Encoder.getInstance());
+				
+				SmartDashboardUpdater.addJagaur("FR", DriveTrain.FrontRight.getInstance());
+				SmartDashboardUpdater.addJagaur("FL", DriveTrain.FrontLeft.getInstance());
+				SmartDashboardUpdater.addJagaur("RR", DriveTrain.RearRight.getInstance());
+				SmartDashboardUpdater.addJagaur("RL", DriveTrain.RearLeft.getInstance());
+				
+				SmartDashboardUpdater.addDigitalInput("LS-Top", Elevator.TopLimitSwitch.getInstance());
+				SmartDashboardUpdater.addDigitalInput("LS-Bottom", Elevator.BottomLimitSwitch.getInstance());
+				SmartDashboardUpdater.addDigitalInput("Photo-R", Autonomous.RightPhotoSensor.getInstance());
+				SmartDashboardUpdater.addDigitalInput("Photo-L", Autonomous.LeftPhotoSensor.getInstance());
+				
+				SmartDashboardUpdater.addGyro("G-Pivot", DriveTrain.PivotGyro.getInstance());
+				SmartDashboardUpdater.addGyro("G-Pitch", DriveTrain.PitchGyro.getInstance());
+				
+				SmartDashboardUpdater.setUltrasonic(Autonomous.Ultrasonic.getInstance());
 			
-			SmartDashboardUpdater.addEncoder("Enc-Elev", Elevator.Encoder.getInstance());
-			
-			SmartDashboardUpdater.addJagaur("FR", DriveTrain.FrontRight.getInstance());
-			SmartDashboardUpdater.addJagaur("FL", DriveTrain.FrontLeft.getInstance());
-			SmartDashboardUpdater.addJagaur("RR", DriveTrain.RearRight.getInstance());
-			SmartDashboardUpdater.addJagaur("RL", DriveTrain.RearLeft.getInstance());
-			
-			SmartDashboardUpdater.addDigitalInput("LS-Top", Elevator.TopLimitSwitch.getInstance());
-			SmartDashboardUpdater.addDigitalInput("LS-Bottom", Elevator.BottomLimitSwitch.getInstance());
-			SmartDashboardUpdater.addDigitalInput("Photo-R", Autonomous.RightPhotoSensor.getInstance());
-			SmartDashboardUpdater.addDigitalInput("Photo-L", Autonomous.LeftPhotoSensor.getInstance());
-			
-			SmartDashboardUpdater.addGyro("G-Pivot", DriveTrain.PivotGyro.getInstance());
-			SmartDashboardUpdater.addGyro("G-Pitch", DriveTrain.PitchGyro.getInstance());
-			
-			SmartDashboardUpdater.setUltrasonic(Autonomous.Ultrasonic.getInstance());
-			
+			} catch(Exception ex) {
+				multiLog.error("Failed to put data to SDBU", ex);
+			}
 		}
 		
 		/**

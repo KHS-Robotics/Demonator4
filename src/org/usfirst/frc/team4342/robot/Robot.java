@@ -117,11 +117,7 @@ public class Robot extends IterativeRobot {
 		
 		CameraConfigurator.configure(camera, log, consoleLog);
 		
-		try {
-			SmartDashboardUpdater.startUpdating(multiLog);
-		} catch(Exception ex) {
-			multiLog.warning("Failed to start updating SDB");
-		}
+		SmartDashboardUpdater.startUpdating(multiLog);
 		
 		LoggingMonitor.startMonitoring();
     }
