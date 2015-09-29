@@ -69,19 +69,19 @@ public class DriveHealthMonitor {
 	}
 	
 	private double getFrontRightEncCount() {
-		return frontRight.getPosition();
+		return Math.abs(frontRight.getPosition());
 	}
 	
 	private double getFrontLeftEncCount() {
-		return frontLeft.getPosition();
+		return Math.abs(frontLeft.getPosition());
 	}
 	
 	private double getRearRightEncCount() {
-		return rearRight.getPosition();
+		return Math.abs(rearRight.getPosition());
 	}
 	
 	private double getRearLeftEncCount() {
-		return rearLeft.getPosition();
+		return Math.abs(rearLeft.getPosition());
 	}
 	
 	/**
