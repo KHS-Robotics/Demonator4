@@ -64,14 +64,13 @@ public class PDPLogger {
 		/**
 		 * Constructs a PDP Logger to log PDP data
 		 * @param pdp the PDP to get data from
-		 * @param log the log to log to
-		 * @param consoleLog the console log to log to
+		 * @param multiLog the loggers to log to
 		 */
 		public PDPLoggingThread(PowerDistributionPanel pdp, MultiLog multiLog) {
 			this.pdp = pdp;
 			this.multiLog = multiLog;
 			
-			csvLogFile = FileHelper.getValidPdpLogFile(multiLog);
+			csvLogFile = FileHelper.getValidPdpLogFile();
 		}
 		
 		/**
@@ -122,8 +121,9 @@ public class PDPLogger {
 				multiLog.warning("Failed to write to CSV for PDP logger :: " + ExceptionInfo.getType(ex));
 			} finally {
 				try {
-					if(writer != null)
+					if(writer != null) {
 						writer.close();
+					}
 				} catch (Exception ex) {
 					multiLog.warning("Failed to close writer to CSV for PDP logger");
 				}

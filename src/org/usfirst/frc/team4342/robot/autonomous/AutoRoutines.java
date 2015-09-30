@@ -1,8 +1,7 @@
-package org.usfirst.frc.team4342.robot.autonomous.configurators;
+package org.usfirst.frc.team4342.robot.autonomous;
 
 import org.usfirst.frc.team4342.robot.Robot;
-import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
-import org.usfirst.frc.team4342.robot.autonomous.Diagnostic;
+import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutine;
 import org.usfirst.frc.team4342.robot.components.Autonomous;
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.drive.DrivePID;
@@ -17,6 +16,7 @@ import ernie.logging.loggers.MultiLog;
 
 import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
+import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -525,7 +525,7 @@ public class AutoRoutines {
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException ex) {
-					ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "Demonator4", ExceptionInfo.getType(ex) + " in AutoRoutines.AutoChecker");
+					ActiveLog.warning(FileHelper.ACTIVE_LOG_PATH, "D4-AR", ExceptionInfo.getType(ex) + " in AutoRoutines.AutoChecker");
 				}
 			}
 		}

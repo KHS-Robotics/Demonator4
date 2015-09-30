@@ -1,13 +1,11 @@
 package org.usfirst.frc.team4342.robot.drive;
 
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
 
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
-import ernie.logging.loggers.ILog;
 
 /**
  * This class is for the drive train of the robot. The drive train is composed

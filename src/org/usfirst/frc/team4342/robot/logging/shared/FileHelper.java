@@ -5,7 +5,6 @@ import java.io.File;
 import org.usfirst.frc.team4342.robot.Robot;
 
 import ernie.logging.loggers.ActiveLog;
-import ernie.logging.loggers.MultiLog;
 
 /**
  * This class is used to shift and get valid log files
@@ -19,6 +18,7 @@ import ernie.logging.loggers.MultiLog;
 public class FileHelper {
 	
 	private static final String ROOT = "/home/lvuser/";
+	public static final String ACTIVE_LOG_PATH = "/home/lvuser/ActiveLog.txt";
 	
 	private FileHelper() {
 		
@@ -44,12 +44,9 @@ public class FileHelper {
 	
 	/**
 	 * Gets a valid log location and file
-	 * 
-	 * @param log used to log warnings about the files
-	 * @param consoleLog used to log warnings about the files
 	 * @return a valid log file location
 	 */
-	public static File getValidPdpLogFile(MultiLog multiLog) {
+	public static File getValidPdpLogFile() {
 		for(int i = 1; i <= 5; i++) {
 			File f = new File(ROOT + "PdpLog[" + i + "].csv");
 			
@@ -58,7 +55,7 @@ public class FileHelper {
 			}
 		}
 		
-		shiftPdpLogFiles(multiLog);
+		shiftPdpLogFiles();
 		
 		return new File(ROOT + "PdpLog[1].csv");
 	}
@@ -83,7 +80,7 @@ public class FileHelper {
 			boolean renamed = f.renameTo(new File(ROOT + "Log[" + (i+1) + "].txt"));
 			
 			if(!renamed) {
-				ActiveLog.warning(Robot.ACTIVE_LOG_PATH, "Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				ActiveLog.warning(ACTIVE_LOG_PATH, "Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
 				
 				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
@@ -96,11 +93,8 @@ public class FileHelper {
 	 * the log file index values up one and delete
 	 * the oldest file and make way for the latest
 	 * log file, [1].
-	 * 
-	 * @param log used to log warnings about the files
-	 * @param consoleLog used to log warnings about the files
 	 */
-	private static void shiftPdpLogFiles(MultiLog multiLog) {
+	private static void shiftPdpLogFiles() {
 		
 		File lastFile = new File(ROOT + "PdpLog[5].csv");
 		
@@ -116,9 +110,7 @@ public class FileHelper {
 			boolean renamed = f.renameTo(new File(ROOT + "PdpLog[" + (i+1) + "].csv"));
 			
 			if(!renamed) {
-				multiLog.warning("The file at path \"" + f.getPath() + "\" was not successfully renamed");
-				
-				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				ActiveLog.warning(ACTIVE_LOG_PATH, "D4-FH", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
 		}
 	}

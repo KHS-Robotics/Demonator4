@@ -1,8 +1,8 @@
 package org.usfirst.frc.team4342.robot;
 
-import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
+import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
+import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutine;
 import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutineLoader;
-import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutines;
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.components.configurators.CameraConfigurator;
 import org.usfirst.frc.team4342.robot.components.configurators.DriveConfigurator;
@@ -22,6 +22,7 @@ import org.usfirst.frc.team4342.robot.logging.loggers.PDPLogger;
 import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
 import org.usfirst.frc.team4342.robot.logging.loggers.SmartDashboardUpdater;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
+import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -50,8 +51,6 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
  */
 public class Robot extends IterativeRobot {
 	
-	public static final String ACTIVE_LOG_PATH = "/home/lvuser/ActiveLog.txt";
-	
 	private CameraServer camera;
 	
 	private AutoRoutines autos;
@@ -66,10 +65,10 @@ public class Robot extends IterativeRobot {
 		new Setpoint(9, 2800)
 	};
 	
-	private static LoggerAsync log;
-	private static RobotConsoleLog consoleLog;
-	private static MultiLog multiLog;
-	private static PDPLogger pdpLogger;
+	private LoggerAsync log;
+	private RobotConsoleLog consoleLog;
+	private MultiLog multiLog;
+	private PDPLogger pdpLogger;
 	
 	/**
 	 * Initialization code for when the robot is first powered on
@@ -77,7 +76,7 @@ public class Robot extends IterativeRobot {
 	@Override
     public void robotInit() {
 		
-		ActiveLog.info(ACTIVE_LOG_PATH, "D4-main", "Robot turned on");
+		ActiveLog.info(FileHelper.ACTIVE_LOG_PATH, "D4-main", "Robot turned on");
 		
 		consoleLog = RobotLogFactory.createRobotConsoleLog();
 		

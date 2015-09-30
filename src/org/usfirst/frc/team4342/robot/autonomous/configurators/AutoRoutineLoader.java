@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.usfirst.frc.team4342.robot.autonomous.AutoRoutine;
-
 /**
  * This class is for loading the specified auto routine from a text file
  * on the robot. This allows us to quickly switch out auto routines without

@@ -1,6 +1,5 @@
-package org.usfirst.frc.team4342.robot.autonomous;
+package org.usfirst.frc.team4342.robot.autonomous.configurators;
 
-import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutineLoader;
 
 /**
  * This enum classifies each auto routine

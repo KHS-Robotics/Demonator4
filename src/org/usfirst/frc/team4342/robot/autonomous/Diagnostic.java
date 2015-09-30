@@ -37,30 +37,21 @@ public class Diagnostic {
 		int warnings = 0;
 		
 		try {
-			log.debug("Starting self diagnostic test...");
-			
-			log.debug("Testing front right drive encoder...");
 			
 			if(!CANJaguarEncoderWorks(drive.getFrontRight())) {
 				log.warning("Possible problem with front right encoder");
 				warnings++;
 			}
 			
-			log.debug("Testing front left drive encoder...");
-			
 			if(!CANJaguarEncoderWorks(drive.getFrontLeft())) {
 				log.warning("Possible problem with front left encoder");
 				warnings++;
 			}
 			
-			log.debug("Testing rear right drive encoder...");
-			
 			if(!CANJaguarEncoderWorks(drive.getRearRight())) {
 				log.warning("Possible problem with rear right encoder");
 				warnings++;
 			}
-			
-			log.debug("Testing rear left drive encoder...");
 			
 			if(!CANJaguarEncoderWorks(drive.getRearLeft())) {
 				log.warning("Possible problem with rear left encoder");
@@ -74,14 +65,10 @@ public class Diagnostic {
 				warnings++;
 			}
 			
-			log.debug("Testing bottom limit switch...");
-			
 			if(!elevatorBottomLSWorks(ec)) {
 				log.warning("Possible problem with bottom limit switch");
 				warnings++;
 			}
-			
-			log.debug("Testing top limit switch...");
 			
 			if(!elevatorTopLSWorks(ec)) {
 				log.warning("Possible problem with the top limit switch");

@@ -158,6 +158,9 @@ public class SmartDashboardUpdater {
 			}
 		}
 		
+		/**
+		 * Initializes all the data to the Smart Dashboard
+		 */
 		private void init() {
 			try {
 				SmartDashboardUpdater.addJoystick("Joy-Drive", DriveTrain.Stick.getInstance());
