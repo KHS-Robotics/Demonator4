@@ -2,8 +2,6 @@ package org.usfirst.frc.team4342.robot.logging.shared;
 
 import java.io.File;
 
-import org.usfirst.frc.team4342.robot.Robot;
-
 import ernie.logging.loggers.ActiveLog;
 
 /**

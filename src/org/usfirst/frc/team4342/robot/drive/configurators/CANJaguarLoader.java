@@ -1,7 +1,6 @@
 package org.usfirst.frc.team4342.robot.drive.configurators;
 
 import org.usfirst.frc.team4342.robot.drive.DrivePID;
-import org.usfirst.frc.team4342.robot.drive.DrivePID.FrontRight;
 
 import edu.wpi.first.wpilibj.CANJaguar;
 

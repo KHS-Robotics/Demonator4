@@ -1,6 +1,5 @@
 package org.usfirst.frc.team4342.robot.autonomous;
 
-import org.usfirst.frc.team4342.robot.Robot;
 import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutine;
 import org.usfirst.frc.team4342.robot.components.Autonomous;
 import org.usfirst.frc.team4342.robot.components.DriveTrain;

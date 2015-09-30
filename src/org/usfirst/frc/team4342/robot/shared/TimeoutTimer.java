@@ -1,6 +1,5 @@
 package org.usfirst.frc.team4342.robot.shared;
 
-import org.usfirst.frc.team4342.robot.Robot;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
