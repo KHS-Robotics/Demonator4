@@ -27,16 +27,11 @@ public final class AutoRoutineLoader {
 	/**
 	 * Gets the current auto routine from a text file
 	 * @return the specified auto routine
-	 * @throws IOException if an error occurrs while attempting to read the auto routine
+	 * @throws IOException if an error occurs while attempting to read the auto routine
 	 */
 	public static AutoRoutine getAutoRoutine() throws IOException {
-		FileReader fr = new FileReader(PATH);
-		BufferedReader br = new BufferedReader(fr);
 		
-		String number = br.readLine();
-		br.close();
-		
-		int id = new Integer(number);
+		int id = loadFromTextFile();
 		
 		switch(id) {
 			case 1:
@@ -51,6 +46,22 @@ public final class AutoRoutineLoader {
 				return AutoRoutine.DiagnosticCheck;
 		}
 		
-		return null;
+		throw new IOException("No valid autonomous value loaded!");
+	}
+	
+	private static int loadFromTextFile() throws IOException {
+		try {
+			FileReader fr = new FileReader(PATH);
+			BufferedReader br = new BufferedReader(fr);
+			
+			String number = br.readLine();
+			br.close();
+			
+			return new Integer(number);
+		} catch(IOException ex) {
+			throw ex;
+		} catch(NumberFormatException ex) {
+			return new Integer(9001);
+		}
 	}
 }

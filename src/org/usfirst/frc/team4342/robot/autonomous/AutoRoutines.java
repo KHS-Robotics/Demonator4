@@ -86,7 +86,7 @@ public class AutoRoutines {
 	 * @param autoRoutine the auto routine to run
 	 */
 	public void executeAutonomous(AutoRoutine autoRoutine) {
-		if(DriverStation.getInstance().isAutonomous()) {
+		if(DriverStation.getInstance().isAutonomous() && DriverStation.getInstance().isEnabled()) {
 			switch(autoRoutine) {
 				case PickUpOneTote:
 					pickupOneTote();
@@ -110,7 +110,7 @@ public class AutoRoutines {
 				
 				default:
 					if(!logged) {
-						multiLog.warning("No valid autonomous value selected, please alert Ernie or Magnus");
+						multiLog.warning("No valid autonomous value selected");
 						
 						logged = true;
 					}
