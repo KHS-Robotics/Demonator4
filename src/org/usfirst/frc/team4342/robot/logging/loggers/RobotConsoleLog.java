@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4342.robot.logging.loggers;
 
+import ernie.logging.data.InfoLogData;
 import ernie.logging.loggers.BaseLog;
 import ernie.logging.Severity;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,13 +21,10 @@ public class RobotConsoleLog extends BaseLog {
 	 * logs the severity level and the message.
 	 */
 	@Override
-	public void log(Severity severity, Object[] message) {
+	public void log(Severity severity, InfoLogData data) {
 		String mssg = severity.toString().toUpperCase() + ": ";
-
-		String hackMessage = message[2].toString();
-		hackMessage = hackMessage.substring(hackMessage.indexOf(":")+1);
 		
-		mssg += hackMessage + "\n";
+		mssg += data.getMessage();
 		
 		DriverStation.reportError(mssg, false);
 	}
