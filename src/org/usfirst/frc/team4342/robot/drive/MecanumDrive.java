@@ -95,11 +95,16 @@ public class MecanumDrive {
 		right = -forward * Math.sin(gyroAngle * (Math.PI / 180)) + right
 				* Math.cos(gyroAngle * (Math.PI / 180));
 		forward = temp;
+		
+		// Used for sensitivity, throttles speed from
+		// x to range 0.0x to 2.0x
+		double divider = -joystick.getThrottle();
+		divider += 1.0;
 
-		f_l = forward + twist + right;
-		f_r = forward - twist - right;
-		r_l = forward + twist - right;
-		r_r = forward - twist + right;
+		f_l = (forward + twist + right) * divider;
+		f_r = (forward - twist - right) * divider;
+		r_l = (forward + twist - right) * divider;
+		r_r = (forward - twist + right) * divider;
 
 		double max = Math.abs(f_l);
 		if (Math.abs(f_r) > max) {
