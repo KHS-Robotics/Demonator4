@@ -137,8 +137,15 @@ public class Elevator {
 		}
 	}
 	
+	/**
+	 * The setpoints used for automatic elevator movement
+	 */
 	public static class Setpoints {
 		
+		/**
+		 * Gets the setpoints used for automatic elevator movement
+		 * @return the setpoints
+		 */
 		public static SetpointMapWrapper getInstance() {
 			if(setpoints == null) {
 				setpoints = new SetpointMapWrapper(
