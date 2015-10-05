@@ -104,7 +104,7 @@ public class ElevatorHealthMonitor {
 						break;
 					}
 					
-					Thread.sleep(100);
+					Thread.sleep(250);
 						
 				} catch (Exception ex) {
 					multiLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);

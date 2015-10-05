@@ -69,19 +69,19 @@ public class DriveHealthMonitor {
 	}
 	
 	private double getFrontRightEncCount() {
-		return Math.abs(frontRight.getPosition());
+		return frontRight.getPosition();
 	}
 	
 	private double getFrontLeftEncCount() {
-		return Math.abs(frontLeft.getPosition());
+		return frontLeft.getPosition();
 	}
 	
 	private double getRearRightEncCount() {
-		return Math.abs(rearRight.getPosition());
+		return rearRight.getPosition();
 	}
 	
 	private double getRearLeftEncCount() {
-		return Math.abs(rearLeft.getPosition());
+		return rearLeft.getPosition();
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class DriveHealthMonitor {
 						// We use 0.05 revolutions here because the encoder counts should change
 						// more dramatically than 1/20 of a spin of the wheel
 						
-						if(getFrontRightEncCount() <= 0.05 && (x || y || z) && !loggedFR) {
+						if(getFrontRightEncCount() == 0.0 && (x || y || z) && !loggedFR) {
 							frontRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							frontRight.enableControl();
 							
@@ -111,7 +111,7 @@ public class DriveHealthMonitor {
 							loggedFR = true;
 						}
 						
-						if(getFrontLeftEncCount() <= 0.05 && (x || y || z) && !loggedFL) {
+						if(getFrontLeftEncCount() == 0.0 && (x || y || z) && !loggedFL) {
 							frontLeft.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							frontLeft.enableControl();
 							
@@ -119,7 +119,7 @@ public class DriveHealthMonitor {
 							loggedFL = true;
 						}
 						
-						if(getRearRightEncCount() <= 0.05 && (x || y || z) && !loggedRR) {
+						if(getRearRightEncCount() == 0.0 && (x || y || z) && !loggedRR) {
 							rearRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							rearRight.enableControl();
 							
@@ -127,7 +127,7 @@ public class DriveHealthMonitor {
 							loggedRR = true;
 						}
 						
-						if(getRearLeftEncCount() <= 0.05 && (x || y || z) && !loggedRL) {
+						if(getRearLeftEncCount() == 0.00 && (x || y || z) && !loggedRL) {
 							rearLeft.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							rearLeft.enableControl();
 							
@@ -144,7 +144,7 @@ public class DriveHealthMonitor {
 						}
 					}
 					
-					Thread.sleep(100);
+					Thread.sleep(250);
 				} catch(Exception ex) {
 					multiLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 				}
