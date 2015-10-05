@@ -4,12 +4,11 @@ import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
 import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutine;
 import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutineLoader;
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
+import org.usfirst.frc.team4342.robot.components.Elevator;
 import org.usfirst.frc.team4342.robot.components.configurators.CameraConfigurator;
 import org.usfirst.frc.team4342.robot.components.configurators.DriveConfigurator;
 import org.usfirst.frc.team4342.robot.components.configurators.ElevatorConfigurator;
 import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
-import org.usfirst.frc.team4342.robot.elevator.setpoints.Setpoint;
-import org.usfirst.frc.team4342.robot.elevator.setpoints.SetpointMapWrapper;
 import org.usfirst.frc.team4342.robot.logging.LoggingMonitor;
 
 import ernie.logging.loggers.ILog;
@@ -24,7 +23,6 @@ import org.usfirst.frc.team4342.robot.logging.loggers.SmartDashboardUpdater;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
@@ -51,19 +49,8 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
  */
 public class Robot extends IterativeRobot {
 	
-	private CameraServer camera;
-	
 	private AutoRoutines autos;
 	private AutoRoutine autoRoutine;
-	
-	private Setpoint[] setpoints = {
-		new Setpoint(2, 0),
-		new Setpoint(4, 325),
-		new Setpoint(3, 750),
-		new Setpoint(5, 1475),
-		new Setpoint(8, 1200),
-		new Setpoint(9, 2800)
-	};
 	
 	private LoggerAsync log;
 	private RobotConsoleLog consoleLog;
@@ -96,7 +83,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		ElevatorConfigurator.configure(
-			new SetpointMapWrapper(setpoints), 
+			Elevator.Setpoints.getInstance(), 
 			log,
 			consoleLog
 		);
@@ -114,7 +101,7 @@ public class Robot extends IterativeRobot {
 			multiLog.error("Unexpected error while initializing autonomous settings", ex);
 		}
 		
-		CameraConfigurator.configure(camera, log, consoleLog);
+		CameraConfigurator.configure(log, consoleLog);
 		
 		SmartDashboardUpdater.startUpdating(multiLog);
 		

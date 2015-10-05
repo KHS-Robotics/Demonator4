@@ -1,5 +1,8 @@
 package org.usfirst.frc.team4342.robot.components;
 
+import org.usfirst.frc.team4342.robot.elevator.setpoints.Setpoint;
+import org.usfirst.frc.team4342.robot.elevator.setpoints.SetpointMapWrapper;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
@@ -24,6 +27,7 @@ public class Elevator {
 	private static Talon rightMotor, leftMotor;
 	private static edu.wpi.first.wpilibj.Encoder encoder;
 	private static DigitalInput topLS, botLS;
+	private static SetpointMapWrapper setpoints;
 	
 	/**
 	 * The joystick used to control the elevator
@@ -130,6 +134,26 @@ public class Elevator {
 			}
 			
 			return botLS;
+		}
+	}
+	
+	public static class Setpoints {
+		
+		public static SetpointMapWrapper getInstance() {
+			if(setpoints == null) {
+				setpoints = new SetpointMapWrapper(
+					new Setpoint[] {
+						new Setpoint(2, 0),
+						new Setpoint(4, 325),
+						new Setpoint(3, 750),
+						new Setpoint(5, 1475),
+						new Setpoint(8, 1200),
+						new Setpoint(9, 2800)
+					}
+				);
+			}
+			
+			return setpoints;
 		}
 	}
 }
