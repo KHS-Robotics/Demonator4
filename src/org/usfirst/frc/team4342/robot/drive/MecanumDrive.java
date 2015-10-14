@@ -210,14 +210,14 @@ public class MecanumDrive {
 	* Converts the joystick x and y values to a single magnitude
 	*/
 	public double resolveVectorMagnitude(double x, double y) {
-		
+		return Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
 	}
 	
 	/*
 	* Resolves the angle of the vector given the x and y components.
 	*/
 	public double resolveVectorAngle(double x, double y) {
-		
+		return (Math.atan(y/x)*(180/Math.PI));
 	}
 	
 	/*
@@ -225,16 +225,17 @@ public class MecanumDrive {
 	* direction is in degrees
 	* magnitude is from -1 to 1, is a velocity in encoder counts/second/470
 	*/
-	public void vectorDriveTeleop(double magnitude, double direction) {
+	public void vectorDriveTeleop(double magnitude, double direction, double twist) {
 		
 		//GOES IN METHOD CALL (inside resolveVectorMagnitude())
-		//double z=Math.pow(joystick.getZ(),2.6);
+		//double z=Math.pow(joystick.getZ(),2.6); for twist
 		//double y=joystick.getY(); //no modification whatsoever
 		//double x=Math.pow(joystick.getX(),1.4);
 		
-		direction*=Math.pi/180;
-		direction+=Math.pi/4
+		direction*=Math.PI/180;
+		direction+=Math.PI/4
 		
+		//field oriented angle, measured from clockwise from +y
 		if(enableGyro) {
 			gyroAngle = gyro.getAngle();
 			
@@ -246,17 +247,17 @@ public class MecanumDrive {
 		} else {
 			gyroAngle = 0.0;
 		}
-		
+		gyroAngle*=Math.PI/180;
 		
 		// Used for sensitivity, throttles speed from
 		// x to range 0.0x to 2.0x
 		double divider = -joystick.getThrottle();
 		divider += 1.0;
 
-		f_l = () * divider;
-		f_r = () * divider;
-		r_l = () * divider;
-		r_r = () * divider;
+		f_l = ((Math.sin(direction)*magnitude)-twist) //* divider;
+		f_r = ((Math.cos(direction)*magnitude)+twist) //* divider;
+		r_l = ((Math.cos(direction)*magnitude)-twist) //* divider;
+		r_r = ((Math.sin(direction)*magnitude)+twist) //* divider;
 
 		double max = Math.abs(f_l);
 		if (Math.abs(f_r) > max) {
