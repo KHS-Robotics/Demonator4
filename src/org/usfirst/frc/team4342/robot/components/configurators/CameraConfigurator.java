@@ -1,9 +1,9 @@
 package org.usfirst.frc.team4342.robot.components.configurators;
 
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 
 import edu.wpi.first.wpilibj.CameraServer;
-import ernie.logging.loggers.ILog;
+import ernie.logging.loggers.ILogger;
 
 /**
  * This class is used for initializing the camera
@@ -23,7 +23,7 @@ public class CameraConfigurator {
 	 * Initializes the camera
 	 * @param camera the camera to initialize
 	 */
-	public static void configure(ILog log, RobotConsoleLog consoleLog) {
+	public static void configure(ILogger log, RobotConsoleLogger consoleLog) {
 		try {
 			CameraServer camera = CameraServer.getInstance();
 			camera.setQuality(50);

@@ -1,11 +1,11 @@
 package org.usfirst.frc.team4342.robot.drive;
 
 import org.usfirst.frc.team4342.robot.components.DriveTrain;
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
-import ernie.logging.loggers.ILog;
-import ernie.logging.loggers.MultiLog;
+import ernie.logging.loggers.ILogger;
+import ernie.logging.loggers.MultiLogger;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -23,7 +23,7 @@ public class DriveHealthMonitor {
 	
 	private static Joystick driveStick;
 	private static CANJaguar frontRight, frontLeft, rearRight, rearLeft;
-	private static MultiLog multiLog;
+	private static MultiLogger multiLog;
 	
 	// We really only want one instance of this class,
 	// so if someone creates multiple instances, there
@@ -47,14 +47,14 @@ public class DriveHealthMonitor {
 	 * @param rearLeft the rear left motor controller to monitor
 	 * @param consoleLog the log to log to
 	 */
-	public DriveHealthMonitor(ILog log, RobotConsoleLog consoleLog) {
+	public DriveHealthMonitor(ILogger log, RobotConsoleLogger consoleLog) {
 		if(!constructed) {
 			this.driveStick = DriveTrain.Stick.getInstance();
 			this.frontRight = DriveTrain.FrontRight.getInstance();
 			this.frontLeft = DriveTrain.FrontLeft.getInstance();
 			this.rearRight = DriveTrain.RearRight.getInstance();
 			this.rearLeft = DriveTrain.RearLeft.getInstance();
-			this.multiLog = new MultiLog(new ILog[] { log, consoleLog });
+			this.multiLog = new MultiLogger(new ILogger[] { log, consoleLog });
 		}
 	}
 	

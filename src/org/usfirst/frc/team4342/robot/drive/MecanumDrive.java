@@ -75,8 +75,8 @@ public class MecanumDrive {
 		double kZ = Math.abs(joystick.getZ()) > JOYSTICK_DEADBAND ? joystick.getZ() : 0.0;
 
 		forward = -kY;
-		right = kX;
-		twist = kZ;
+		right = Math.pow(kX,1.4);
+		twist = Math.pow(kZ,2.6);
 		
 		if(enableGyro) {
 			gyroAngle = gyro.getAngle();
@@ -233,7 +233,7 @@ public class MecanumDrive {
 		//double x=Math.pow(joystick.getX(),1.4);
 		
 		direction*=Math.PI/180;
-		direction+=Math.PI/4
+		direction+=Math.PI/4;
 		
 		//field oriented angle, measured from clockwise from +y
 		if(enableGyro) {
@@ -254,10 +254,10 @@ public class MecanumDrive {
 		double divider = -joystick.getThrottle();
 		divider += 1.0;
 
-		f_l = ((Math.sin(direction)*magnitude)-twist) //* divider;
-		f_r = ((Math.cos(direction)*magnitude)+twist) //* divider;
-		r_l = ((Math.cos(direction)*magnitude)-twist) //* divider;
-		r_r = ((Math.sin(direction)*magnitude)+twist) //* divider;
+		f_l = ((Math.sin(direction)*magnitude)-twist); //* divider;
+		f_r = ((Math.cos(direction)*magnitude)+twist); //* divider;
+		r_l = ((Math.cos(direction)*magnitude)-twist); //* divider;
+		r_r = ((Math.sin(direction)*magnitude)+twist); //* divider;
 
 		double max = Math.abs(f_l);
 		if (Math.abs(f_r) > max) {

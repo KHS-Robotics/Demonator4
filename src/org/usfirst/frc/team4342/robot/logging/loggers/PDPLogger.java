@@ -7,7 +7,7 @@ import java.util.Date;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
-import ernie.logging.loggers.MultiLog;
+import ernie.logging.loggers.MultiLogger;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
@@ -34,7 +34,7 @@ public class PDPLogger {
 	 * @param log the log to log to
 	 * @param consoleLog the console log to log to
 	 */
-	public PDPLogger(PowerDistributionPanel pdp, MultiLog multiLog)  {
+	public PDPLogger(PowerDistributionPanel pdp, MultiLogger multiLog)  {
 		logger = new PDPLoggingThread(pdp, multiLog);
 	}
 	
@@ -59,14 +59,14 @@ public class PDPLogger {
 		private static final int MAX_LOGS = 100;
 		
 		private PowerDistributionPanel pdp;
-		private MultiLog multiLog;
+		private MultiLogger multiLog;
 		
 		/**
 		 * Constructs a PDP Logger to log PDP data
 		 * @param pdp the PDP to get data from
 		 * @param multiLog the loggers to log to
 		 */
-		public PDPLoggingThread(PowerDistributionPanel pdp, MultiLog multiLog) {
+		public PDPLoggingThread(PowerDistributionPanel pdp, MultiLogger multiLog) {
 			this.pdp = pdp;
 			this.multiLog = multiLog;
 			

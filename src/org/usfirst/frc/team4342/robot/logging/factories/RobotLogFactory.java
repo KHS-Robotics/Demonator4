@@ -2,10 +2,10 @@ package org.usfirst.frc.team4342.robot.logging.factories;
 
 import java.io.IOException;
 
-import ernie.logging.loggers.LocalLog;
+import ernie.logging.loggers.LocalLogger;
 import ernie.logging.loggers.LoggerAsync;
 
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
 /**
@@ -30,8 +30,8 @@ public class RobotLogFactory {
 	 * @throws IOException
 	 * @throws LoggingException 
 	 */
-	public static LocalLog createLocalLog() throws IOException {
-		return new LocalLog("Demonator4", FileHelper.getValidLogFile(), true);
+	public static LocalLogger createLocalLog() throws IOException {
+		return new LocalLogger("Demonator4", FileHelper.getValidLogFile(), true);
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class RobotLogFactory {
 	 * @throws IOException
 	 * @throws LoggingException 
 	 */
-	public static LoggerAsync createAsyncLog() throws IOException {
+	public static LoggerAsync createAsyncLogger() throws IOException {
 		return new LoggerAsync(createLocalLog());
 	}
 	
@@ -50,7 +50,7 @@ public class RobotLogFactory {
 	 * Creates a new logger for the console on the Driver Station
 	 * @return a logger to log to the console on the DS
 	 */
-	public static RobotConsoleLog createRobotConsoleLog() {
-		return new RobotConsoleLog();
+	public static RobotConsoleLogger createRobotConsoleLogger() {
+		return new RobotConsoleLogger();
 	}
 }

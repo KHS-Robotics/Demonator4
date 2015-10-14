@@ -2,12 +2,12 @@ package org.usfirst.frc.team4342.robot.autonomous;
 
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.shared.TimeoutTimer;
 
 import edu.wpi.first.wpilibj.CANJaguar;
-import ernie.logging.loggers.ILog;
+import ernie.logging.loggers.ILogger;
 
 /**
  * This class is for running tests on the robot to make sure
@@ -33,7 +33,7 @@ public class Diagnostic {
 	 * @param consoleLog the logger to log messages to the Driver Station
 	 * @return true if no warnings; false otherwise
 	 */
-	public static boolean runSelfTest(MecanumDrive drive, ElevatorController ec, ILog log, RobotConsoleLog consoleLog) {
+	public static boolean runSelfTest(MecanumDrive drive, ElevatorController ec, ILogger log, RobotConsoleLogger consoleLog) {
 		int warnings = 0;
 		
 		try {

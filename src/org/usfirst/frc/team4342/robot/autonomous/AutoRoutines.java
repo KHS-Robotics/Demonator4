@@ -8,12 +8,12 @@ import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
 
-import ernie.logging.loggers.ActiveLog;
-import ernie.logging.loggers.LocalLog;
+import ernie.logging.loggers.ActiveLogger;
+import ernie.logging.loggers.LocalLogger;
 import ernie.logging.loggers.LoggerAsync;
-import ernie.logging.loggers.MultiLog;
+import ernie.logging.loggers.MultiLogger;
 
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
@@ -54,8 +54,8 @@ public class AutoRoutines {
 	private DigitalInput leftPhotoSensor, rightPhotoSensor;
 	private Gyro gyro;
 	
-	private MultiLog multiLog;
-	private RobotConsoleLog consoleLog;
+	private MultiLogger multiLog;
+	private RobotConsoleLogger consoleLog;
 	
 	/**
 	 * Constructs an object to run auto routines
@@ -67,7 +67,7 @@ public class AutoRoutines {
 	 * @param gyro the gyro to ensure the robot is moving straight
 	 */
 	public AutoRoutines(MecanumDrive drive, ElevatorController ec,
-						MultiLog multiLog, RobotConsoleLog consoleLog) {
+						MultiLogger multiLog, RobotConsoleLogger consoleLog) {
 		this.drive = drive;
 		this.ec = ec;
 		this.ultra = Autonomous.Ultrasonic.getInstance();
@@ -442,9 +442,9 @@ public class AutoRoutines {
 		}
  	}
 	
-	public void runDiagnosticCheck(RobotConsoleLog consoleLog) {
+	public void runDiagnosticCheck(RobotConsoleLogger consoleLog) {
 		try {
-			Diagnostic.runSelfTest(drive, ec, new LoggerAsync(new LocalLog("Demonator4", "/home/lvuser/Diagnostic.txt")), consoleLog);
+			Diagnostic.runSelfTest(drive, ec, new LoggerAsync(new LocalLogger("Demonator4", "/home/lvuser/Diagnostic.txt")), consoleLog);
 		} catch(Exception ex) {
 			multiLog.error(ExceptionInfo.getType(ex) + " in AutoRoutines.java", ex);
 		}
@@ -524,7 +524,7 @@ public class AutoRoutines {
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException ex) {
-					ActiveLog.warning(FileHelper.ACTIVE_LOG_PATH, "D4-AR", ExceptionInfo.getType(ex) + " in AutoRoutines.AutoChecker");
+					ActiveLogger.warning(FileHelper.ACTIVE_LOG_PATH, "D4-AR", ExceptionInfo.getType(ex) + " in AutoRoutines.AutoChecker");
 				}
 			}
 		}

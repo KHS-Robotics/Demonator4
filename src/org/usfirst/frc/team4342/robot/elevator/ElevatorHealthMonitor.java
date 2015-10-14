@@ -1,11 +1,11 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
 import org.usfirst.frc.team4342.robot.components.Elevator;
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
-import ernie.logging.loggers.ILog;
-import ernie.logging.loggers.MultiLog;
+import ernie.logging.loggers.ILogger;
+import ernie.logging.loggers.MultiLogger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -26,7 +26,7 @@ public class ElevatorHealthMonitor {
 	private static Joystick elevStick;
 	private static Encoder enc;
 	private static DigitalInput top, bottom;
-	private static MultiLog multiLog;
+	private static MultiLogger multiLog;
 	
 	// We really only want one instance of this class,
 	// so if someone creates multiple instances, there
@@ -47,13 +47,13 @@ public class ElevatorHealthMonitor {
 	 * @param bottom the bottom limit switch to monitor
 	 * @param consoleLog the log to log to
 	 */
-	public ElevatorHealthMonitor(ILog log, RobotConsoleLog consoleLog) {
+	public ElevatorHealthMonitor(ILogger log, RobotConsoleLogger consoleLog) {
 		if(!constructed) {
 			this.elevStick = Elevator.Stick.getInstance();
 			this.enc = Elevator.Encoder.getInstance();
 			this.top = Elevator.TopLimitSwitch.getInstance();
 			this.bottom = Elevator.BottomLimitSwitch.getInstance();
-			this.multiLog = new MultiLog(new ILog[] { log, consoleLog });
+			this.multiLog = new MultiLogger(new ILogger[] { log, consoleLog });
 		}
 	}
 	

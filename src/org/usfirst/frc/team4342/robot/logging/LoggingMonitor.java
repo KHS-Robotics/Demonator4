@@ -4,7 +4,7 @@ import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import ernie.logging.loggers.ActiveLog;
+import ernie.logging.loggers.ActiveLogger;
 
 /**
  * This class is used to tell whether or not the robot should log
@@ -62,7 +62,7 @@ public class LoggingMonitor {
 				try {
 					Thread.sleep(5000);
 				} catch(Exception ex) {
-					ActiveLog.error(FileHelper.ACTIVE_LOG_PATH, "D4-LM", ExceptionInfo.getType(ex) + " in LoggingMonitor", ex);
+					ActiveLogger.error(FileHelper.ACTIVE_LOG_PATH, "D4-LM", ExceptionInfo.getType(ex) + " in LoggingMonitor", ex);
 				}
 			}
 		}

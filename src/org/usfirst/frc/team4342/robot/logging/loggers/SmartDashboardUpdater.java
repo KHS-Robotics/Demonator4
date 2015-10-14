@@ -9,7 +9,7 @@ import org.usfirst.frc.team4342.robot.components.Elevator;
 import org.usfirst.frc.team4342.robot.components.Autonomous;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
-import ernie.logging.loggers.MultiLog;
+import ernie.logging.loggers.MultiLogger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
@@ -110,7 +110,7 @@ public class SmartDashboardUpdater {
 	/**
 	 * Starts updating the Smart Dashboard
 	 */
-	public static void startUpdating(MultiLog multiLog) {
+	public static void startUpdating(MultiLogger multiLog) {
 		if(!started) {
 			new SmartDashboardUpdaterThread(multiLog).start();
 			started = true;
@@ -129,9 +129,9 @@ public class SmartDashboardUpdater {
 		private boolean loggedGyros;
 		private boolean loggedUltra;
 		
-		private MultiLog multiLog;
+		private MultiLogger multiLog;
 		
-		public SmartDashboardUpdaterThread(MultiLog multiLog) {
+		public SmartDashboardUpdaterThread(MultiLogger multiLog) {
 			this.multiLog = multiLog;
 		}
 		

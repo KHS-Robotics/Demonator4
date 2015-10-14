@@ -3,9 +3,9 @@ package org.usfirst.frc.team4342.robot.components.configurators;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorController;
 import org.usfirst.frc.team4342.robot.elevator.ElevatorHealthMonitor;
 import org.usfirst.frc.team4342.robot.elevator.setpoints.SetpointMapWrapper;
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 
-import ernie.logging.loggers.ILog;
+import ernie.logging.loggers.ILogger;
 
 /**
  * This class is for initializing the elevator
@@ -41,7 +41,7 @@ public class ElevatorConfigurator {
 	 * @param setpoints the elevator presets
 	 * @param multiLog the log to log to
 	 */
-	public static void configure(SetpointMapWrapper setpoints, ILog log, RobotConsoleLog consoleLog) {
+	public static void configure(SetpointMapWrapper setpoints, ILogger log, RobotConsoleLogger consoleLog) {
 		try {
 		
 			ElevatorController elevController = new ElevatorController(setpoints);

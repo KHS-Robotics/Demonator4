@@ -2,7 +2,7 @@ package org.usfirst.frc.team4342.robot.logging.shared;
 
 import java.io.File;
 
-import ernie.logging.loggers.ActiveLog;
+import ernie.logging.loggers.ActiveLogger;
 
 /**
  * This class is used to shift and get valid log files
@@ -78,7 +78,7 @@ public class FileHelper {
 			boolean renamed = f.renameTo(new File(ROOT + "Log[" + (i+1) + "].txt"));
 			
 			if(!renamed) {
-				ActiveLog.warning(ACTIVE_LOG_PATH, "Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				ActiveLogger.warning(ACTIVE_LOG_PATH, "Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
 				
 				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
@@ -108,7 +108,7 @@ public class FileHelper {
 			boolean renamed = f.renameTo(new File(ROOT + "PdpLog[" + (i+1) + "].csv"));
 			
 			if(!renamed) {
-				ActiveLog.warning(ACTIVE_LOG_PATH, "D4-FH", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				ActiveLogger.warning(ACTIVE_LOG_PATH, "D4-FH", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
 		}
 	}

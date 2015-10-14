@@ -11,14 +11,14 @@ import org.usfirst.frc.team4342.robot.components.configurators.ElevatorConfigura
 import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.logging.LoggingMonitor;
 
-import ernie.logging.loggers.ILog;
+import ernie.logging.loggers.ActiveLogger;
+import ernie.logging.loggers.ILogger;
 import ernie.logging.loggers.LoggerAsync;
-import ernie.logging.loggers.MultiLog;
-import ernie.logging.loggers.ActiveLog;
+import ernie.logging.loggers.MultiLogger;
 
 import org.usfirst.frc.team4342.robot.logging.factories.RobotLogFactory;
 import org.usfirst.frc.team4342.robot.logging.loggers.PDPLogger;
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.loggers.SmartDashboardUpdater;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
@@ -53,8 +53,8 @@ public class Robot extends IterativeRobot {
 	private AutoRoutine autoRoutine;
 	
 	private LoggerAsync log;
-	private RobotConsoleLog consoleLog;
-	private MultiLog multiLog;
+	private RobotConsoleLogger consoleLog;
+	private MultiLogger multiLog;
 	private PDPLogger pdpLogger;
 	
 	/**
@@ -63,15 +63,15 @@ public class Robot extends IterativeRobot {
 	@Override
     public void robotInit() {
 		
-		ActiveLog.info(FileHelper.ACTIVE_LOG_PATH, "D4-main", "Robot turned on");
+		ActiveLogger.info(FileHelper.ACTIVE_LOG_PATH, "D4-main", "Robot turned on");
 		
-		consoleLog = RobotLogFactory.createRobotConsoleLog();
+		consoleLog = RobotLogFactory.createRobotConsoleLogger();
 		
 		try {
-			log = RobotLogFactory.createAsyncLog();
-			multiLog = new MultiLog(new ILog[] { log, consoleLog });
+			log = RobotLogFactory.createAsyncLogger();
+			multiLog = new MultiLogger(new ILogger[] { log, consoleLog });
 		} catch(Exception ex) {
-			multiLog = new MultiLog(new ILog[] { consoleLog });
+			multiLog = new MultiLogger(new ILogger[] { consoleLog });
 			consoleLog.warning("Robot log failed to initalize :: " + ExceptionInfo.getType(ex));
 		}
 		

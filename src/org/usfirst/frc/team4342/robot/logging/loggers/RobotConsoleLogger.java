@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4342.robot.logging.loggers;
 
 import ernie.logging.data.InfoLogData;
-import ernie.logging.loggers.BaseLog;
+import ernie.logging.loggers.BaseLogger;
 import ernie.logging.Severity;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class RobotConsoleLog extends BaseLog {
+public class RobotConsoleLogger extends BaseLogger {
 
 	/**
 	 * Logs to the console on the driver station. This method only

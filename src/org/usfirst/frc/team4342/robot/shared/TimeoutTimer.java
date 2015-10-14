@@ -3,7 +3,7 @@ package org.usfirst.frc.team4342.robot.shared;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
-import ernie.logging.loggers.ActiveLog;
+import ernie.logging.loggers.ActiveLogger;
 
 /**
  * This class is for creating timeouts for automated robot tasks in case
@@ -158,7 +158,7 @@ public class TimeoutTimer {
 							timedOut = true;
 						}
 					} catch(Exception ex) {
-						ActiveLog.error(FileHelper.ACTIVE_LOG_PATH, "D4-timer", ExceptionInfo.getType(ex) + " in TimedTimeout", ex);
+						ActiveLogger.error(FileHelper.ACTIVE_LOG_PATH, "D4-timer", ExceptionInfo.getType(ex) + " in TimedTimeout", ex);
 						timedOut = true;
 					}
 				}

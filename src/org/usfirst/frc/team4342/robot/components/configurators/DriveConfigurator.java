@@ -4,9 +4,9 @@ import org.usfirst.frc.team4342.robot.components.DriveTrain;
 import org.usfirst.frc.team4342.robot.drive.DriveHealthMonitor;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
-import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLog;
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 
-import ernie.logging.loggers.ILog;
+import ernie.logging.loggers.ILogger;
 
 /**
  * This class is for initializing the drive train
@@ -40,7 +40,7 @@ public class DriveConfigurator {
 	 * @param pivotGyro the gyro to get data from
 	 * @param multiLog the log to log to
 	 */
-	public static void configure(ILog log, RobotConsoleLog consoleLog) {
+	public static void configure(ILogger log, RobotConsoleLogger consoleLog) {
 		try {
 			CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
 			CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
