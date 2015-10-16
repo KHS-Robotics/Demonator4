@@ -59,8 +59,10 @@ public class ElevatorController {
 	private int setpoint;
 	private boolean isAtAutoSetpoint;
 	
+	private boolean hold;
 	private boolean buttonPressed;
 	private int buttonSelected;
+	private int holdSetpoint;
 	
 	private ElevatorControllerThread elevThread;
 	
@@ -165,7 +167,11 @@ public class ElevatorController {
 			
 			if(Math.abs(elevStick.getY()) < JOYSTICK_DEADBAND) {
 				if(buttonPressed) {
-					autoMove(setpoints.getSetpoint(buttonSelected));
+					if(hold) {
+						autoMove(holdSetpoint);
+					} else {
+						autoMove(setpoints.getSetpoint(buttonSelected));
+					}
 				} else {
 					stopMotors();
 				}
@@ -196,6 +202,13 @@ public class ElevatorController {
 				buttonPressed = true;
 				buttonSelected = i;
 			}
+		}
+		
+		if(elevStick.getRawButton(3)) {
+			buttonPressed = true;
+			hold = true;
+			buttonSelected = -1;
+			holdSetpoint = enc.get();
 		}
 	}
 	
