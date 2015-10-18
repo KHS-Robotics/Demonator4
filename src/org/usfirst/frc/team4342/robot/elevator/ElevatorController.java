@@ -199,6 +199,7 @@ public class ElevatorController {
 	private synchronized void checkButtonStatus() {
 		for(int i = 1; i < elevStick.getButtonCount(); i++) {
 			if(elevStick.getRawButton(i) && setpoints.containsButton(i)) {
+				hold = false;
 				buttonPressed = true;
 				buttonSelected = i;
 			}
