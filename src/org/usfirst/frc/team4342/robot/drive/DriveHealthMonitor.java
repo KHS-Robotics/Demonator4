@@ -100,9 +100,6 @@ public class DriveHealthMonitor {
 						boolean y = Math.abs(driveStick.getY()) > 0.10;
 						boolean z = Math.abs(driveStick.getZ()) > 0.10;
 						
-						// We use 0.05 revolutions here because the encoder counts should change
-						// more dramatically than 1/20 of a spin of the wheel
-						
 						if(getFrontRightEncCount() == 0.0 && (x || y || z) && !loggedFR) {
 							frontRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							frontRight.enableControl();
