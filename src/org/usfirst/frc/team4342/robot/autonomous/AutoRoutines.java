@@ -1,8 +1,7 @@
 package org.usfirst.frc.team4342.robot.autonomous;
 
 import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutine;
-import org.usfirst.frc.team4342.robot.components.Autonomous;
-import org.usfirst.frc.team4342.robot.components.DriveTrain;
+import org.usfirst.frc.team4342.robot.components.repository.RobotRepository;
 import org.usfirst.frc.team4342.robot.drive.DrivePID;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
@@ -70,10 +69,10 @@ public class AutoRoutines {
 						MultiLogger multiLog, RobotConsoleLogger consoleLog) {
 		this.drive = drive;
 		this.ec = ec;
-		this.ultra = Autonomous.Ultrasonic.getInstance();
-		this.leftPhotoSensor = Autonomous.LeftPhotoSensor.getInstance();
-		this.rightPhotoSensor = Autonomous.RightPhotoSensor.getInstance();
-		this.gyro = DriveTrain.PivotGyro.getInstance();
+		this.ultra = RobotRepository.Ultra;
+		this.leftPhotoSensor = RobotRepository.LeftPhotoSensor;
+		this.rightPhotoSensor = RobotRepository.RightPhotoSensor;
+		this.gyro = RobotRepository.PivotGyro;
 		
 		this.multiLog = multiLog;
 		this.consoleLog = consoleLog;

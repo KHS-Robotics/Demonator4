@@ -1,6 +1,6 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
-import org.usfirst.frc.team4342.robot.components.Elevator;
+import org.usfirst.frc.team4342.robot.components.repository.RobotRepository;
 import org.usfirst.frc.team4342.robot.elevator.setpoints.SetpointMapWrapper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -77,22 +77,16 @@ public class ElevatorController {
 	
 	/**
 	 * Crates the elevator thread and starts it
-	 * @param rightMotor one of the motors to move the elevator
-	 * @param leftMotor one of the motors to move the elevator
-	 * @param elevStick the joystick to control the elevator
-	 * @param enc the encoder to keep track of the location for elevator
-	 * @param topLS the top limit switch to stop the elevator from moving off the track
-	 * @param botLS the bottom limit switch to stop the elevator from moving off the track
 	 * @param setpoints the encoder setpoints for buttons on the joystick for automatic arm movement
 	 */
 	public ElevatorController(SetpointMapWrapper setpoints) {
 		
-		this.rightMotor = Elevator.RightMotor.getInstance();
-		this.leftMotor = Elevator.LeftMotor.getInstance();
-		this.elevStick = Elevator.Stick.getInstance();
-		this.enc = Elevator.Encoder.getInstance();
-		this.topLS = Elevator.TopLimitSwitch.getInstance();
-		this.botLS = Elevator.BottomLimitSwitch.getInstance();
+		this.rightMotor = RobotRepository.RightMotor;
+		this.leftMotor = RobotRepository.LeftMotor;
+		this.elevStick = RobotRepository.ElevatorStick;
+		this.enc = RobotRepository.ElevatorEncoder;
+		this.topLS = RobotRepository.TopLimitSwitch;
+		this.botLS = RobotRepository.BottomLimitSwitch;
 		this.setpoints = setpoints;
 		
 		ds = DriverStation.getInstance();

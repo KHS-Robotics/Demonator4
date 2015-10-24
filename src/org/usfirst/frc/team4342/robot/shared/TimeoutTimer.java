@@ -1,8 +1,10 @@
 package org.usfirst.frc.team4342.robot.shared;
 
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
+import ernie.logging.Severity;
 import ernie.logging.loggers.ActiveLogger;
 
 /**
@@ -159,6 +161,7 @@ public class TimeoutTimer {
 						}
 					} catch(Exception ex) {
 						ActiveLogger.error(FileHelper.ACTIVE_LOG_PATH, "D4-timer", ExceptionInfo.getType(ex) + " in TimedTimeout", ex);
+						RobotConsoleLogger.log(Severity.WARNING, ExceptionInfo.getType(ex) + " in TimedTimeout");
 						timedOut = true;
 					}
 				}

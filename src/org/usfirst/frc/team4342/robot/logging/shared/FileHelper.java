@@ -2,6 +2,9 @@ package org.usfirst.frc.team4342.robot.logging.shared;
 
 import java.io.File;
 
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
+
+import ernie.logging.Severity;
 import ernie.logging.loggers.ActiveLogger;
 
 /**
@@ -79,8 +82,7 @@ public class FileHelper {
 			
 			if(!renamed) {
 				ActiveLogger.warning(ACTIVE_LOG_PATH, "Demonator4", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
-				
-				System.err.println("The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				RobotConsoleLogger.log(Severity.WARNING, "The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
 		}
 	}
@@ -109,6 +111,7 @@ public class FileHelper {
 			
 			if(!renamed) {
 				ActiveLogger.warning(ACTIVE_LOG_PATH, "D4-FH", "The file at path \"" + f.getPath() + "\" was not successfully renamed");
+				RobotConsoleLogger.log(Severity.WARNING, "The file at path \"" + f.getPath() + "\" was not successfully renamed");
 			}
 		}
 	}

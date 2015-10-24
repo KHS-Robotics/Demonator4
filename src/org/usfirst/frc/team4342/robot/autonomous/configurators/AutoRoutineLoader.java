@@ -46,7 +46,7 @@ public final class AutoRoutineLoader {
 				return AutoRoutine.DiagnosticCheck;
 		}
 		
-		throw new IOException("No valid autonomous value loaded!");
+		return null;
 	}
 	
 	private static int loadFromTextFile() throws IOException {

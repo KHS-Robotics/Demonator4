@@ -1,6 +1,6 @@
 package org.usfirst.frc.team4342.robot.components.configurators;
 
-import org.usfirst.frc.team4342.robot.components.DriveTrain;
+import org.usfirst.frc.team4342.robot.components.repository.RobotRepository;
 import org.usfirst.frc.team4342.robot.drive.DriveHealthMonitor;
 import org.usfirst.frc.team4342.robot.drive.MecanumDrive;
 import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
@@ -42,10 +42,10 @@ public class DriveConfigurator {
 	 */
 	public static void configure(ILogger log, RobotConsoleLogger consoleLog) {
 		try {
-			CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
-			CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
-			CANJaguarLoader.init(DriveTrain.RearRight.getInstance(), false);
-			CANJaguarLoader.init(DriveTrain.RearLeft.getInstance(), false);
+			CANJaguarLoader.init(RobotRepository.FrontRight, false);
+			CANJaguarLoader.init(RobotRepository.FrontLeft, false);
+			CANJaguarLoader.init(RobotRepository.RearRight, false);
+			CANJaguarLoader.init(RobotRepository.RearLeft, false);
 			
 			MecanumDrive mecDrive = new MecanumDrive();
 			

@@ -22,11 +22,24 @@ public class RobotConsoleLogger extends BaseLogger {
 	 */
 	@Override
 	public void log(Severity severity, InfoLogData data) {
-		String mssg = severity.toString().toUpperCase() + ": ";
-		
-		mssg += data.getMessage();
-		
+		String mssg = createMessage(severity, data.getMessage());
 		DriverStation.reportError(mssg, false);
 	}
-
+	
+	/**
+	 * Logs to the console on the driver station.
+	 * @param severity the severity of the log
+	 * @param message the message about the log
+	 */
+	public static void log(Severity severity, String message) {
+		String mssg = createMessage(severity, message);
+		DriverStation.reportError(mssg, false);
+	}
+	
+	private static String createMessage(Severity severity, String message) {
+		String mssg = severity.toString().toUpperCase() + ": ";
+		mssg += message;
+		
+		return mssg;
+	}
 }

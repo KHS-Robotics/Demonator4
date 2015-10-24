@@ -1,6 +1,6 @@
 package org.usfirst.frc.team4342.robot.drive;
 
-import org.usfirst.frc.team4342.robot.components.DriveTrain;
+import org.usfirst.frc.team4342.robot.components.repository.RobotRepository;
 
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -58,12 +58,12 @@ public class MecanumDrive {
 	 * @param enableGyro true for field oriented, false for robot oriented
 	 */
 	public MecanumDrive() {
-		fl = DriveTrain.FrontLeft.getInstance();
-		fr = DriveTrain.FrontRight.getInstance();
-		rl = DriveTrain.RearLeft.getInstance();
-		rr = DriveTrain.RearRight.getInstance();
-		this.joystick = DriveTrain.Stick.getInstance();
-		this.gyro = DriveTrain.PivotGyro.getInstance();
+		fl = RobotRepository.FrontLeft;
+		fr = RobotRepository.FrontRight;
+		rl = RobotRepository.RearLeft;
+		rr = RobotRepository.RearRight;
+		this.joystick = RobotRepository.DriveStick;
+		this.gyro = RobotRepository.PivotGyro;
 	}
 	
 	/**

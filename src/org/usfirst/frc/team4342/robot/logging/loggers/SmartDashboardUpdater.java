@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team4342.robot.components.DriveTrain;
-import org.usfirst.frc.team4342.robot.components.Elevator;
-import org.usfirst.frc.team4342.robot.components.Autonomous;
+import org.usfirst.frc.team4342.robot.components.repository.RobotRepository;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
+import ernie.logging.loggers.ILogger;
 import ernie.logging.loggers.MultiLogger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -110,9 +109,9 @@ public class SmartDashboardUpdater {
 	/**
 	 * Starts updating the Smart Dashboard
 	 */
-	public static void startUpdating(MultiLogger multiLog) {
+	public static void startUpdating(ILogger log, RobotConsoleLogger consoleLog) {
 		if(!started) {
-			new SmartDashboardUpdaterThread(multiLog).start();
+			new SmartDashboardUpdaterThread(log, consoleLog).start();
 			started = true;
 		}
 	}
@@ -131,8 +130,8 @@ public class SmartDashboardUpdater {
 		
 		private MultiLogger multiLog;
 		
-		public SmartDashboardUpdaterThread(MultiLogger multiLog) {
-			this.multiLog = multiLog;
+		public SmartDashboardUpdaterThread(ILogger log, RobotConsoleLogger consoleLog) {
+			this.multiLog = new MultiLogger(new ILogger[] { log, consoleLog });
 		}
 		
 		/**
@@ -163,25 +162,25 @@ public class SmartDashboardUpdater {
 		 */
 		private void init() {
 			try {
-				SmartDashboardUpdater.addJoystick("Joy-Drive", DriveTrain.Stick.getInstance());
-				SmartDashboardUpdater.addJoystick("Joy-Elev", Elevator.Stick.getInstance());
+				SmartDashboardUpdater.addJoystick("Joy-Drive", RobotRepository.DriveStick);
+				SmartDashboardUpdater.addJoystick("Joy-Elev", RobotRepository.ElevatorStick);
 				
-				SmartDashboardUpdater.addEncoder("Enc-Elev", Elevator.Encoder.getInstance());
+				SmartDashboardUpdater.addEncoder("Enc-Elev", RobotRepository.ElevatorEncoder);
 				
-				SmartDashboardUpdater.addJagaur("FR", DriveTrain.FrontRight.getInstance());
-				SmartDashboardUpdater.addJagaur("FL", DriveTrain.FrontLeft.getInstance());
-				SmartDashboardUpdater.addJagaur("RR", DriveTrain.RearRight.getInstance());
-				SmartDashboardUpdater.addJagaur("RL", DriveTrain.RearLeft.getInstance());
+				SmartDashboardUpdater.addJagaur("FR", RobotRepository.FrontRight);
+				SmartDashboardUpdater.addJagaur("FL", RobotRepository.FrontLeft);
+				SmartDashboardUpdater.addJagaur("RR", RobotRepository.RearRight);
+				SmartDashboardUpdater.addJagaur("RL", RobotRepository.RearLeft);
 				
-				SmartDashboardUpdater.addDigitalInput("LS-Top", Elevator.TopLimitSwitch.getInstance());
-				SmartDashboardUpdater.addDigitalInput("LS-Bottom", Elevator.BottomLimitSwitch.getInstance());
-				SmartDashboardUpdater.addDigitalInput("Photo-R", Autonomous.RightPhotoSensor.getInstance());
-				SmartDashboardUpdater.addDigitalInput("Photo-L", Autonomous.LeftPhotoSensor.getInstance());
+				SmartDashboardUpdater.addDigitalInput("LS-Top", RobotRepository.TopLimitSwitch);
+				SmartDashboardUpdater.addDigitalInput("LS-Bottom", RobotRepository.BottomLimitSwitch);
+				SmartDashboardUpdater.addDigitalInput("Photo-R", RobotRepository.RightPhotoSensor);
+				SmartDashboardUpdater.addDigitalInput("Photo-L", RobotRepository.LeftPhotoSensor);
 				
-				SmartDashboardUpdater.addGyro("G-Pivot", DriveTrain.PivotGyro.getInstance());
-				SmartDashboardUpdater.addGyro("G-Pitch", DriveTrain.PitchGyro.getInstance());
+				SmartDashboardUpdater.addGyro("G-Pivot", RobotRepository.PivotGyro);
+				SmartDashboardUpdater.addGyro("G-Pitch", RobotRepository.PitchGyro);
 				
-				SmartDashboardUpdater.setUltrasonic(Autonomous.Ultrasonic.getInstance());
+				SmartDashboardUpdater.setUltrasonic(RobotRepository.Ultra);
 			
 			} catch(Exception ex) {
 				multiLog.error("Failed to put data to SDBU", ex);

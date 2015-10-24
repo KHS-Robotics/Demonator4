@@ -1,6 +1,6 @@
 package org.usfirst.frc.team4342.robot.drive;
 
-import org.usfirst.frc.team4342.robot.components.DriveTrain;
+import org.usfirst.frc.team4342.robot.components.repository.RobotRepository;
 import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
@@ -40,20 +40,16 @@ public class DriveHealthMonitor {
 	 * Constructs a health monitor for the drive train. This includes making sure:
 	 * the front right encoder, front left encoder, rear right encoder and the rear 
 	 * left encoder are functioning properly.
-	 * @param driveStick the joystick to monitor
-	 * @param frontRight the front right motor controller to monitor
-	 * @param frontLeft the front left motor controller to monitor
-	 * @param rearRight the rear right motor controller to monitor
-	 * @param rearLeft the rear left motor controller to monitor
+	 * @param log the log to log to
 	 * @param consoleLog the log to log to
 	 */
 	public DriveHealthMonitor(ILogger log, RobotConsoleLogger consoleLog) {
 		if(!constructed) {
-			this.driveStick = DriveTrain.Stick.getInstance();
-			this.frontRight = DriveTrain.FrontRight.getInstance();
-			this.frontLeft = DriveTrain.FrontLeft.getInstance();
-			this.rearRight = DriveTrain.RearRight.getInstance();
-			this.rearLeft = DriveTrain.RearLeft.getInstance();
+			this.driveStick = RobotRepository.DriveStick;
+			this.frontRight = RobotRepository.FrontRight;
+			this.frontLeft = RobotRepository.FrontLeft;
+			this.rearRight = RobotRepository.RearRight;
+			this.rearLeft = RobotRepository.RearLeft;
 			this.multiLog = new MultiLogger(new ILogger[] { log, consoleLog });
 		}
 	}

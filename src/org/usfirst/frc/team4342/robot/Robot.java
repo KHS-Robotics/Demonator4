@@ -3,11 +3,10 @@ package org.usfirst.frc.team4342.robot;
 import org.usfirst.frc.team4342.robot.autonomous.AutoRoutines;
 import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutine;
 import org.usfirst.frc.team4342.robot.autonomous.configurators.AutoRoutineLoader;
-import org.usfirst.frc.team4342.robot.components.DriveTrain;
-import org.usfirst.frc.team4342.robot.components.Elevator;
 import org.usfirst.frc.team4342.robot.components.configurators.CameraConfigurator;
 import org.usfirst.frc.team4342.robot.components.configurators.DriveConfigurator;
 import org.usfirst.frc.team4342.robot.components.configurators.ElevatorConfigurator;
+import org.usfirst.frc.team4342.robot.components.repository.RobotRepository;
 import org.usfirst.frc.team4342.robot.drive.configurators.CANJaguarLoader;
 import org.usfirst.frc.team4342.robot.logging.LoggingMonitor;
 
@@ -76,14 +75,14 @@ public class Robot extends IterativeRobot {
 		}
 		
 		try {
-			pdpLogger = new PDPLogger(new PowerDistributionPanel(), multiLog);
+			pdpLogger = new PDPLogger(new PowerDistributionPanel(), log, consoleLog);
 			pdpLogger.start();
 		} catch(Exception ex) {
 			multiLog.warning("Failed to start PDPMonitor");
 		}
 		
 		ElevatorConfigurator.configure(
-			Elevator.Setpoints.getInstance(), 
+			RobotRepository.ElevatorSetpoints, 
 			log,
 			consoleLog
 		);
@@ -103,7 +102,7 @@ public class Robot extends IterativeRobot {
 		
 		CameraConfigurator.configure(log, consoleLog);
 		
-		SmartDashboardUpdater.startUpdating(multiLog);
+		SmartDashboardUpdater.startUpdating(log, consoleLog);
 		
 		LoggingMonitor.startMonitoring();
     }
@@ -114,8 +113,8 @@ public class Robot extends IterativeRobot {
 	@Override
     public void autonomousInit() {
 		try {
-			DriveTrain.PivotGyro.getInstance().reset();
-			DriveTrain.PitchGyro.getInstance().reset();
+			RobotRepository.PivotGyro.reset();
+			RobotRepository.PitchGyro.reset();
 			
 			autoRoutine = AutoRoutineLoader.getAutoRoutine();
 			
@@ -143,10 +142,10 @@ public class Robot extends IterativeRobot {
 	@Override
     public void teleopInit() {
 		try {
-			CANJaguarLoader.init(DriveTrain.FrontRight.getInstance(), false);
-			CANJaguarLoader.init(DriveTrain.FrontLeft.getInstance(), false);
-			CANJaguarLoader.init(DriveTrain.RearRight.getInstance(), false);
-			CANJaguarLoader.init(DriveTrain.RearLeft.getInstance(), false);
+			CANJaguarLoader.init(RobotRepository.FrontRight, false);
+			CANJaguarLoader.init(RobotRepository.FrontLeft, false);
+			CANJaguarLoader.init(RobotRepository.RearRight, false);
+			CANJaguarLoader.init(RobotRepository.RearLeft, false);
 		} catch(Exception ex) {
 			multiLog.error(ExceptionInfo.getType(ex) + " in teleopInit()", ex);
 		}
@@ -171,10 +170,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 		try {
-			CANJaguarLoader.setCoast(DriveTrain.FrontRight.getInstance());
-			CANJaguarLoader.setCoast(DriveTrain.FrontLeft.getInstance());
-			CANJaguarLoader.setCoast(DriveTrain.RearRight.getInstance());
-			CANJaguarLoader.setCoast(DriveTrain.RearRight.getInstance());
+			CANJaguarLoader.setCoast(RobotRepository.FrontRight);
+			CANJaguarLoader.setCoast(RobotRepository.FrontLeft);
+			CANJaguarLoader.setCoast(RobotRepository.RearRight);
+			CANJaguarLoader.setCoast(RobotRepository.RearRight);
 		} catch(Exception ex) {
 			multiLog.error(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
 		}

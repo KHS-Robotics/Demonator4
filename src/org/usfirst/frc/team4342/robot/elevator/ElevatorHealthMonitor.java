@@ -1,6 +1,6 @@
 package org.usfirst.frc.team4342.robot.elevator;
 
-import org.usfirst.frc.team4342.robot.components.Elevator;
+import org.usfirst.frc.team4342.robot.components.repository.RobotRepository;
 import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 
@@ -41,18 +41,15 @@ public class ElevatorHealthMonitor {
 	/**
 	 * Constructs a health monitor for the elevator. This includes making sure:
 	 * the top limit, bottom limit switch an the encoder are functioning properly.
-	 * @param elevStick the joystick to monitor
-	 * @param enc the encoder to monitor
-	 * @param top the top limit switch to monitor
-	 * @param bottom the bottom limit switch to monitor
+	 * @param log the log to log to
 	 * @param consoleLog the log to log to
 	 */
 	public ElevatorHealthMonitor(ILogger log, RobotConsoleLogger consoleLog) {
 		if(!constructed) {
-			this.elevStick = Elevator.Stick.getInstance();
-			this.enc = Elevator.Encoder.getInstance();
-			this.top = Elevator.TopLimitSwitch.getInstance();
-			this.bottom = Elevator.BottomLimitSwitch.getInstance();
+			this.elevStick = RobotRepository.ElevatorStick;
+			this.enc = RobotRepository.ElevatorEncoder;
+			this.top = RobotRepository.TopLimitSwitch;
+			this.bottom = RobotRepository.BottomLimitSwitch;
 			this.multiLog = new MultiLogger(new ILogger[] { log, consoleLog });
 		}
 	}

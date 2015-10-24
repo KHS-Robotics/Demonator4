@@ -1,9 +1,11 @@
 package org.usfirst.frc.team4342.robot.logging;
 
+import org.usfirst.frc.team4342.robot.logging.loggers.RobotConsoleLogger;
 import org.usfirst.frc.team4342.robot.logging.shared.ExceptionInfo;
 import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import ernie.logging.Severity;
 import ernie.logging.loggers.ActiveLogger;
 
 /**
@@ -63,6 +65,7 @@ public class LoggingMonitor {
 					Thread.sleep(5000);
 				} catch(Exception ex) {
 					ActiveLogger.error(FileHelper.ACTIVE_LOG_PATH, "D4-LM", ExceptionInfo.getType(ex) + " in LoggingMonitor", ex);
+					RobotConsoleLogger.log(Severity.ERROR, ExceptionInfo.getType(ex) + " in LoggingMonitor");
 				}
 			}
 		}
