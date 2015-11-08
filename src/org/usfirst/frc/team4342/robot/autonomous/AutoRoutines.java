@@ -333,6 +333,7 @@ public class AutoRoutines {
 		else if(autoStep == 6) {
 			if(ec.isAtAutoSetpoint()) {
 				ec.setAutoSetpoint(250);
+				autoStep++;
 			}
 		}
 		else if(autoStep == 7) {
