@@ -26,8 +26,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class SmartDashboardUpdater {
-	
+public class SmartDashboardUpdater 
+{
 	private static boolean started;
 	
 	private static ArrayList<String> joystickKeys = new ArrayList<String>();
@@ -49,7 +49,8 @@ public class SmartDashboardUpdater {
 	 * @param key the key to use when putting to the Smart Dashboard
 	 * @param joystick the joystick to get data from
 	 */
-	public static void addJoystick(String key, Joystick joystick) {
+	public static void addJoystick(String key, Joystick joystick) 
+	{
 		joystickKeys.add(key);
 		joysticks.put(key, joystick);
 	}
@@ -59,7 +60,8 @@ public class SmartDashboardUpdater {
 	 * @param key the key to use when putting to the Smart Dashboard
 	 * @param encoder the encoder to get data from
 	 */
-	public static void addEncoder(String key, Encoder encoder) {
+	public static void addEncoder(String key, Encoder encoder)
+	{
 		encoderKeys.add(key);
 		encoders.put(key, encoder);
 	}
@@ -69,7 +71,8 @@ public class SmartDashboardUpdater {
 	 * @param key the key to use when putting to the Smart Dashboard
 	 * @param jaguar the jagaur to get data from
 	 */
-	public static void addJagaur(String key, CANJaguar jaguar) {
+	public static void addJagaur(String key, CANJaguar jaguar) 
+	{
 		jagaurKeys.add(key);
 		jaguars.put(key, jaguar);
 	}
@@ -79,7 +82,8 @@ public class SmartDashboardUpdater {
 	 * @param key the key to use when putting to the Smart Dashboard
 	 * @param limitSwitch the limit switch to get data from
 	 */
-	public static void addDigitalInput(String key, DigitalInput limitSwitch) {
+	public static void addDigitalInput(String key, DigitalInput limitSwitch) 
+	{
 		limitSwitchKeys.add(key);
 		limitSwitches.put(key, limitSwitch);
 	}
@@ -89,7 +93,8 @@ public class SmartDashboardUpdater {
 	 * @param key the key to use when putting to the Smart Dashboard
 	 * @param gyro the gyro to get data from
 	 */
-	public static void addGyro(String key, Gyro gyro) {
+	public static void addGyro(String key, Gyro gyro) 
+	{
 		gyroKeys.add(key);
 		gyros.put(key, gyro);
 	}
@@ -98,10 +103,10 @@ public class SmartDashboardUpdater {
 	 * Adds an Ultrasonic sensor to put on the Smart Dashboard
 	 * @param ultra the ulrasonic sensor to get data from
 	 */
-	public static void setUltrasonic(Ultrasonic ultra) {
-		if(ultra == null) {
+	public static void setUltrasonic(Ultrasonic ultra) 
+	{
+		if(ultra == null)
 			throw new NullPointerException("Ultrasonic cannot be null");
-		}
 		
 		SmartDashboardUpdater.ultra = ultra;
 	}
@@ -109,8 +114,10 @@ public class SmartDashboardUpdater {
 	/**
 	 * Starts updating the Smart Dashboard
 	 */
-	public static void startUpdating(ILogger log, RobotConsoleLogger consoleLog) {
-		if(!started) {
+	public static void startUpdating(ILogger log, RobotConsoleLogger consoleLog)
+	{
+		if(!started) 
+		{
 			new SmartDashboardUpdaterThread(log, consoleLog).start();
 			started = true;
 		}
@@ -119,8 +126,8 @@ public class SmartDashboardUpdater {
 	/**
 	 * The magic behind this class...
 	 */
-	private static class SmartDashboardUpdaterThread extends Thread implements Runnable {
-		
+	private static class SmartDashboardUpdaterThread extends Thread implements Runnable 
+	{	
 		private boolean loggedJoysticks;
 		private boolean loggedEncoders;
 		private boolean loggedJaguars;
@@ -130,7 +137,8 @@ public class SmartDashboardUpdater {
 		
 		private MultiLogger multiLog;
 		
-		public SmartDashboardUpdaterThread(ILogger log, RobotConsoleLogger consoleLog) {
+		public SmartDashboardUpdaterThread(ILogger log, RobotConsoleLogger consoleLog) 
+		{
 			this.multiLog = new MultiLogger(new ILogger[] { log, consoleLog });
 		}
 		
@@ -138,10 +146,12 @@ public class SmartDashboardUpdater {
 		 * Puts data to the Smart Dashboard
 		 */
 		@Override
-		public void run() {
+		public void run() 
+		{
 			init();
 			
-			while(true) {
+			while(true) 
+			{
 				putJoystickData();
 				putEncoderData();
 				putJagaurData();
@@ -149,9 +159,12 @@ public class SmartDashboardUpdater {
 				putGyroData();
 				putUltrasonicData();
 				
-				try {
+				try
+				{
 					Thread.sleep(100);
-				} catch(Exception ex) {
+				} 
+				catch(Exception ex)
+				{
 					multiLog.error(ExceptionInfo.getType(ex) + " in SDU", ex);
 				}
 			}
@@ -161,7 +174,8 @@ public class SmartDashboardUpdater {
 		 * Initializes all the data to the Smart Dashboard
 		 */
 		private void init() {
-			try {
+			try 
+			{
 				SmartDashboardUpdater.addJoystick("Joy-Drive", RobotRepository.DriveStick);
 				SmartDashboardUpdater.addJoystick("Joy-Elev", RobotRepository.ElevatorStick);
 				
@@ -182,7 +196,9 @@ public class SmartDashboardUpdater {
 				
 				SmartDashboardUpdater.setUltrasonic(RobotRepository.Ultra);
 			
-			} catch(Exception ex) {
+			} 
+			catch(Exception ex) 
+			{
 				multiLog.error("Failed to put data to SDBU", ex);
 			}
 		}
@@ -190,16 +206,22 @@ public class SmartDashboardUpdater {
 		/**
 		 * Puts Joystick data to the Smart Dashboard
 		 */
-		private void putJoystickData() {
-			try {
-				for(String key : joystickKeys) {
+		private void putJoystickData() 
+		{
+			try 
+			{
+				for(String key : joystickKeys) 
+				{
 					Joystick joystick = joysticks.get(key);
 					SmartDashboard.putNumber(key + "-X", joystick.getX());
 					SmartDashboard.putNumber(key + "-Y", joystick.getY());
 					SmartDashboard.putNumber(key + "-Z", joystick.getZ());
 				}
-			} catch(Exception ex) {
-				if(!loggedJoysticks) {
+			} 
+			catch(Exception ex) 
+			{
+				if(!loggedJoysticks) 
+				{
 					multiLog.error("Error while putting Joystick data", ex);
 					loggedJoysticks = true;
 				}
@@ -209,14 +231,20 @@ public class SmartDashboardUpdater {
 		/**
 		 * Puts Encoder data to the Smart Dashboard
 		 */
-		private void putEncoderData() {
-			try {
-				for(String key : encoderKeys) {
+		private void putEncoderData() 
+		{
+			try 
+			{
+				for(String key : encoderKeys) 
+				{
 					Encoder encoder = encoders.get(key);
 					SmartDashboard.putNumber(key + "-Count", encoder.get());
 				}
-			} catch(Exception ex) {
-				if(!loggedEncoders) {
+			} 
+			catch(Exception ex) 
+			{
+				if(!loggedEncoders) 
+				{
 					multiLog.error("Error while putting Encoder data", ex);
 					loggedEncoders = true;
 				}
@@ -226,14 +254,20 @@ public class SmartDashboardUpdater {
 		/**
 		 * Puts Jagaur data to the Smart Dashboard
 		 */
-		private void putJagaurData() {
-			try {
-				for(String key : jagaurKeys) {
+		private void putJagaurData()
+		{
+			try 
+			{
+				for(String key : jagaurKeys)
+				{
 					CANJaguar jaguar = jaguars.get(key);
 					SmartDashboard.putNumber(key + "-Enc", jaguar.getPosition());
 				}
-			} catch(Exception ex) {
-				if(!loggedJaguars) {
+			} 
+			catch(Exception ex) 
+			{
+				if(!loggedJaguars)
+				{
 					multiLog.error("Error while putting CANJaguar data", ex);
 					loggedJaguars = true;
 				}
@@ -243,14 +277,20 @@ public class SmartDashboardUpdater {
 		/**
 		 * Puts Limit Switch data to the Smart Dashboard
 		 */
-		private void putLimitSwitchData() {
-			try {
-				for(String key : limitSwitchKeys) {
+		private void putLimitSwitchData()
+		{
+			try 
+			{
+				for(String key : limitSwitchKeys) 
+				{
 					DigitalInput limitSwitch = limitSwitches.get(key);
 					SmartDashboard.putBoolean(key, limitSwitch.get());
 				}
-			} catch(Exception ex) {
-				if(!loggedDigitalInput) {
+			} 
+			catch(Exception ex) 
+			{
+				if(!loggedDigitalInput) 
+				{
 					multiLog.error("Error while putting DigitalInput data", ex);
 					loggedDigitalInput = true;
 				}
@@ -260,14 +300,20 @@ public class SmartDashboardUpdater {
 		/**
 		 * Puts Gyro data to the Smart Dashboard
 		 */
-		private void putGyroData() {
-			try {
-				for(String key : gyroKeys) {
+		private void putGyroData() 
+		{
+			try 
+			{
+				for(String key : gyroKeys) 
+				{
 					Gyro gyro = gyros.get(key);
 					SmartDashboard.putNumber(key + "-Ang", gyro.getAngle());
 				}
-			} catch(Exception ex) {
-				if(!loggedGyros) {
+			} 
+			catch(Exception ex) 
+			{
+				if(!loggedGyros) 
+				{
 					multiLog.error("Error while putting Gyro data", ex);
 					loggedGyros = true;
 				}
@@ -277,11 +323,16 @@ public class SmartDashboardUpdater {
 		/**
 		 * Puts Ultrasonic data to the Smart Dashboard
 		 */
-		private void putUltrasonicData() {
-			try {
+		private void putUltrasonicData() 
+		{
+			try 
+			{
 				SmartDashboard.putNumber("U-Dist", ultra.getRangeInches());
-			} catch(Exception ex) {
-				if(!loggedUltra) {
+			} 
+			catch(Exception ex) 
+			{
+				if(!loggedUltra) 
+				{
 					multiLog.error("Error while putting Ultrasonic data", ex);
 					loggedUltra = true;
 				}

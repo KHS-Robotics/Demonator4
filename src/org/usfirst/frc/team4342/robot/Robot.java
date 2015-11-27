@@ -46,8 +46,8 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class Robot extends IterativeRobot {
-	
+public class Robot extends IterativeRobot 
+{	
 	private AutoRoutines autos;
 	private AutoRoutine autoRoutine;
 	
@@ -60,24 +60,30 @@ public class Robot extends IterativeRobot {
 	 * Initialization code for when the robot is first powered on
 	 */
 	@Override
-    public void robotInit() {
-		
+    public void robotInit() 
+	{
 		ActiveLogger.info(FileHelper.ACTIVE_LOG_PATH, "D4-main", "Robot turned on");
 		
 		consoleLog = RobotLogFactory.createRobotConsoleLogger();
 		
-		try {
+		try 
+		{
 			log = RobotLogFactory.createAsyncLogger();
 			multiLog = new MultiLogger(new ILogger[] { log, consoleLog });
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			multiLog = new MultiLogger(new ILogger[] { consoleLog });
 			consoleLog.warning("Robot log failed to initalize :: " + ExceptionInfo.getType(ex));
 		}
 		
-		try {
+		try 
+		{
 			pdpLogger = new PDPLogger(new PowerDistributionPanel(), log, consoleLog);
 			pdpLogger.start();
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			multiLog.warning("Failed to start PDPMonitor");
 		}
 		
@@ -89,14 +95,17 @@ public class Robot extends IterativeRobot {
 		
 		DriveConfigurator.configure(log, consoleLog);
 		
-		try {
+		try 
+		{
 			autos = new AutoRoutines(
 				DriveConfigurator.getMecanumDrive(), 
 				ElevatorConfigurator.getElevatorController(),
 				multiLog, 
 				consoleLog
 			);
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			multiLog.error("Unexpected error while initializing autonomous settings", ex);
 		}
 		
@@ -111,14 +120,17 @@ public class Robot extends IterativeRobot {
 	 * Initialization code for autonomous
 	 */
 	@Override
-    public void autonomousInit() {
-		try {
+    public void autonomousInit() 
+	{
+		try 
+		{
 			RobotRepository.PivotGyro.reset();
 			RobotRepository.PitchGyro.reset();
 			
 			autoRoutine = AutoRoutineLoader.getAutoRoutine();
-			
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			multiLog.error(ExceptionInfo.getType(ex) + " in autonomousInit()", ex);
 		}
     }
@@ -128,10 +140,14 @@ public class Robot extends IterativeRobot {
 	 * while the robot is in auto
 	 */
 	@Override
-    public void autonomousPeriodic() {
-		try {
+    public void autonomousPeriodic() 
+	{
+		try 
+		{
 			autos.executeAutonomous(autoRoutine);
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			tryLogError(ExceptionInfo.getType(ex) + " in autonomousPeriodic()", ex);
 		}
     }
@@ -140,13 +156,17 @@ public class Robot extends IterativeRobot {
 	 * Initialization code for operator control
 	 */
 	@Override
-    public void teleopInit() {
-		try {
+    public void teleopInit() 
+	{
+		try 
+		{
 			CANJaguarLoader.init(RobotRepository.FrontRight, false);
 			CANJaguarLoader.init(RobotRepository.FrontLeft, false);
 			CANJaguarLoader.init(RobotRepository.RearRight, false);
 			CANJaguarLoader.init(RobotRepository.RearLeft, false);
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			multiLog.error(ExceptionInfo.getType(ex) + " in teleopInit()", ex);
 		}
     }
@@ -156,10 +176,14 @@ public class Robot extends IterativeRobot {
 	 * while the robot is in auto
 	 */
 	@Override
-    public void teleopPeriodic() {
-		try {
+    public void teleopPeriodic() 
+	{
+		try 
+		{
 			DriveConfigurator.getMecanumDrive().drive();
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			tryLogError("Error in teleopPeriodic()", ex);
 		}
     }
@@ -168,13 +192,17 @@ public class Robot extends IterativeRobot {
 	 * Initialization code for disabled
 	 */
 	@Override
-	public void disabledInit() {
-		try {
+	public void disabledInit() 
+	{
+		try 
+		{
 			CANJaguarLoader.setCoast(RobotRepository.FrontRight);
 			CANJaguarLoader.setCoast(RobotRepository.FrontLeft);
 			CANJaguarLoader.setCoast(RobotRepository.RearRight);
 			CANJaguarLoader.setCoast(RobotRepository.RearRight);
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			multiLog.error(ExceptionInfo.getType(ex) + " in disabledInit()", ex);
 		}
 	}
@@ -184,7 +212,8 @@ public class Robot extends IterativeRobot {
 	 * while in disabled
 	 */
 	@Override
-	public void disabledPeriodic() {
+	public void disabledPeriodic() 
+	{
 		// No need to put code in here,
 		// everything that needs to run
 		// is on separate threads
@@ -195,10 +224,10 @@ public class Robot extends IterativeRobot {
 	 * @param message the message to write and display
 	 * @param ex the exception associated with the error
 	 */
-	private void tryLogError(String message, Exception ex) {
-		if(!LoggingMonitor.hasLogged()) {
+	private void tryLogError(String message, Exception ex) 
+	{
+		if(!LoggingMonitor.hasLogged())
 			multiLog.error(message, ex);
-		}
 		
 		LoggingMonitor.logged();
 	}

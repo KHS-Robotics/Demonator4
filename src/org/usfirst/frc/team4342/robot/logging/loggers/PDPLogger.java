@@ -22,7 +22,8 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class PDPLogger {
+public class PDPLogger 
+{
 	private boolean started;
 	
 	private static final int LOG_SECONDS = 5;
@@ -35,15 +36,18 @@ public class PDPLogger {
 	 * @param log the log to log to
 	 * @param consoleLog the console log to log to
 	 */
-	public PDPLogger(PowerDistributionPanel pdp, ILogger log, RobotConsoleLogger consoleLog)  {
+	public PDPLogger(PowerDistributionPanel pdp, ILogger log, RobotConsoleLogger consoleLog)  
+	{
 		logger = new PDPLoggingThread(pdp, new MultiLogger(new ILogger[] { log, consoleLog }));
 	}
 	
 	/**
 	 * Starts logging for 10 minutes
 	 */
-	public void start() {
-		if(!started) {
+	public void start() 
+	{
+		if(!started) 
+		{
 			logger.start();
 			started = true;
 		}
@@ -52,7 +56,8 @@ public class PDPLogger {
 	/**
 	 * The magic behind this class...
 	 */
-	private class PDPLoggingThread extends Thread implements Runnable {
+	private class PDPLoggingThread extends Thread implements Runnable 
+	{
 		private int numLogs = 0;
 		
 		File csvLogFile;
@@ -67,7 +72,8 @@ public class PDPLogger {
 		 * @param pdp the PDP to get data from
 		 * @param multiLog the loggers to log to
 		 */
-		public PDPLoggingThread(PowerDistributionPanel pdp, MultiLogger multiLog) {
+		public PDPLoggingThread(PowerDistributionPanel pdp, MultiLogger multiLog) 
+		{
 			this.pdp = pdp;
 			this.multiLog = multiLog;
 			
@@ -78,15 +84,18 @@ public class PDPLogger {
 		 * Logs to the RoboRIO for 10 minutes
 		 */
 		@Override
-		public void run() {
+		public void run() 
+		{
 			FileWriter writer = null;
 			
-			try {
+			try 
+			{
 				csvLogFile.createNewFile();
 				
 				writer = new FileWriter(csvLogFile);
 				
-				for(int channel = 0; channel < 16; channel++) {
+				for(int channel = 0; channel < 16; channel++) 
+				{
 		        	writer.write("PDP-A" + channel);
 		        	writer.write(',');
 		        }
@@ -98,7 +107,8 @@ public class PDPLogger {
 				
 				writer.write('\r');
 	
-				while(numLogs < MAX_LOGS) {
+				while(numLogs < MAX_LOGS) 
+				{
 			        for(int channel = 0; channel < 16; channel++) {
 			        	writer.write("" + pdp.getCurrent(channel));
 			        	writer.write(',');
@@ -118,14 +128,20 @@ public class PDPLogger {
 				}
 				
 				writer.close();
-			} catch(Exception ex) {
+			} 
+			catch(Exception ex) 
+			{
 				multiLog.warning("Failed to write to CSV for PDP logger :: " + ExceptionInfo.getType(ex));
-			} finally {
-				try {
-					if(writer != null) {
+			} 
+			finally 
+			{
+				try 
+				{
+					if(writer != null)
 						writer.close();
-					}
-				} catch (Exception ex) {
+				} 
+				catch (Exception ex) 
+				{
 					multiLog.warning("Failed to close writer to CSV for PDP logger");
 				}
 			}

@@ -21,7 +21,8 @@ import edu.wpi.first.wpilibj.Ultrasonic;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class RobotRepository {
+public class RobotRepository 
+{
 	public static final Joystick DriveStick = new Joystick(0);
 	public static final Joystick ElevatorStick = new Joystick(1);
 	
@@ -56,7 +57,8 @@ public class RobotRepository {
 	public static final Gyro PivotGyro = new Gyro(0);
 	public static final Gyro PitchGyro = new Gyro(1);
 	
-	static {
+	static 
+	{
 		Ultra.setAutomaticMode(true);
 		
 		PivotGyro.setSensitivity(0.007);

@@ -18,11 +18,10 @@ import edu.wpi.first.wpilibj.CANJaguar;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public final class CANJaguarLoader {
+public final class CANJaguarLoader 
+{
 	
-	private CANJaguarLoader() {
-		
-	}
+	private CANJaguarLoader() {}
 	
 	/**
 	 * Initializes the CANJaguars for the drive train. Each controller
@@ -30,10 +29,12 @@ public final class CANJaguarLoader {
 	 * @param jaguar the jaguar to initialize
 	 * @param resetEncoders true to reset the encoder, false otherwise
 	 */
-	public static void init(CANJaguar jaguar, boolean resetEncoders) {
+	public static void init(CANJaguar jaguar, boolean resetEncoders) 
+	{
 		jaguar.configNeutralMode(CANJaguar.NeutralMode.Brake);
 		
-		if(resetEncoders) {
+		if(resetEncoders) 
+		{
 			jaguar.setPositionMode(CANJaguar.kQuadEncoder, 512, 0.0, 0.0, 0.0);
 			jaguar.enableControl(0);
 		}
@@ -53,7 +54,8 @@ public final class CANJaguarLoader {
 	 * Sets the CANJaguar neutral mode to coast
 	 * @param jaguars the jaguar to set
 	 */
-	public static void setCoast(CANJaguar jaguar) {
+	public static void setCoast(CANJaguar jaguar) 
+	{
 		jaguar.configNeutralMode(CANJaguar.NeutralMode.Coast);
 	}
 	
@@ -61,7 +63,8 @@ public final class CANJaguarLoader {
 	 * Sets the jaguars to speed mode and sets their PID values with the Encoders
 	 * @param jaguars the jaguars to initialize
 	 */
-	public static void init(CANJaguar[] jaguars) {
+	public static void init(CANJaguar[] jaguars) 
+	{
 		init(jaguars, false);
 	}
 	
@@ -70,8 +73,10 @@ public final class CANJaguarLoader {
 	 * @param jaguars the jaguars to initialize
 	 * @param resetEncoders true to reset the encoders, false to not reset them
 	 */
-	public static void init(CANJaguar[] jaguars, boolean resetEncoders) {
-		for(CANJaguar jag : jaguars) {
+	public static void init(CANJaguar[] jaguars, boolean resetEncoders) 
+	{
+		for(CANJaguar jag : jaguars) 
+		{
 			init(jag, resetEncoders);
 		}
 	}

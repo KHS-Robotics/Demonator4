@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class DriveHealthMonitor {
-	
+public class DriveHealthMonitor 
+{	
 	private static Joystick driveStick;
 	private static CANJaguar frontRight, frontLeft, rearRight, rearLeft;
 	private static MultiLogger multiLog;
@@ -43,8 +43,10 @@ public class DriveHealthMonitor {
 	 * @param log the log to log to
 	 * @param consoleLog the log to log to
 	 */
-	public DriveHealthMonitor(ILogger log, RobotConsoleLogger consoleLog) {
-		if(!constructed) {
+	public DriveHealthMonitor(ILogger log, RobotConsoleLogger consoleLog) 
+	{
+		if(!constructed) 
+		{
 			this.driveStick = RobotRepository.DriveStick;
 			this.frontRight = RobotRepository.FrontRight;
 			this.frontLeft = RobotRepository.FrontLeft;
@@ -57,26 +59,32 @@ public class DriveHealthMonitor {
 	/**
 	 * Starts monitoring the drive train
 	 */
-	public void startMonitoring() {
-		if(!started) {
+	public void startMonitoring() 
+	{
+		if(!started) 
+		{
 			new MonitorThread().start();
 			started = true;
 		}
 	}
 	
-	private double getFrontRightEncCount() {
+	private double getFrontRightEncCount() 
+	{
 		return frontRight.getPosition();
 	}
 	
-	private double getFrontLeftEncCount() {
+	private double getFrontLeftEncCount() 
+	{
 		return frontLeft.getPosition();
 	}
 	
-	private double getRearRightEncCount() {
+	private double getRearRightEncCount() 
+	{
 		return rearRight.getPosition();
 	}
 	
-	private double getRearLeftEncCount() {
+	private double getRearLeftEncCount() 
+	{
 		return rearLeft.getPosition();
 	}
 	
@@ -84,19 +92,23 @@ public class DriveHealthMonitor {
 	 * Magic of the class... this works by checking to see if the user is giving the robot
 	 * an input and the encoder counts are changing
 	 */
-	private class MonitorThread extends Thread implements Runnable {
+	private class MonitorThread extends Thread implements Runnable 
+	{
 		@Override
-		public void run() {
-			while(true) {
-				try {
-					
-					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
-						
+		public void run() 
+		{
+			while(true) 
+			{
+				try 
+				{
+					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) 
+					{
 						boolean x = Math.abs(driveStick.getX()) > 0.10;
 						boolean y = Math.abs(driveStick.getY()) > 0.10;
 						boolean z = Math.abs(driveStick.getZ()) > 0.10;
 						
-						if(getFrontRightEncCount() == 0.0 && (x || y || z) && !loggedFR) {
+						if(getFrontRightEncCount() == 0.0 && (x || y || z) && !loggedFR) 
+						{
 							frontRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							frontRight.enableControl();
 							
@@ -104,7 +116,8 @@ public class DriveHealthMonitor {
 							loggedFR = true;
 						}
 						
-						if(getFrontLeftEncCount() == 0.0 && (x || y || z) && !loggedFL) {
+						if(getFrontLeftEncCount() == 0.0 && (x || y || z) && !loggedFL) 
+						{
 							frontLeft.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							frontLeft.enableControl();
 							
@@ -112,7 +125,8 @@ public class DriveHealthMonitor {
 							loggedFL = true;
 						}
 						
-						if(getRearRightEncCount() == 0.0 && (x || y || z) && !loggedRR) {
+						if(getRearRightEncCount() == 0.0 && (x || y || z) && !loggedRR) 
+						{
 							rearRight.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							rearRight.enableControl();
 							
@@ -120,7 +134,8 @@ public class DriveHealthMonitor {
 							loggedRR = true;
 						}
 						
-						if(getRearLeftEncCount() == 0.00 && (x || y || z) && !loggedRL) {
+						if(getRearLeftEncCount() == 0.00 && (x || y || z) && !loggedRL)
+						{
 							rearLeft.setPercentMode(CANJaguar.kQuadEncoder, DrivePID.kCodesPerRev);
 							rearLeft.enableControl();
 							
@@ -128,17 +143,21 @@ public class DriveHealthMonitor {
 							loggedRL = true;
 						}
 						
-						if(loggedFR && loggedFL && loggedRR && loggedRL) {
+						if(loggedFR && loggedFL && loggedRR && loggedRL) 
+						{
 							// Everything has indicated a warning, so no need
 							// to use unnecessary resources
 							multiLog.warning("Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
 							constructed = started = false;
+							
 							return;
 						}
 					}
 					
 					Thread.sleep(250);
-				} catch(Exception ex) {
+				} 
+				catch(Exception ex) 
+				{
 					multiLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 				}
 			}

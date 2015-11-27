@@ -14,21 +14,24 @@ import ernie.logging.loggers.ILogger;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class CameraConfigurator {
-	private CameraConfigurator() {
-		
-	}
+public class CameraConfigurator 
+{
+	private CameraConfigurator() {}
 	
 	/**
 	 * Initializes the camera
 	 * @param camera the camera to initialize
 	 */
-	public static void configure(ILogger log, RobotConsoleLogger consoleLog) {
-		try {
+	public static void configure(ILogger log, RobotConsoleLogger consoleLog)
+	{
+		try 
+		{
 			CameraServer camera = CameraServer.getInstance();
 			camera.setQuality(50);
 			camera.startAutomaticCapture("cam0");
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			consoleLog.warning("Failed to start camera");
 			log.error("Failed to start camera", ex);
 		}

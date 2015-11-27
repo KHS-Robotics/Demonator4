@@ -17,16 +17,15 @@ package org.usfirst.frc.team4342.robot.drive;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public final class DrivePID {
-	
-	private DrivePID() {
-		
-	}
+public final class DrivePID 
+{	
+	private DrivePID() {}
 	
 	/**
 	 * Front right motor controller
 	 */
-	public static class FrontRight {
+	public static class FrontRight 
+	{
 		public static final double kP = 0.45;
 		public static final double kI = 0.005;
 		public static final double kD = 0.001;
@@ -35,7 +34,8 @@ public final class DrivePID {
 	/**
 	 * Front left motor controller
 	 */
-	public static class FrontLeft {
+	public static class FrontLeft 
+	{
 		public static final double kP = 0.45;
 		public static final double kI = 0.003;
 		public static final double kD = 0.002;
@@ -44,7 +44,8 @@ public final class DrivePID {
 	/**
 	 * Rear right motor controller
 	 */
-	public static class RearRight {
+	public static class RearRight 
+	{
 		public static final double kP = 0.45;
 		public static final double kI = 0.009;
 		public static final double kD = 0.001;
@@ -53,7 +54,8 @@ public final class DrivePID {
 	/**
 	 * Rear left motor controller
 	 */
-	public static class RearLeft {
+	public static class RearLeft 
+	{
 		public static final double kP = 0.45;
 		public static final double kI = 0.009;
 		public static final double kD = 0.001;
@@ -62,7 +64,8 @@ public final class DrivePID {
 	/**
 	 * Values for autonomous
 	 */
-	public static class Autonomous {
+	public static class Autonomous 
+	{
 		public static final double kP = 0.02;
 	}
 	

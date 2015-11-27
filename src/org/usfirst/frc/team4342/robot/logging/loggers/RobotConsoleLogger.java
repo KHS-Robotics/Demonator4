@@ -14,14 +14,15 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class RobotConsoleLogger extends BaseLogger {
-
+public class RobotConsoleLogger extends BaseLogger 
+{
 	/**
 	 * Logs to the console on the driver station. This method only
 	 * logs the severity level and the message.
 	 */
 	@Override
-	public void log(Severity severity, InfoLogData data) {
+	public void log(Severity severity, InfoLogData data) 
+	{
 		String mssg = createMessage(severity, data.getMessage());
 		DriverStation.reportError(mssg, false);
 	}
@@ -31,12 +32,14 @@ public class RobotConsoleLogger extends BaseLogger {
 	 * @param severity the severity of the log
 	 * @param message the message about the log
 	 */
-	public static void log(Severity severity, String message) {
+	public static void log(Severity severity, String message) 
+	{
 		String mssg = createMessage(severity, message);
 		DriverStation.reportError(mssg, false);
 	}
 	
-	private static String createMessage(Severity severity, String message) {
+	private static String createMessage(Severity severity, String message) 
+	{
 		String mssg = severity.toString().toUpperCase() + ": ";
 		mssg += message;
 		

@@ -17,8 +17,8 @@ import ernie.logging.loggers.ActiveLogger;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class TimeoutTimer {
-	
+public class TimeoutTimer 
+{	
 	private volatile boolean timedOut;
 	private volatile boolean killed;
 	private volatile boolean stopped;
@@ -29,7 +29,8 @@ public class TimeoutTimer {
 	 * Initialize a timer to create a timeout on a separate thread
 	 * @param timeOut
 	 */
-	public TimeoutTimer(int timeOut) {
+	public TimeoutTimer(int timeOut) 
+	{
 		this.timedOut = true;
 		t = new TimeoutTimerThread(timeOut);
 	}
@@ -37,7 +38,8 @@ public class TimeoutTimer {
 	/**
 	 * Starts the timer on another thread
 	 */
-	public void start() {
+	public void start()
+	{
 		t.start();
 		t.startTimer();
 	}
@@ -46,14 +48,16 @@ public class TimeoutTimer {
 	 * Starts the timer. Only call this if you plan on using the timer more than once.
 	 * Otherwise, use start() instead.
 	 */
-	public void startTimer() {
+	public void startTimer() 
+	{
 		t.startTimer();
 	}
 	
 	/**
 	 * Stops the timer
 	 */
-	public void stop() {
+	public void stop() 
+	{
 		stopped = true;
 	}
 	
@@ -61,7 +65,8 @@ public class TimeoutTimer {
 	 * Sets the timeout for the timer
 	 * @param timeout the timeout
 	 */
-	public void setTimeout(int timeout) {
+	public void setTimeout(int timeout) 
+	{
 		t.setTimeout(timeout);
 	}
 	
@@ -69,11 +74,13 @@ public class TimeoutTimer {
 	 * Used to tell whether or not the timer has reached its timeout
 	 * @return true if timed out; false if not or if the timer has not been started
 	 */
-	public boolean isTimedOut() {
+	public boolean isTimedOut()
+	{
 		return timedOut;
 	}
 	
-	public boolean isKilled() {
+	public boolean isKilled() 
+	{
 		return killed;
 	}
 	
@@ -81,28 +88,32 @@ public class TimeoutTimer {
 	 * Gets the current ticks of the timer
 	 * @return the current ticks of the timer
 	 */
-	public int currentTicks() {
+	public int currentTicks() 
+	{
 		return t.currentTicks;
 	}
 	
 	/**
 	 * Resets the timer
 	 */
-	public void reset() {
+	public void reset() 
+	{
 		t.reset();
 	}
 	
 	/**
 	 * Instantly times out the timer and frees the resources used by the thread
 	 */
-	public void kill() {
+	public void kill()
+	{
 		t.kill();
 	}
 	
 	/**
 	 * The magic behind this class...
 	 */
-	private class TimeoutTimerThread extends Thread implements Runnable {
+	private class TimeoutTimerThread extends Thread implements Runnable 
+	{
 		private int timeout;
 		private int currentTicks;
 		
@@ -110,14 +121,16 @@ public class TimeoutTimer {
 		 * Creates a timer that's on a separate thread
 		 * @param timeout
 		 */
-		public TimeoutTimerThread(int timeout) {
+		public TimeoutTimerThread(int timeout) 
+		{
 			this.timeout = timeout;
 		}
 		
 		/**
 		 * Starts the timer
 		 */
-		public void startTimer() {
+		public void startTimer()
+		{
 			timedOut = false;
 		}
 		
@@ -125,14 +138,16 @@ public class TimeoutTimer {
 		 * Sets the timeout of the timer
 		 * @param timeout the timeout
 		 */
-		public void setTimeout(int timeout) {
+		public void setTimeout(int timeout) 
+		{
 			this.timeout = timeout;
 		}
 		
 		/**
 		 * Resets the timer
 		 */
-		public void reset() {
+		public void reset()
+		{
 			currentTicks = 0;
 			timedOut = true;
 		}
@@ -140,7 +155,8 @@ public class TimeoutTimer {
 		/**
 		 * Kills the timer and frees the resources used by this object
 		 */
-		public void kill() {
+		public void kill() 
+		{
 			timedOut = true;
 			killed = true;
 		}
@@ -149,17 +165,26 @@ public class TimeoutTimer {
 		 * Continually iterates until the timeout is reached.
 		 */
 		@Override
-		public void run() {
-			while(!killed) {
-				while(!timedOut && !stopped) {
-					try {
-						if(currentTicks < timeout) {
+		public void run() 
+		{
+			while(!killed) 
+			{
+				while(!timedOut && !stopped) 
+				{
+					try 
+					{
+						if(currentTicks < timeout)
+						{
 							currentTicks++;
 							Thread.sleep(1000);
-						} else {
+						}
+						else 
+						{
 							timedOut = true;
 						}
-					} catch(Exception ex) {
+					} 
+					catch(Exception ex) 
+					{
 						ActiveLogger.error(FileHelper.ACTIVE_LOG_PATH, "D4-timer", ExceptionInfo.getType(ex) + " in TimedTimeout", ex);
 						RobotConsoleLogger.log(Severity.WARNING, ExceptionInfo.getType(ex) + " in TimedTimeout");
 						timedOut = true;

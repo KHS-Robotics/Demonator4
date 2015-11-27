@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class MecanumDrive {
-	
+public class MecanumDrive 
+{	
 	private static final double JOYSTICK_DEADBAND = 0.1;
 	
 	private double forward;
@@ -57,7 +57,8 @@ public class MecanumDrive {
 	 * @param gyro the gyro to ensure the robot is driving straight
 	 * @param enableGyro true for field oriented, false for robot oriented
 	 */
-	public MecanumDrive() {
+	public MecanumDrive() 
+	{
 		fl = RobotRepository.FrontLeft;
 		fr = RobotRepository.FrontRight;
 		rl = RobotRepository.RearLeft;
@@ -69,7 +70,8 @@ public class MecanumDrive {
 	/**
 	 * Moved the robot based on the joystick inputs
 	 */
-	public void drive() {
+	public void drive() 
+	{
 		double kX = Math.abs(joystick.getX()) > JOYSTICK_DEADBAND ? joystick.getX() : 0.0;
 		double kY = Math.abs(joystick.getY()) > JOYSTICK_DEADBAND ? joystick.getY() : 0.0;
 		double kZ = Math.abs(joystick.getZ()) > JOYSTICK_DEADBAND ? joystick.getZ() : 0.0;
@@ -78,22 +80,26 @@ public class MecanumDrive {
 		right = Math.pow(kX,1.4);
 		twist = Math.pow(kZ,2.6);
 		
-		if(enableGyro) {
+		if(enableGyro) 
+		{
 			gyroAngle = gyro.getAngle();
 			
 			gyroAngle %= 360.0;
 			
-			if (gyroAngle < 0) {
+			if (gyroAngle < 0)
 				gyroAngle += 360;
-			}
-		} else {
+		} 
+		else 
+		{
 			gyroAngle = 0.0;
 		}
 
 		temp = forward * Math.cos(gyroAngle * (Math.PI / 180)) + right
 				* Math.sin(gyroAngle * (Math.PI / 180));
+		
 		right = -forward * Math.sin(gyroAngle * (Math.PI / 180)) + right
 				* Math.cos(gyroAngle * (Math.PI / 180));
+		
 		forward = temp;
 		
 		// Used for sensitivity, throttles speed from
@@ -107,16 +113,18 @@ public class MecanumDrive {
 		r_r = (forward - twist + right) * divider;
 
 		double max = Math.abs(f_l);
-		if (Math.abs(f_r) > max) {
+		
+		if (Math.abs(f_r) > max)
 			max = Math.abs(f_r);
-		}
-		if (Math.abs(r_l) > max) {
+		
+		if (Math.abs(r_l) > max)
 			max = Math.abs(r_l);
-		}
-		if (Math.abs(r_r) > max) {
+		
+		if (Math.abs(r_r) > max)
 			max = Math.abs(r_r);
-		}
-		if (max > 1) {
+		
+		if (max > 1) 
+		{
 			f_l /= max;
 			f_r /= max;
 			r_l /= max;
@@ -135,13 +143,17 @@ public class MecanumDrive {
 	 * @param y the Y value to move
 	 * @param gyroAngle the current angle of the robot
 	 */
-	public void autoDrive(double x, double y, double gyroAngle) {
-		if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isAutonomous()) {
+	public void autoDrive(double x, double y, double gyroAngle) 
+	{
+		if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isAutonomous()) 
+		{
 			forward = y;
 			right = x;
 	
-			if (x == 0.0 && y == 0.0) {
+			if (x == 0.0 && y == 0.0) 
+			{
 				stopMotors();
+				
 				return;
 			}
 			
@@ -150,27 +162,33 @@ public class MecanumDrive {
 			
 			double error = initialAngle - gyroAngle;
 			
-			if (error >= 180) {
+			if (error >= 180) 
+			{
 				error -= 360;
-			} else if (error <= -180) {
+			} else if (error <= -180) 
+			{
 				error += 360;
 			}
 			
-			if (error >= -0.5 && error <= 0.5) {
+			if (error >= -0.5 && error <= 0.5) 
+			{
 				twist = 0.0;
-			} else {
+			} 
+			else 
+			{
 				twist = error * DrivePID.Autonomous.kP;
 			}
 			
 			gyroAngle %= 360.0;
-			if (gyroAngle < 0) {
+			if (gyroAngle < 0)
 				gyroAngle += 360;
-			}
 			
 			temp = forward * Math.cos(gyroAngle * (Math.PI / 180)) + right
 					* Math.sin(gyroAngle * (Math.PI / 180));
+			
 			right = -forward * Math.sin(gyroAngle * (Math.PI / 180)) + right
 					* Math.cos(gyroAngle * (Math.PI / 180));
+			
 			forward = temp;
 	
 			f_l = forward + twist + right;
@@ -180,17 +198,14 @@ public class MecanumDrive {
 	
 			double max = Math.abs(f_l);
 			
-			if (Math.abs(f_r) > max) {
+			if (Math.abs(f_r) > max)
 				max = Math.abs(f_r);
-			}
 			
-			if (Math.abs(r_l) > max) {
+			if (Math.abs(r_l) > max)
 				max = Math.abs(r_l);
-			}
 			
-			if (Math.abs(r_r) > max) {
+			if (Math.abs(r_r) > max)
 				max = Math.abs(r_r);
-			}
 			
 			if (max > 1) {
 				f_l /= max;
@@ -209,14 +224,16 @@ public class MecanumDrive {
 	/*
 	* Converts the joystick x and y values to a single magnitude
 	*/
-	public double resolveVectorMagnitude(double x, double y) {
+	public double resolveVectorMagnitude(double x, double y) 
+	{
 		return Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
 	}
 	
 	/*
 	* Resolves the angle of the vector given the x and y components.
 	*/
-	public double resolveVectorAngle(double x, double y) {
+	public double resolveVectorAngle(double x, double y) 
+	{
 		return (Math.atan(y/x)*(180/Math.PI));
 	}
 	
@@ -225,8 +242,8 @@ public class MecanumDrive {
 	* direction is in degrees
 	* magnitude is from -1 to 1, is a velocity in encoder counts/second/470
 	*/
-	public void vectorDriveTeleop(double magnitude, double direction, double twist) {
-		
+	public void vectorDriveTeleop(double magnitude, double direction, double twist) 
+	{	
 		//GOES IN METHOD CALL (inside resolveVectorMagnitude())
 		//double z=Math.pow(joystick.getZ(),2.6); for twist
 		//double y=joystick.getY(); //no modification whatsoever
@@ -236,7 +253,8 @@ public class MecanumDrive {
 		direction+=Math.PI/4;
 		
 		//field oriented angle, measured from clockwise from +y
-		if(enableGyro) {
+		if(enableGyro) 
+		{
 			gyroAngle = gyro.getAngle();
 			
 			gyroAngle %= 360.0;
@@ -244,7 +262,9 @@ public class MecanumDrive {
 			if (gyroAngle < 0) {
 				gyroAngle += 360;
 			}
-		} else {
+		} 
+		else 
+		{
 			gyroAngle = 0.0;
 		}
 		gyroAngle*=Math.PI/180;
@@ -260,15 +280,16 @@ public class MecanumDrive {
 		r_r = ((Math.sin(direction)*magnitude)+twist); //* divider;
 
 		double max = Math.abs(f_l);
-		if (Math.abs(f_r) > max) {
+		
+		if (Math.abs(f_r) > max)
 			max = Math.abs(f_r);
-		}
-		if (Math.abs(r_l) > max) {
+		
+		if (Math.abs(r_l) > max)
 			max = Math.abs(r_l);
-		}
-		if (Math.abs(r_r) > max) {
+		
+		if (Math.abs(r_r) > max)
 			max = Math.abs(r_r);
-		}
+		
 		if (max > 1) {
 			f_l /= max;
 			f_r /= max;
@@ -285,18 +306,21 @@ public class MecanumDrive {
 	/**
 	 * Enabled field oriented drive
 	 */
-	public void enableFod() {
+	public void enableFod()
+	{
 		enableGyro = true;
 	}
 	
 	/**
 	 * Disables field oriented drive and goes to robot oriented
 	 */
-	public void disableFod() {
+	public void disableFod() 
+	{
 		enableGyro = false;
 	}
 	
-	public boolean isFodEnabled() {
+	public boolean isFodEnabled() 
+	{
 		return enableGyro;
 	}
 	
@@ -306,14 +330,16 @@ public class MecanumDrive {
 	 * 
 	 * @param angle the initial angle to set
 	 */
-	public void setInitalAngle(double angle) {
+	public void setInitalAngle(double angle) 
+	{
 		initialAngle = angle;
 	}
 	
 	/**
 	 * Stops all drive motors
 	 */
-	public void stopMotors() {
+	public void stopMotors() 
+	{
 		fr.set(0.0);
 		fl.set(0.0);
 		rr.set(0.0);
@@ -324,7 +350,8 @@ public class MecanumDrive {
 	 * Gets the front right CANJaguar for the drive train
 	 * @return the front right CANJaguar of the drive train
 	 */
-	public CANJaguar getFrontRight() {
+	public CANJaguar getFrontRight() 
+	{
 		return fr;
 	}
 	
@@ -332,7 +359,8 @@ public class MecanumDrive {
 	 * Gets the front left CANJaguar for the drive train
 	 * @return the front left CANJaguar of the drive train
 	 */
-	public CANJaguar getFrontLeft() {
+	public CANJaguar getFrontLeft() 
+	{
 		return fl;
 	}
 	
@@ -340,7 +368,8 @@ public class MecanumDrive {
 	 * Gets the rear right CANJaguar for the drive train
 	 * @return the rear right CANJaguar of the drive train
 	 */
-	public CANJaguar getRearRight() {
+	public CANJaguar getRearRight() 
+	{
 		return rr;
 	}
 	
@@ -348,7 +377,8 @@ public class MecanumDrive {
 	 * Gets the rear left CANJaguar for the drive train
 	 * @return the rear left CANJaguar of the drive train
 	 */
-	public CANJaguar getRearLeft() {
+	public CANJaguar getRearLeft() 
+	{
 		return rl;
 	}
 }

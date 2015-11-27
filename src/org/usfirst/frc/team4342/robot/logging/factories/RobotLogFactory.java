@@ -17,8 +17,8 @@ import org.usfirst.frc.team4342.robot.logging.shared.FileHelper;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class RobotLogFactory {
-	
+public class RobotLogFactory 
+{
 	public static final String ROOT = "/home/lvuser/";
 	
 	/**
@@ -30,7 +30,8 @@ public class RobotLogFactory {
 	 * @throws IOException
 	 * @throws LoggingException 
 	 */
-	public static LocalLogger createLocalLog() throws IOException {
+	public static LocalLogger createLocalLog() throws IOException 
+	{
 		return new LocalLogger("Demonator4", FileHelper.getValidLogFile(), true);
 	}
 	
@@ -42,7 +43,8 @@ public class RobotLogFactory {
 	 * @throws IOException
 	 * @throws LoggingException 
 	 */
-	public static LoggerAsync createAsyncLogger() throws IOException {
+	public static LoggerAsync createAsyncLogger() throws IOException 
+	{
 		return new LoggerAsync(createLocalLog());
 	}
 	
@@ -50,7 +52,8 @@ public class RobotLogFactory {
 	 * Creates a new logger for the console on the Driver Station
 	 * @return a logger to log to the console on the DS
 	 */
-	public static RobotConsoleLogger createRobotConsoleLogger() {
+	public static RobotConsoleLogger createRobotConsoleLogger() 
+	{
 		return new RobotConsoleLogger();
 	}
 }

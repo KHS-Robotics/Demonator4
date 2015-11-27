@@ -11,8 +11,8 @@ package org.usfirst.frc.team4342.robot.elevator.setpoints;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class Setpoint {
-	
+public class Setpoint 
+{	
 	private final int button;
 	private final int encoderCounts;
 	
@@ -21,16 +21,19 @@ public class Setpoint {
 	 * @param button the button associated with the setpoint
 	 * @param encoderCounts the encoder counts for the setpoint
 	 */
-	public Setpoint(int button, int encoderCounts) {
+	public Setpoint(int button, int encoderCounts) 
+	{
 		this.button = button;
 		this.encoderCounts = encoderCounts;
 	}
 	
-	public int getButton() {
+	public int getButton() 
+	{
 		return button;
 	}
 	
-	public int getEncoderCounts() {
+	public int getEncoderCounts() 
+	{
 		return encoderCounts;
 	}
 }

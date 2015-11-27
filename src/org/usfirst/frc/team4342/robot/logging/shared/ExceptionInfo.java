@@ -11,14 +11,15 @@ package org.usfirst.frc.team4342.robot.logging.shared;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class ExceptionInfo {
-	
+public class ExceptionInfo
+{	
 	/**
 	 * Gets the type of exception, without having to instantiate this class
 	 * @param ex the exception
 	 * @return the type of exception (the class name)
 	 */
-	public static String getType(Exception ex) {
+	public static String getType(Exception ex) 
+	{
 		return ex.getClass().getSimpleName();
 	}
 }

@@ -12,8 +12,8 @@ package org.usfirst.frc.team4342.robot.autonomous.configurators;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public enum AutoRoutine {
-	
+public enum AutoRoutine 
+{
 	PickUpOneTote(1), 
 	PickUpTwoTotes(2), 
 	PickUpThreeTotes(3), 
@@ -26,7 +26,8 @@ public enum AutoRoutine {
 	 * An Id is needed in order to match the text file's Id to the proper enum constant
 	 * @param id the auto routine
 	 */
-	private AutoRoutine(int id) {
+	private AutoRoutine(int id) 
+	{
 		this.id = id;
 	}
 	
@@ -34,7 +35,8 @@ public enum AutoRoutine {
 	 * Get's the Id of the enum
 	 * @return the id of the enum
 	 */
-	public int getId() {
+	public int getId() 
+	{
 		return id;
 	}
 }

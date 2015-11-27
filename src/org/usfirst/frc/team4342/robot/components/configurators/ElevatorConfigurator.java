@@ -16,11 +16,9 @@ import ernie.logging.loggers.ILogger;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class ElevatorConfigurator {
-	
-	private ElevatorConfigurator() {
-		
-	}
+public class ElevatorConfigurator 
+{	
+	private ElevatorConfigurator() {}
 	
 	private static ElevatorController elevatorController;
 	
@@ -28,7 +26,8 @@ public class ElevatorConfigurator {
 	 * Gets the elevator controller
 	 * @return the elevator controller
 	 */
-	public static ElevatorController getElevatorController() {
+	public static ElevatorController getElevatorController() 
+	{
 		return elevatorController;
 	}
 	
@@ -41,22 +40,29 @@ public class ElevatorConfigurator {
 	 * @param setpoints the elevator presets
 	 * @param multiLog the log to log to
 	 */
-	public static void configure(SetpointMapWrapper setpoints, ILogger log, RobotConsoleLogger consoleLog) {
-		try {
+	public static void configure(SetpointMapWrapper setpoints, ILogger log, RobotConsoleLogger consoleLog) 
+	{
+		try 
+		{
 		
 			ElevatorController elevController = new ElevatorController(setpoints);
 			
 			elevatorController = elevController;
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex)
+		{
 			consoleLog.error("Unexpected error while initializing the elevator controls", ex);
 			log.error("Unexpected error while initializing the elevator controls", ex);
 		}
 		
-		try {
+		try 
+		{
 			ElevatorHealthMonitor ehm = new ElevatorHealthMonitor(log, consoleLog);
 			
 			ehm.startMonitoring();
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			consoleLog.warning("Failed to start EHM");
 			log.error("Failed to start EHM", ex);
 		}

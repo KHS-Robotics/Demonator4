@@ -17,10 +17,9 @@ import ernie.logging.loggers.ActiveLogger;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class LoggingMonitor {
-	private LoggingMonitor() {
-		
-	}
+public class LoggingMonitor 
+{
+	private LoggingMonitor() {}
 	
 	private static boolean started;
 	private static boolean logged;
@@ -28,8 +27,10 @@ public class LoggingMonitor {
 	/**
 	 * Starts checking if the robot should log
 	 */
-	public static void startMonitoring() {
-		if(!started) {
+	public static void startMonitoring() 
+	{
+		if(!started) 
+		{
 			new LoggingMonitorThread().start();
 			started = true;
 		}
@@ -39,31 +40,40 @@ public class LoggingMonitor {
 	 * Used to tell if the logger has already logged
 	 * @return true if logged; false otherwise
 	 */
-	public static boolean hasLogged() {
+	public static boolean hasLogged()
+	{
 		return logged;
 	}
 	
-	public static void logged() {
+	public static void logged() 
+	{
 		logged = true;
 	}
 	
 	/**
 	 * The magic behind this class...
 	 */
-	private static class LoggingMonitorThread extends Thread implements Runnable {
+	private static class LoggingMonitorThread extends Thread implements Runnable 
+	{
 		/**
 		 * Checks if the robot is in disabled to reset the logged variable
 		 */
 		@Override
-		public void run() {
-			while(true) {
-				if(DriverStation.getInstance().isDisabled()) {
+		public void run() 
+		{
+			while(true) 
+			{
+				if(DriverStation.getInstance().isDisabled()) 
+				{
 					logged = false;
 				}
 				
-				try {
+				try 
+				{
 					Thread.sleep(5000);
-				} catch(Exception ex) {
+				} 
+				catch(Exception ex) 
+				{
 					ActiveLogger.error(FileHelper.ACTIVE_LOG_PATH, "D4-LM", ExceptionInfo.getType(ex) + " in LoggingMonitor", ex);
 					RobotConsoleLogger.log(Severity.ERROR, ExceptionInfo.getType(ex) + " in LoggingMonitor");
 				}

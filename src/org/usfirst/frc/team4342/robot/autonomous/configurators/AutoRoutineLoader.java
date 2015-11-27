@@ -15,25 +15,25 @@ import java.io.IOException;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public final class AutoRoutineLoader {
+public final class AutoRoutineLoader 
+{
 	
 	/** The path to the text file that holds the auto routine */
 	public static final String PATH = "/home/lvuser/AutoRoutine.txt";
 	
-	private AutoRoutineLoader() {
-		
-	}
+	private AutoRoutineLoader() {}
 	
 	/**
 	 * Gets the current auto routine from a text file
 	 * @return the specified auto routine
 	 * @throws IOException if an error occurs while attempting to read the auto routine
 	 */
-	public static AutoRoutine getAutoRoutine() throws IOException {
-		
+	public static AutoRoutine getAutoRoutine() throws IOException 
+	{
 		int id = loadFromTextFile();
 		
-		switch(id) {
+		switch(id) 
+		{
 			case 1:
 				return AutoRoutine.PickUpOneTote;
 			case 2:
@@ -49,8 +49,10 @@ public final class AutoRoutineLoader {
 		return null;
 	}
 	
-	private static int loadFromTextFile() throws IOException {
-		try {
+	private static int loadFromTextFile() throws IOException 
+	{
+		try 
+		{
 			FileReader fr = new FileReader(PATH);
 			BufferedReader br = new BufferedReader(fr);
 			
@@ -58,9 +60,13 @@ public final class AutoRoutineLoader {
 			br.close();
 			
 			return new Integer(number);
-		} catch(IOException ex) {
+		} 
+		catch(IOException ex) 
+		{
 			throw ex;
-		} catch(NumberFormatException ex) {
+		} 
+		catch(NumberFormatException ex) 
+		{
 			return new Integer(9001);
 		}
 	}

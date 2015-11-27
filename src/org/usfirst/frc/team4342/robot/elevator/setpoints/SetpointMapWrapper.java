@@ -28,10 +28,10 @@ public class SetpointMapWrapper
 	 * 
 	 * @throws IllegalArgumentException if setpoints is null or empty
 	 */
-	public SetpointMapWrapper(Setpoint[] setpoints) {
-		if(setpoints == null) {
+	public SetpointMapWrapper(Setpoint[] setpoints) 
+	{
+		if(setpoints == null)
 			throw new IllegalArgumentException("setpoints cannot be null");
-		}
 		
 		map = new Hashtable<Integer, Integer>();
 		
@@ -43,7 +43,8 @@ public class SetpointMapWrapper
 	 * @param button the button on the joystick
 	 * @return the setpoint corresponding to the button
 	 */
-	public int getSetpoint(int button) {
+	public int getSetpoint(int button) 
+	{
 		return map.get(button);
 	}
 	
@@ -52,7 +53,8 @@ public class SetpointMapWrapper
 	 * @param button the button for the setpoint
 	 * @return true if the button is specified, false otherwise
 	 */
-	public boolean containsButton(int button) {
+	public boolean containsButton(int button) 
+	{
 		return map.containsKey(button);
 	}
 	
@@ -60,13 +62,16 @@ public class SetpointMapWrapper
 	 * Initializes the Hashtable
 	 * @param setpoints the button and setpoints for the elevator
 	 */
-	private void init(Setpoint[] setpoints) {
-		for(int i = 0; i < setpoints.length; i++) {
+	private void init(Setpoint[] setpoints) 
+	{
+		for(int i = 0; i < setpoints.length; i++) 
+		{
 			map.put(setpoints[i].getButton(), setpoints[i].getEncoderCounts());
 		}
 	}
 	
-	public long getSerialVersionUID() {
+	public long getSerialVersionUID() 
+	{
 		return serialVersionUID;
 	}
 }

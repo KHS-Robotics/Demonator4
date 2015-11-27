@@ -19,11 +19,9 @@ import ernie.logging.loggers.ILogger;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class Diagnostic {
-	
-	private Diagnostic() {
-		
-	}
+public class Diagnostic 
+{	
+	private Diagnostic() {}
 	
 	/**
 	 * Runs tests to take sure all sensors are working properly
@@ -33,58 +31,71 @@ public class Diagnostic {
 	 * @param consoleLog the logger to log messages to the Driver Station
 	 * @return true if no warnings; false otherwise
 	 */
-	public static boolean runSelfTest(MecanumDrive drive, ElevatorController ec, ILogger log, RobotConsoleLogger consoleLog) {
+	public static boolean runSelfTest(MecanumDrive drive, ElevatorController ec, ILogger log, RobotConsoleLogger consoleLog) 
+	{
 		int warnings = 0;
 		
-		try {
-			
-			if(!CANJaguarEncoderWorks(drive.getFrontRight())) {
+		try 
+		{
+			if(!CANJaguarEncoderWorks(drive.getFrontRight())) 
+			{
 				log.warning("Possible problem with front right encoder");
 				warnings++;
 			}
 			
-			if(!CANJaguarEncoderWorks(drive.getFrontLeft())) {
+			if(!CANJaguarEncoderWorks(drive.getFrontLeft())) 
+			{
 				log.warning("Possible problem with front left encoder");
 				warnings++;
 			}
 			
-			if(!CANJaguarEncoderWorks(drive.getRearRight())) {
+			if(!CANJaguarEncoderWorks(drive.getRearRight())) 
+			{
 				log.warning("Possible problem with rear right encoder");
 				warnings++;
 			}
 			
-			if(!CANJaguarEncoderWorks(drive.getRearLeft())) {
+			if(!CANJaguarEncoderWorks(drive.getRearLeft())) 
+			{
 				log.warning("Possible problem with rear left encoder");
 				warnings++;
 			}
 			
 			log.debug("Testing elevator encoder...");
 			
-			if(!elevatorEncoderWorks(ec)) {
+			if(!elevatorEncoderWorks(ec)) 
+			{
 				log.warning("Possible problem with elevator encoder");
 				warnings++;
 			}
 			
-			if(!elevatorBottomLSWorks(ec)) {
+			if(!elevatorBottomLSWorks(ec))
+			{
 				log.warning("Possible problem with bottom limit switch");
 				warnings++;
 			}
 			
-			if(!elevatorTopLSWorks(ec)) {
+			if(!elevatorTopLSWorks(ec))
+			{
 				log.warning("Possible problem with the top limit switch");
 				warnings++;
 			}
 			
-			if(warnings > 0) {
+			if(warnings > 0) 
+			{
 				log.warning("Robot finished self diagnostic test with " + warnings + " warning(s)");
 				consoleLog.warning("Robot finished self diagnostic test with " + warnings + " warning(s), check the log for more information");
 				return false;
-			} else {
+			} 
+			else 
+			{
 				log.info("Robot finished self diagnostic test without any warnings");
 				consoleLog.info("Robot finished self diagnostic test without any warnings");
 				return true;
 			}
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			log.error(ExceptionInfo.getType(ex) + " in Diagnostic.java", ex);
 			consoleLog.error(ExceptionInfo.getType(ex) + " in Diagnostic.java", ex);
 			
@@ -97,13 +108,15 @@ public class Diagnostic {
 	 * @param jag the jaguar to test
 	 * @return true if the encoder is working; false otherwise
 	 */
-	private static boolean CANJaguarEncoderWorks(CANJaguar jag) {
+	private static boolean CANJaguarEncoderWorks(CANJaguar jag) 
+	{
 		TimeoutTimer t = new TimeoutTimer(2);
 		t.start();
 		
 		jag.set(1.0);
 		
-		while(!t.isTimedOut()) {
+		while(!t.isTimedOut()) 
+		{
 			
 		}
 		
@@ -119,13 +132,15 @@ public class Diagnostic {
 	 * @param ec the elevator controls
 	 * @return true if the bottom limit switch works; false otherwise
 	 */
-	private static boolean elevatorBottomLSWorks(ElevatorController ec) {
+	private static boolean elevatorBottomLSWorks(ElevatorController ec) 
+	{
 		TimeoutTimer t = new TimeoutTimer(5);
 		t.start();
 		
 		ec.setAutoSetpoint(0);
 		
-		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) {
+		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) 
+		{
 			// Wait until it's at the bottom...
 		}
 		
@@ -139,13 +154,15 @@ public class Diagnostic {
 	 * @param ec the elevator controls
 	 * @return true if the top limit switch works; false otherwise
 	 */
-	private static boolean elevatorTopLSWorks(ElevatorController ec) {
+	private static boolean elevatorTopLSWorks(ElevatorController ec)
+	{
 		TimeoutTimer t = new TimeoutTimer(10);
 		t.start();
 		
 		ec.setAutoSetpoint(3750);
 		
-		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) {
+		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) 
+		{
 			// Wait until it's at the top...
 		}
 		
@@ -159,19 +176,22 @@ public class Diagnostic {
 	 * @param ec the elevator controls
 	 * @return true if the encoder works; false otherwise
 	 */
-	private static boolean elevatorEncoderWorks(ElevatorController ec) {
+	private static boolean elevatorEncoderWorks(ElevatorController ec)
+	{
 		TimeoutTimer t = new TimeoutTimer(5);
 		t.start();
 		
 		ec.setAutoSetpoint(1000);
 		
-		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) {
+		while(!ec.isAtAutoSetpoint() || !t.isTimedOut()) 
+		{
 			// Wait until it's at the setpoint
 		}
 		
 		boolean isWorking = ec.getEncoder().get() > 0;
 		
-		if(isWorking) {
+		if(isWorking) 
+		{
 			t.reset();
 			t.startTimer();
 			

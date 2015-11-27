@@ -20,18 +20,19 @@ import edu.wpi.first.wpilibj.Talon;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class ElevatorController {
-	
+public class ElevatorController 
+{	
 	/**
 	 * The elevator operates on a separate thread, since it contains
 	 * complex math and things that should be done separate from the
 	 * main thread
 	 */
-	private class ElevatorControllerThread extends Thread implements Runnable {
-		
+	private class ElevatorControllerThread extends Thread implements Runnable 
+	{
 		private ElevatorController ec;
 		
-		public ElevatorControllerThread(ElevatorController ec) {
+		public ElevatorControllerThread(ElevatorController ec) 
+		{
 			this.ec = ec;
 		}
 		
@@ -39,8 +40,10 @@ public class ElevatorController {
 		 * Starts listening for both teleop and auto inputs
 		 */
 		@Override
-		public void run() {
-			while(true) {
+		public void run() 
+		{
+			while(true) 
+			{
 				ec.move();
 			}
 		}
@@ -79,8 +82,8 @@ public class ElevatorController {
 	 * Crates the elevator thread and starts it
 	 * @param setpoints the encoder setpoints for buttons on the joystick for automatic arm movement
 	 */
-	public ElevatorController(SetpointMapWrapper setpoints) {
-		
+	public ElevatorController(SetpointMapWrapper setpoints) 
+	{	
 		this.rightMotor = RobotRepository.RightMotor;
 		this.leftMotor = RobotRepository.LeftMotor;
 		this.elevStick = RobotRepository.ElevatorStick;
@@ -100,10 +103,12 @@ public class ElevatorController {
 	 * Automatically moves the arm to a specific encoder setpoint
 	 * @param setpoint the number of encoder revolutions to move
 	 */
-	public void autoMove(int setpoint) {
+	public void autoMove(int setpoint) 
+	{
 		error = setpoint - enc.get();
 		
-		if (Math.abs(error) <= 50) {
+		if (Math.abs(error) <= 50) 
+		{
 			isAtAutoSetpoint = true;
 			return;
 		}
@@ -112,18 +117,17 @@ public class ElevatorController {
 		
 		double out;
 		
-		if (error > 0) {
+		if (error > 0)
 			out = pid(ElevatorPID.kP, ElevatorPID.kI, ElevatorPID.kD, error);
-		} else {
+		else
 			out = pid(ElevatorPID.kPd, ElevatorPID.kId, ElevatorPID.kDd, error);
-		}
 		
-		if (botLS.get() && out < 0) {
+		
+		if (botLS.get() && out < 0)
 			out = 0;
-		}
-		if (topLS.get() && out > 0) {
+		
+		if (topLS.get() && out > 0)
 			out = 0;
-		}
 		
 		setMotors(controlSpeed(out, enc.get()));
 	}
@@ -132,7 +136,8 @@ public class ElevatorController {
 	 * Sets the setpoint for automatic elevator movement
 	 * @param setpoint
 	 */
-	public void setAutoSetpoint(int setpoint) {
+	public void setAutoSetpoint(int setpoint) 
+	{
 		this.setpoint = setpoint;
 	}
 	
@@ -140,7 +145,8 @@ public class ElevatorController {
 	 * Returns true if the elevator is at the auto setpoint, false otherwise
 	 * @return true if the elevator is at the auto setpoint, false otherwise
 	 */
-	public boolean isAtAutoSetpoint() {
+	public boolean isAtAutoSetpoint() 
+	{
 		return isAtAutoSetpoint;
 	}
 	
@@ -148,38 +154,51 @@ public class ElevatorController {
 	 * Primary method to move the elevator for operator control
 	 * and autonomous
 	 */
-	private void move() {
-		if(botLS.get()) {
+	private void move() 
+	{
+		if(botLS.get()) 
+		{
 			enc.reset();
 		}
 		
-		if(ds.isEnabled() && ds.isOperatorControl()) {
-			
+		if(ds.isEnabled() && ds.isOperatorControl()) 
+		{
 			// Check to see if the user
 			// pressed a preset
 			checkButtonStatus();
 			
-			if(Math.abs(elevStick.getY()) < JOYSTICK_DEADBAND) {
-				if(buttonPressed) {
-					if(hold) {
+			if(Math.abs(elevStick.getY()) < JOYSTICK_DEADBAND) 
+			{
+				if(buttonPressed) 
+				{
+					if(hold) 
+					{
 						autoMove(holdSetpoint);
-					} else {
+					} 
+					else 
+					{
 						autoMove(setpoints.getSetpoint(buttonSelected));
 					}
-				} else {
+				} 
+				else
+				{
 					stopMotors();
 				}
-			} else {
+			} 
+			else 
+			{
 				stopOperatorAutoMove();
 				
 				double input = elevStick.getY();
 				setMotors(controlSpeed(input, enc.get()));
 			}
 		}
-		else if(ds.isEnabled() && ds.isAutonomous()) {
+		else if(ds.isEnabled() && ds.isAutonomous()) 
+		{
 			autoMove(setpoint);
 		}
-		else if(ds.isDisabled()) {
+		else if(ds.isDisabled()) 
+		{
 			stopOperatorAutoMove();
 		}
 	}
@@ -190,16 +209,20 @@ public class ElevatorController {
 	 * value and let the program know that the elevator
 	 * will move automatically
 	 */
-	private synchronized void checkButtonStatus() {
-		for(int i = 1; i < elevStick.getButtonCount(); i++) {
-			if(elevStick.getRawButton(i) && setpoints.containsButton(i)) {
+	private synchronized void checkButtonStatus() 
+	{
+		for(int i = 1; i < elevStick.getButtonCount(); i++) 
+		{
+			if(elevStick.getRawButton(i) && setpoints.containsButton(i)) 
+			{
 				hold = false;
 				buttonPressed = true;
 				buttonSelected = i;
 			}
 		}
 		
-		if(elevStick.getRawButton(3)) {
+		if(elevStick.getRawButton(3)) 
+		{
 			buttonPressed = true;
 			hold = true;
 			buttonSelected = -1;
@@ -218,12 +241,16 @@ public class ElevatorController {
 	 * @param err the current elevator position vs the setpoint
 	 * @return the new calculation for the elevator output
 	 */
-	private synchronized double pid(double p, double i, double d, int err) {
+	private synchronized double pid(double p, double i, double d, int err) 
+	{
 		double out = 0;
-		if (Math.abs(err) <= 5) {
+		if (Math.abs(err) <= 5) 
+		{
 			accumulatedError = 0;
 			return 0;
-		} else if (Math.abs(prevError - err) > Math.abs(err + prevError)) {
+		} 
+		else if (Math.abs(prevError - err) > Math.abs(err + prevError)) 
+		{
 			accumulatedError = 0;
 		}
 
@@ -236,26 +263,23 @@ public class ElevatorController {
 		prevError = err;
 		out = P + I + D;
 		
-		if (out > 1) {
+		if (out > 1)
 			out = 1;
-		} else if (out < -.5) {
+		else if (out < -.5)
 			out = -.5;
-		}
 		
-		if (out - prevPidOut > .1) {
+		if (out - prevPidOut > .1)
 			out = prevPidOut + .1;
-		} else if (out - prevPidOut < -.1) {
+		else if (out - prevPidOut < -.1)
 			out = prevPidOut - .1;
-		}
+		
 		
 		prevPidOut = out;
 		
-		if(out < 0.1 && out > 0.0) {
+		if(out < 0.1 && out > 0.0)
 			out = 0.1;
-		}
-		else if(out > -0.1 && out < 0.0) {
+		else if(out > -0.1 && out < 0.0)
 			out = -0.1;
-		}
 		
 		return out;
 	}
@@ -265,20 +289,20 @@ public class ElevatorController {
 	 * and down being between 0 and -1.0
 	 * @param output the output value to the motors
 	 */
-	private void setMotors(double output) {
-		if(topLS.get() && output > 0) {
+	private void setMotors(double output) 
+	{
+		if(topLS.get() && output > 0)
 			output = 0;
-		}
 		
-		if(botLS.get() && output < 0) {
+		if(botLS.get() && output < 0)
 			output = 0;
-		}
 		
 		rightMotor.set(output);
 		leftMotor.set(output);
 	}
 	
-	private void stopMotors() {
+	private void stopMotors() 
+	{
 		rightMotor.set(0);
 		leftMotor.set(0);
 	}
@@ -290,16 +314,19 @@ public class ElevatorController {
 	 * @param encCounts the current position of the elevator
 	 * @return the new output for the motors
 	 */
-	private double controlSpeed(double input, int encCounts) {
+	private double controlSpeed(double input, int encCounts) 
+	{
 		double output = input;
 		
-		if(input > 0 && isInTopWindow(encCounts)) {
+		if(input > 0 && isInTopWindow(encCounts))
+		{
 			double penetration = (encCounts - START_TOP_WINDOW);
 			output = input - (penetration*(input/(TOP_WINDOW_SIZE)));
 			
 			output = output < .35 ? .35 : output;
 		}
-		else if(input < 0 && isInBottomWindow(encCounts)) {
+		else if(input < 0 && isInBottomWindow(encCounts))
+		{
 			double penetration = (BOTTOM_WINDOW_SIZE - encCounts);
 			output = input - (penetration*(input / (BOTTOM_WINDOW_SIZE)));
 			
@@ -314,7 +341,8 @@ public class ElevatorController {
 	 * @param encCounts the current elevator position
 	 * @return true if close, false otherwise
 	 */
-	private boolean isInBottomWindow(int encCounts) {
+	private boolean isInBottomWindow(int encCounts) 
+	{
 		return encCounts <= START_BOTTOM_WINDOW;
 	}
 	
@@ -323,7 +351,8 @@ public class ElevatorController {
 	 * @param encCounts the current elevator postion
 	 * @return true if close, false otherwise
 	 */
-	private boolean isInTopWindow(int encCounts) {
+	private boolean isInTopWindow(int encCounts) 
+	{
 		return encCounts >= START_TOP_WINDOW;
 	}
 	
@@ -331,7 +360,8 @@ public class ElevatorController {
 	 * Stops the elevator from automatically moving to the user
 	 * selected setpoint
 	 */
-	private void stopOperatorAutoMove() {
+	private void stopOperatorAutoMove() 
+	{
 		buttonPressed = false;
 		buttonSelected = -1;
 	}
@@ -340,14 +370,16 @@ public class ElevatorController {
 	 * Gets the status of the bottom elevator limit switch
 	 * @return true if being pressed, false if not
 	 */
-	public DigitalInput getBottomLS() {
+	public DigitalInput getBottomLS() 
+	{
 		return botLS;
 	}
 	/**
 	 * Gets the status of the top elevator limit switch
 	 * @return true if being pressed, false if not
 	 */
-	public DigitalInput getTopLS() {
+	public DigitalInput getTopLS() 
+	{
 		return topLS;
 	}
 	
@@ -355,7 +387,8 @@ public class ElevatorController {
 	 * Gets the encoder for the elevator
 	 * @return the encoder for the elevator
 	 */
-	public Encoder getEncoder() {
+	public Encoder getEncoder() 
+	{
 		return enc;
 	}
 }

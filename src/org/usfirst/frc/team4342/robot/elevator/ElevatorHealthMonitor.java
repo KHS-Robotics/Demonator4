@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class ElevatorHealthMonitor {
-	
+public class ElevatorHealthMonitor 
+{
 	private static Joystick elevStick;
 	private static Encoder enc;
 	private static DigitalInput top, bottom;
@@ -45,7 +45,8 @@ public class ElevatorHealthMonitor {
 	 * @param consoleLog the log to log to
 	 */
 	public ElevatorHealthMonitor(ILogger log, RobotConsoleLogger consoleLog) {
-		if(!constructed) {
+		if(!constructed) 
+		{
 			this.elevStick = RobotRepository.ElevatorStick;
 			this.enc = RobotRepository.ElevatorEncoder;
 			this.top = RobotRepository.TopLimitSwitch;
@@ -57,8 +58,10 @@ public class ElevatorHealthMonitor {
 	/**
 	 * Starts monitoring the elevator
 	 */
-	public void startMonitoring() {
-		if(!started) {
+	public void startMonitoring() 
+	{
+		if(!started) 
+		{
 			new MonitoringThread().start();
 			started = true;
 		}
@@ -69,31 +72,40 @@ public class ElevatorHealthMonitor {
 	 * the encoder is not changing, and if the limit switches are not returning true
 	 * when the elevator is all the way down or up
 	 */
-	private class MonitoringThread extends Thread implements Runnable {
+	private class MonitoringThread extends Thread implements Runnable 
+	{
 		@Override
-		public void run() {
-			while(true) {
-				try {
-					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) {
+		public void run() 
+		{
+			while(true) 
+			{
+				try 
+				{
+					if(DriverStation.getInstance().isEnabled() && DriverStation.getInstance().isOperatorControl()) 
+					{
 						boolean y = Math.abs(elevStick.getY()) > 0.10;
 						
-						if(Math.abs(enc.get()) == 0 && y && !loggedEnc) {
+						if(Math.abs(enc.get()) == 0 && y && !loggedEnc) 
+						{
 							multiLog.warning("Elevator encoder may not be operating correctly");
 							loggedEnc = true;
 						}
 						
-						if(enc.get() <= 0 && !bottom.get() && !loggedBotLS) {
+						if(enc.get() <= 0 && !bottom.get() && !loggedBotLS) 
+						{
 							multiLog.warning("Bottom limit may not be operating correctly");
 							loggedBotLS = true;
 						}
 						
-						if(enc.get() >= 3700 && !top.get() && !loggedTopLS) {
+						if(enc.get() >= 3700 && !top.get() && !loggedTopLS) 
+						{
 							multiLog.warning("Top limit may not be operating correctly");
 							loggedTopLS = true;
 						}
 					}
 					
-					if(loggedEnc && loggedBotLS && loggedTopLS) {
+					if(loggedEnc && loggedBotLS && loggedTopLS) 
+					{
 						// Nice! Everything in here has indicated a
 						// warning! Hopefully you're not in a match!
 						multiLog.warning("Nice! Everything in DHM has indicated an error. Hopefully you weren't in a match!");
@@ -103,7 +115,9 @@ public class ElevatorHealthMonitor {
 					
 					Thread.sleep(250);
 						
-				} catch (Exception ex) {
+				} 
+				catch (Exception ex) 
+				{
 					multiLog.error(ExceptionInfo.getType(ex) + " in HealthMonitor.MonitorThread.java", ex);
 				}
 			}

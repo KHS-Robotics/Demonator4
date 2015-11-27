@@ -17,11 +17,9 @@ package org.usfirst.frc.team4342.robot.elevator;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public final class ElevatorPID {
-	
-	private ElevatorPID() {
-		
-	}
+public final class ElevatorPID 
+{
+	private ElevatorPID() {}
 	
 	// Values for going up (higher to fight gravity)
 	public static final double kP = 0.007;
