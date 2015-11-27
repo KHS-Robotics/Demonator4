@@ -384,6 +384,7 @@ public class AutoRoutines
 			if(ec.isAtAutoSetpoint()) 
 			{
 				ec.setAutoSetpoint(250);
+				autoStep++;
 			}
 		}
 		else if(autoStep == 7) 
