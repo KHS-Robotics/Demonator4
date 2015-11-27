@@ -33,8 +33,8 @@ import edu.wpi.first.wpilibj.Ultrasonic;
  * @author Brian Lucas
  * @author Steve Chapman
  */
-public class AutoRoutines {
-	
+public class AutoRoutines 
+{
 	private static final double MinToteDist = 11.0;
 	private static final double MaxToteDist = 13.0;
 	
@@ -66,7 +66,8 @@ public class AutoRoutines {
 	 * @param gyro the gyro to ensure the robot is moving straight
 	 */
 	public AutoRoutines(MecanumDrive drive, ElevatorController ec,
-						MultiLogger multiLog, RobotConsoleLogger consoleLog) {
+						MultiLogger multiLog, RobotConsoleLogger consoleLog) 
+	{
 		this.drive = drive;
 		this.ec = ec;
 		this.ultra = RobotRepository.Ultra;
@@ -84,9 +85,12 @@ public class AutoRoutines {
 	 * Executes the auto routine 
 	 * @param autoRoutine the auto routine to run
 	 */
-	public void executeAutonomous(AutoRoutine autoRoutine) {
-		if(DriverStation.getInstance().isAutonomous() && DriverStation.getInstance().isEnabled()) {
-			switch(autoRoutine) {
+	public void executeAutonomous(AutoRoutine autoRoutine) 
+	{
+		if(DriverStation.getInstance().isAutonomous() && DriverStation.getInstance().isEnabled()) 
+		{
+			switch(autoRoutine) 
+			{
 				case PickUpOneTote:
 					pickupOneTote();
 					break;
@@ -108,7 +112,8 @@ public class AutoRoutines {
 					break;
 				
 				default:
-					if(!logged) {
+					if(!logged) 
+					{
 						multiLog.warning("No valid autonomous value selected");
 						
 						logged = true;
@@ -127,41 +132,50 @@ public class AutoRoutines {
 	 * 4) Wait for the elevator to move
 	 * 5) Move backwards 1 encoder count
 	 */
-	private void pickupOneTote() {
-		if(autoStep == 0) {
+	private void pickupOneTote() 
+	{
+		if(autoStep == 0) 
+		{
 			ec.setAutoSetpoint(350);
 			autoStep++;
 		}
-		else if(autoStep == 1) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 1) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				resetDriveEncoders();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 2) {
-			
+		else if(autoStep == 2) 
+		{
 			drive.autoDrive(0.0, -0.5, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 14) {
+			if(currentDriveEncoderCounts() >= 14) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
 		}
-		else if(autoStep == 3) {
+		else if(autoStep == 3) 
+		{
 			ec.setAutoSetpoint(0);
 			autoStep++;
 		}
-		else if(autoStep == 4) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 4) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				resetDriveEncoders();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 5) {
-			
+		else if(autoStep == 5) 
+		{
 			drive.autoDrive(0.0, -0.25, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 1) {
+			if(currentDriveEncoderCounts() >= 1) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
@@ -183,81 +197,103 @@ public class AutoRoutines {
 	 * 10) Wait for the elevator to move
 	 * 11) Move backwards 1 encoder count
 	 */
-	private void pickupTwoTotes() {
-		if(autoStep == 0) {
+	private void pickupTwoTotes() 
+	{
+		if(autoStep == 0) 
+		{
 			ec.setAutoSetpoint(250);
 		}
-		else if(autoStep == 1) {
+		else if(autoStep == 1) 
+		{
 			if(ec.isAtAutoSetpoint()) {
 				autoStep++;
 			}
 		}
-		else if(autoStep == 2) {
+		else if(autoStep == 2) 
+		{
 			drive.autoDrive(0.0, -0.25, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 6) {
+			if(currentDriveEncoderCounts() >= 6) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
 		}
-		else if(autoStep == 3) {
-			
+		else if(autoStep == 3) 
+		{
 			checkLeftPhotoSensor();
 			
-			if(!leftPhotoSensorMadeContact) {
+			if(!leftPhotoSensorMadeContact) 
+			{
 				drive.autoDrive(0.25, 0.0, gyro.getAngle());
 			}
-			else if(leftPhotoSensorMadeContact && !rightPhotoSensor.get()) {
+			else if(leftPhotoSensorMadeContact && !rightPhotoSensor.get()) 
+			{
 				drive.autoDrive(-0.10, 0.0, gyro.getAngle());
 			}
-			else if(leftPhotoSensor.get() && leftPhotoSensor.get()) {
+			else if(leftPhotoSensor.get() && leftPhotoSensor.get()) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				leftPhotoSensorMadeContact = false;
 				autoStep++;
 			}
 		}
-		else if(autoStep == 4) {
-			if(autoMoveDist()) {
+		else if(autoStep == 4) 
+		{
+			if(autoMoveDist()) 
+			{
 				autoStep++;
 			}
 		}
-		else if(autoStep == 5) {
+		else if(autoStep == 5) 
+		{
 			ec.setAutoSetpoint(0);
 			autoStep++;
 		}
-		else if(autoStep == 6) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 6) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				ec.setAutoSetpoint(100);
 			}
 		}
-		else if(autoStep == 7) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 7) 
+		{
+			if(ec.isAtAutoSetpoint())
+			{
 				resetDriveEncoders();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 8) {
+		else if(autoStep == 8) 
+		{
 			drive.autoDrive(0.0, -0.50, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 14) {
+			if(currentDriveEncoderCounts() >= 14)
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
 		}
-		else if(autoStep == 9) {
+		else if(autoStep == 9) 
+		{
 			ec.setAutoSetpoint(0);
 			autoStep++;
 		}
-		else if(autoStep == 10) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 10) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				resetDriveEncoders();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 11) {
+		else if(autoStep == 11) 
+		{
 			drive.autoDrive(0.0, -0.25, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 1) {
+			if(currentDriveEncoderCounts() >= 1) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
@@ -285,129 +321,165 @@ public class AutoRoutines {
 	 * 16) Wait for the elevator to move
 	 * 17) Move backwards 1 encoder count
 	 */
-	private void pickupThreeTotes() {
-		if(autoStep == 0) {
-			if(ec.isAtAutoSetpoint()) {
+	private void pickupThreeTotes() 
+	{
+		if(autoStep == 0) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				ec.setAutoSetpoint(250);
 				autoStep++;
 			}
 		}
-		else if(autoStep == 1) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 1)
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				autoStep++;
 			}
 		}
-		else if(autoStep == 2) {
+		else if(autoStep == 2) 
+		{
 			drive.autoDrive(0.0, -0.25, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 6) {
+			if(currentDriveEncoderCounts() >= 6) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
 		}
-		else if(autoStep == 3) {
-			
+		else if(autoStep == 3) 
+		{
 			checkLeftPhotoSensor();
 			
-			if(!leftPhotoSensorMadeContact) {
+			if(!leftPhotoSensorMadeContact) 
+			{
 				drive.autoDrive(0.25, 0.0, gyro.getAngle());
 			}
-			else if(leftPhotoSensorMadeContact && !rightPhotoSensor.get()) {
+			else if(leftPhotoSensorMadeContact && !rightPhotoSensor.get()) 
+			{
 				drive.autoDrive(-0.10, 0.0, gyro.getAngle());
 			}
-			else if(leftPhotoSensor.get() && leftPhotoSensor.get()) {
+			else if(leftPhotoSensor.get() && leftPhotoSensor.get()) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				leftPhotoSensorMadeContact = false;
 				autoStep++;
 			}
 		}
-		else if(autoStep == 4) {
-			if(autoMoveDist()) {
+		else if(autoStep == 4) 
+		{
+			if(autoMoveDist()) 
+			{
 				autoStep++;
 			}
 		}
-		else if(autoStep == 5) {
+		else if(autoStep == 5) 
+		{
 			ec.setAutoSetpoint(0);
 			autoStep++;
 		}
-		else if(autoStep == 6) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 6) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				ec.setAutoSetpoint(250);
 			}
 		}
-		else if(autoStep == 7) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 7) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				resetDriveEncoders();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 8) {
+		else if(autoStep == 8) 
+		{
 			drive.autoDrive(0.0, -0.50, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 6) {
+			if(currentDriveEncoderCounts() >= 6) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
 		}
-		else if(autoStep == 9) {
-			
+		else if(autoStep == 9) 
+		{
 			checkLeftPhotoSensor();
 			
-			if(!leftPhotoSensorMadeContact) {
+			if(!leftPhotoSensorMadeContact) 
+			{
 				drive.autoDrive(0.25, 0.0, gyro.getAngle());
 			}
-			else if(leftPhotoSensorMadeContact && !rightPhotoSensor.get()) {
+			else if(leftPhotoSensorMadeContact && !rightPhotoSensor.get()) 
+			{
 				drive.autoDrive(-0.10, 0.0, gyro.getAngle());
 			}
-			else if(leftPhotoSensor.get() && leftPhotoSensor.get()) {
+			else if(leftPhotoSensor.get() && leftPhotoSensor.get()) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				leftPhotoSensorMadeContact = false;
 				autoStep++;
 			}
 		}
-		else if(autoStep == 10) {
-			if(autoMoveDist()) {
+		else if(autoStep == 10) 
+		{
+			if(autoMoveDist()) 
+			{
 				autoStep++;
 			}
 		}
-		else if(autoStep == 11) {
+		else if(autoStep == 11) 
+		{
 			ec.setAutoSetpoint(0);
 			autoStep++;
 		}
-		else if(autoStep == 12) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 12) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				ec.setAutoSetpoint(100);
 				autoStep++;
 			}
 		}
-		else if(autoStep == 13) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 13) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				resetDriveEncoders();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 14) {
+		else if(autoStep == 14) 
+		{
 			drive.autoDrive(0.0, -0.50, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 14) {
+			if(currentDriveEncoderCounts() >= 14) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
 		}
-		else if(autoStep == 15) {
+		else if(autoStep == 15) 
+		{
 			ec.setAutoSetpoint(0);
 			autoStep++;
 		}
-		else if(autoStep == 16) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 16) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				resetDriveEncoders();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 17) {
+		else if(autoStep == 17) 
+		{
 			drive.autoDrive(0.0, -0.25, gyro.getAngle());
 			
-			if(currentDriveEncoderCounts() >= 1) {
+			if(currentDriveEncoderCounts() >= 1) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
@@ -420,31 +492,41 @@ public class AutoRoutines {
 	 * 1) Wait for elevator to move
 	 * 2) Move backwards for 14 encoder counts
 	 */
-	private void pickupOneContainer() {
-		if(autoStep == 0) {
+	private void pickupOneContainer() 
+	{
+		if(autoStep == 0) 
+		{
 			ec.setAutoSetpoint(800);
 			autoStep++;
 		}
-		else if(autoStep == 1) {
-			if(ec.isAtAutoSetpoint()) {
+		else if(autoStep == 1) 
+		{
+			if(ec.isAtAutoSetpoint()) 
+			{
 				resetDriveEncoders();
 				autoStep++;
 			}
 		}
-		else if(autoStep == 2) {
+		else if(autoStep == 2) 
+		{
 			drive.autoDrive(0.0, -0.50, gyro.getAngle());
 			
-		if(currentDriveEncoderCounts() >= 14) {
+			if(currentDriveEncoderCounts() >= 14) 
+			{
 				drive.autoDrive(0.0, 0.0, gyro.getAngle());
 				autoStep++;
 			}
 		}
  	}
 	
-	public void runDiagnosticCheck(RobotConsoleLogger consoleLog) {
-		try {
+	public void runDiagnosticCheck(RobotConsoleLogger consoleLog) 
+	{
+		try 
+		{
 			Diagnostic.runSelfTest(drive, ec, new LoggerAsync(new LocalLogger("Demonator4", "/home/lvuser/Diagnostic.txt")), consoleLog);
-		} catch(Exception ex) {
+		} 
+		catch(Exception ex) 
+		{
 			multiLog.error(ExceptionInfo.getType(ex) + " in AutoRoutines.java", ex);
 		}
 	}
@@ -453,7 +535,8 @@ public class AutoRoutines {
 	 * Adds up all encoder counts of the drive train
 	 * @return the total encoder counts of the drive train
 	 */
-	private int currentDriveEncoderCounts() {
+	private int currentDriveEncoderCounts() 
+	{
 		int frontRight = Math.abs((int) drive.getFrontRight().getPosition());
 		int frontLeft = Math.abs((int) drive.getFrontLeft().getPosition());
 		int rearRight = Math.abs((int) drive.getRearRight().getPosition());
@@ -467,7 +550,8 @@ public class AutoRoutines {
 	/**
 	 * Resets the encoders on the drive train
 	 */
-	private void resetDriveEncoders() {
+	private void resetDriveEncoders() 
+	{
 		CANJaguarLoader.init(new CANJaguar[] {
 				drive.getFrontLeft(),
 				drive.getFrontRight(),
@@ -482,15 +566,19 @@ public class AutoRoutines {
 	 * Automatically moves the robot a perfect distance to the tote.
 	 * @return true if finished, false otherwise
 	 */
-	public boolean autoMoveDist() {
+	public boolean autoMoveDist()
+	{
 		double dist = ultra.getRangeInches();
 		
 		distanceError = dist - ((MinToteDist + MaxToteDist) / 2);
 		
-		if(dist > MinToteDist && dist < MaxToteDist) {
+		if(dist > MinToteDist && dist < MaxToteDist)
+		{
 			drive.autoDrive(0.0, 0.0, gyro.getAngle());
 			return true;
-		} else {
+		}
+		else
+		{
 			drive.autoDrive(0.0, (distanceError*DrivePID.Autonomous.kP), gyro.getAngle());
 			return false;
 		}
@@ -502,8 +590,10 @@ public class AutoRoutines {
 	 * This comes in handy because we want the robot to slow down in order to
 	 * properly align with the tote it will pickup.
 	 */
-	private void checkLeftPhotoSensor() {
-		if(leftPhotoSensor.get()) {
+	private void checkLeftPhotoSensor() 
+	{
+		if(leftPhotoSensor.get()) 
+		{
 			leftPhotoSensorMadeContact = true;
 		}
 	}
@@ -511,18 +601,25 @@ public class AutoRoutines {
 	/**
 	 * Used to reset the logged variable
 	 */
-	private class AutoChecker extends Thread implements Runnable {
+	private class AutoChecker extends Thread implements Runnable 
+	{
 		@Override
-		public void run() {
-			while(true) {
-				if(!DriverStation.getInstance().isAutonomous() || !DriverStation.getInstance().isEnabled()) {
+		public void run() 
+		{
+			while(true) 
+			{
+				if(!DriverStation.getInstance().isAutonomous() || !DriverStation.getInstance().isEnabled()) 
+				{
 					autoStep = 0;
 					logged = false;
 				}
 				
-				try {
+				try 
+				{
 					Thread.sleep(5000);
-				} catch (InterruptedException ex) {
+				} 
+				catch (InterruptedException ex) 
+				{
 					ActiveLogger.warning(FileHelper.ACTIVE_LOG_PATH, "D4-AR", ExceptionInfo.getType(ex) + " in AutoRoutines.AutoChecker");
 				}
 			}
